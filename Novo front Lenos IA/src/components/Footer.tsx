@@ -1,24 +1,25 @@
-import React from "react";
+import { Link } from "react-router-dom";
+import "./style/Footer.css";
 
 const Footer = () => {
   return (
     <footer>
       <div className="logo">
-        <img></img>
-        <h2>Lenos IA</h2>
+        <img className="official-brand-logo official-brand-logo--footer" src="/logo.png" alt="Lenos IA" />
       </div>
 
       <nav>
         <ul>
-          <li>Sobre</li>
-          <li>FAQ</li>
-          <li>Suporte</li>
-          <li>Políticas</li>
+          <li><Link to="/">Início</Link></li>
+          <li><Link to="/sobre">Sobre</Link></li>
+          <li><Link to="/perguntas-frequentes">FAQ</Link></li>
+          <li><Link to="/suporte">Suporte</Link></li>
+          <li><Link to="/politicas-e-termos-de-uso">Políticas</Link></li>
         </ul>
       </nav>
 
       <div className="copyrigths">
-        <p>@ 2026 Lenos IA. Todos os direitos reservados.</p>
+        <p>© 2026 Lenos IA. Todos os direitos reservados.</p>
       </div>
     </footer>
   );

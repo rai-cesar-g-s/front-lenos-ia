@@ -1,4 +1,5 @@
 import React from 'react';
+import "./style/Message.css";
 
 interface MessageProps {
     title: string;
@@ -12,21 +13,21 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({title, subtitle, name, email, subject, message, children}) => {
     return (
-        <div className="message">
+        <div className="message support-form">
             <h3>{title}</h3>
             <h4>{subtitle}</h4>
 
             <h5>Nome</h5>
-            <label>{name}</label>
+            <input placeholder={name || "Seu nome"} aria-label="Nome" />
             
             <h5>E-mail</h5>
-            <label>{email}</label>
+            <input type="email" placeholder={email || "seu@email.com"} aria-label="E-mail" />
 
             <h5>Assunto</h5>
-            <label>{subject}</label>
+            <input placeholder={subject || "Como podemos ajudar?"} aria-label="Assunto" />
 
             <h5>Mensagem</h5>
-            <label>{message}</label>
+            <textarea placeholder={message || "Descreva sua dúvida ou problema..."} aria-label="Mensagem" />
 
             <div className="btn">
                 <p>Enviar mensagem</p>

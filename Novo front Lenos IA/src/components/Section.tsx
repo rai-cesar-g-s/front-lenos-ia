@@ -1,22 +1,23 @@
 import React from 'react';
+import "./style/Section.css";
 
 interface SectionProps {
-    img: string;
+    image?: React.ReactNode;
     title: string;
     children?: React.ReactNode;
     update: string;
 };
 
-const Section: React.FC<SectionProps> = ({img, title, update, children}) => {
+const Section: React.FC<SectionProps> = ({image, title, update, children}) => {
     return (
         <div className="page">
-            <img>{img}</img>
+            <div className="section-image">{image}</div>
 
             <title>{title}</title>
 
             {children}
 
-            {update}
+            <p className="section-update">{update}</p>
         </div>
     );
 };

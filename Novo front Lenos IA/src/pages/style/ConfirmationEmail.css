@@ -1,0 +1,124 @@
+.confirmation-email-page {
+	display: grid;
+	min-height: 100vh;
+	box-sizing: border-box;
+	place-items: center;
+	padding: 24px;
+	background: #f8fafb;
+}
+
+.confirmation-email-card {
+	width: min(100%, 440px);
+	box-sizing: border-box;
+	padding: 36px 32px 32px;
+	border: 1px solid #e0e7e5;
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: 0 12px 32px rgb(21 28 46 / 7%);
+	text-align: center;
+}
+
+.confirmation-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 9px;
+	color: #101729;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+.confirmation-brand .brand-mark {
+	display: grid;
+	width: 36px;
+	height: 36px;
+	place-items: center;
+	border-radius: 10px;
+	background: #75aa7e;
+	color: #fff;
+	font-size: 18px;
+}
+
+.confirmation-status-icon {
+	display: grid;
+	width: 64px;
+	height: 64px;
+	place-items: center;
+	margin: 34px auto 20px;
+	border-radius: 18px;
+	background: #edf5ee;
+	color: #528c5d;
+	font-size: 30px;
+}
+
+.confirmation-status-pending svg {
+	animation: confirmation-spin 1.1s linear infinite;
+}
+
+.confirmation-status-error {
+	background: #fff0ef;
+	color: #c3433d;
+}
+
+.confirmation-title {
+	margin: 0 0 10px;
+	color: #101729;
+	font-size: var(--font-page-title);
+	font-weight: var(--font-page-title-weight);
+	line-height: 1.2;
+	letter-spacing: 0;
+}
+
+.confirmation-description {
+	color: #59636b;
+	font-size: var(--font-page-subtitle);
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.confirmation-actions {
+	display: grid;
+	gap: 12px;
+	margin-top: 28px;
+}
+
+.confirmation-primary-action,
+.confirmation-secondary-action {
+	display: inline-flex;
+	min-height: 46px;
+	box-sizing: border-box;
+	align-items: center;
+	justify-content: center;
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.confirmation-primary-action {
+	background: #75aa7e;
+	color: #fff;
+}
+
+.confirmation-primary-action:hover {
+	background: #64966d;
+}
+
+.confirmation-secondary-action {
+	color: #528c5d;
+}
+
+@keyframes confirmation-spin {
+	to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+	.confirmation-email-card {
+		padding: 30px 22px 24px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.confirmation-status-pending svg {
+		animation: none;
+	}
+}

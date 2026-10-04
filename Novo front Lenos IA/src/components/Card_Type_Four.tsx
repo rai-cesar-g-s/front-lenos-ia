@@ -1,4 +1,5 @@
 import React from 'react';
+import "./style/Card_Type_Four.css";
 
 interface CardTypeFourProps {
     title: string;

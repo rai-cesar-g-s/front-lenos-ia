@@ -1,0 +1,213 @@
+:root {
+  --main-color: #75aa7e;
+  --secondary-color: #101729;
+  --light-gray: #f5f7ff;
+  --border-color: #e5e7eb;
+}
+
+footer {
+  background-color: #fff;
+  border-top: 1px solid var(--border-color);
+  padding: 60px 40px 40px;
+  margin-top: 120px;
+}
+
+footer .logo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+footer .logo .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+footer .logo h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+  margin: 0;
+  padding: 0;
+}
+
+footer nav {
+  margin-bottom: 40px;
+}
+
+footer nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer nav ul li {
+  list-style: none;
+}
+
+footer nav ul li a {
+  text-decoration: none;
+  color: var(--secondary-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+footer nav ul li a:hover {
+  color: var(--main-color);
+}
+
+footer nav ul li a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--main-color);
+  bottom: -2px;
+  transition: width 0.3s ease;
+}
+
+footer nav ul li a:hover::before {
+  width: 100%;
+}
+
+footer .copyrigths {
+  padding-top: 30px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+footer .copyrigths p {
+  color: #151c2e;
+  font-size: 0.85rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Layout responsivo - Desktop */
+@media (min-width: 1024px) {
+  footer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  footer .logo {
+    margin-bottom: 0;
+  }
+
+  footer nav ul {
+    flex-direction: row;
+    gap: 32px;
+  }
+
+  footer .copyrigths {
+    grid-column: 1 / -1;
+    padding-top: 30px;
+    text-align: center;
+  }
+}
+
+/* Responsivo - Tablet */
+@media (max-width: 1024px) and (min-width: 768px) {
+  footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  footer nav ul {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  footer .copyrigths {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Responsivo - Mobile */
+@media (max-width: 768px) {
+  footer {
+    padding: 40px 20px 30px;
+    margin-top: 60px;
+  }
+
+  footer .logo {
+    margin-bottom: 30px;
+  }
+
+  footer nav ul {
+    margin-bottom: 30px;
+  }
+
+  footer .copyrigths {
+    padding-top: 20px;
+  }
+
+  footer .copyrigths p {
+    font-size: 0.8rem;
+  }
+}
+
+footer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 24px;
+  margin-top: 48px;
+  padding: 18px clamp(20px, 5vw, 64px);
+  background: #fff;
+  border-top: 1px solid var(--border-color);
+}
+
+footer .logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+}
+
+footer .logo strong {
+  color: var(--secondary-color);
+  font-size: 15px;
+}
+
+footer .brand-mark { width: 28px; height: 28px; font-size: 15px; }
+footer nav { margin: 0; }
+footer nav ul { flex-direction: row; flex-wrap: wrap; gap: 16px 24px; }
+footer nav ul li a { color: var(--secondary-color); font-size: 14px; }
+footer .copyrigths { padding: 0; border: 0; text-align: right; }
+footer .copyrigths p { color: var(--secondary-color); font-size: 12px; }
+
+@media (max-width: 700px) {
+  footer {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 18px;
+    margin-top: 40px;
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  footer nav ul { justify-content: center; }
+  footer .copyrigths { text-align: center; }
+}
