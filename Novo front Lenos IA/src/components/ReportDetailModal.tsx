@@ -7,6 +7,8 @@ export interface ReportItem {
   title?: string;
   video_url?: string;
   comments_count?: number | string;
+  comments_positive?: number;
+  comments_negative?: number;
   created_at?: string;
   status?: string;
   sentiment_positive?: number;
@@ -49,7 +51,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
     : 'data não fornecida';
 
   const getYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
@@ -57,24 +59,16 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const videoId = getYouTubeId(videoUrl);
   const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 
-  const posSentiment = report.sentiment_positive ?? 68;
-  const neuSentiment = report.sentiment_neutral ?? 22;
-  const negSentiment = report.sentiment_negative ?? 10;
-
+  const completed = report.status === 'done' || report.status === 'completed';
+  const posSentiment = completed ? report.sentiment_positive : undefined;
+  const negSentiment = completed ? report.sentiment_negative : undefined;
+  const percentageLabel = (value: number | undefined) => value === undefined
+    ? 'Não disponível' : `${value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+  const countLabel = (value: number | undefined) => completed && value !== undefined
+    ? `${value.toLocaleString('pt-BR')} comentários` : 'Contagem não disponível';
   const summaryText = report.summary || report.report || 'Resumo não fornecido pela API.';
-
-  const topicsList = report.topics || [
-    { name: 'Qualidade do conteúdo', count: Math.round(Number(commentsCount) * 0.45) || 450, percentage: 45 },
-    { name: 'Áudio e qualidade técnica', count: Math.round(Number(commentsCount) * 0.25) || 250, percentage: 25 },
-    { name: 'Dúvidas e sugestões de pauta', count: Math.round(Number(commentsCount) * 0.18) || 180, percentage: 18 },
-    { name: 'Feedback geral da audiência', count: Math.round(Number(commentsCount) * 0.12) || 120, percentage: 12 },
-  ];
-
-  const recommendationsList = report.recommendations || [
-    'Criar um vídeo de acompanhamento focado nas dúvidas mais recorrentes.',
-    'Ajustar o ritmo das explicações nos primeiros 3 minutos do conteúdo.',
-    'Adicionar capítulos e links de referência na descrição do vídeo.',
-  ];
+  const topicsList = report.topics || [];
+  const recommendationsList = report.recommendations || [];
 
   const handleStartRename = () => {
     setEditedTitle(title);
@@ -173,25 +167,19 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             <div className="report-sentiment-cards">
               <div className="sentiment-stat-card positive">
                 <span className="stat-label">Sentimento Positivo</span>
-                <strong className="stat-val">{posSentiment}%</strong>
+                <strong className="stat-val">{percentageLabel(posSentiment)}</strong>
+                <span>{countLabel(report.comments_positive)}</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill pos" style={{ width: `${posSentiment}%` }} />
-                </div>
-              </div>
-
-              <div className="sentiment-stat-card neutral">
-                <span className="stat-label">Sentimento Neutro</span>
-                <strong className="stat-val">{neuSentiment}%</strong>
-                <div className="stat-bar-track">
-                  <div className="stat-bar-fill neu" style={{ width: `${neuSentiment}%` }} />
+                  <div className="stat-bar-fill pos" style={{ width: `${percentageLabel(posSentiment)}` }} />
                 </div>
               </div>
 
               <div className="sentiment-stat-card negative">
                 <span className="stat-label">Sentimento Negativo</span>
-                <strong className="stat-val">{negSentiment}%</strong>
+                <strong className="stat-val">{percentageLabel(negSentiment)}</strong>
+                <span>{countLabel(report.comments_negative)}</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill neg" style={{ width: `${negSentiment}%` }} />
+                  <div className="stat-bar-fill neg" style={{ width: `${percentageLabel(negSentiment)}` }} />
                 </div>
               </div>
             </div>
@@ -205,6 +193,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           <section className="report-section-box">
             <h3><FiTrendingUp /> Temas Mais Recorrentes nos Comentários</h3>
             <div className="topics-list-container">
+              {topicsList.length === 0 && <p>Temas não fornecidos pela API.</p>}
               {topicsList.map((topic, index) => (
                 <div className="topic-item-row" key={index}>
                   <div className="topic-info">
@@ -214,7 +203,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                   <div className="topic-progress-bg">
                     <div
                       className="topic-progress-fill"
-                      style={{ width: `${topic.percentage || Math.min(100, Math.max(10, (topic.count / Number(commentsCount || 100)) * 100))}%` }}
+                      style={{ width: `${topic.percentage ?? (Number(commentsCount) > 0 ? Math.min(100, (topic.count / Number(commentsCount)) * 100) : 0)}%` }}
                     />
                   </div>
                 </div>
@@ -225,6 +214,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           <section className="report-section-box">
             <h3><FiCheckCircle /> Recomendações Estratégicas para seu Canal</h3>
             <ul className="recommendations-list">
+              {recommendationsList.length === 0 && <li>Recomendações não fornecidas pela API.</li>}
               {recommendationsList.map((rec, index) => (
                 <li key={index}>
                   <span className="rec-bullet">✓</span>

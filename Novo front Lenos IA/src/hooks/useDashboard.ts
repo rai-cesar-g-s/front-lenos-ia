@@ -2,6 +2,7 @@ import { logSafeError } from '../utils/safeLogger';
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { ReportService } from '../api/report';
+import { toReportItem, getReportTotals } from '../utils/reportMetrics';
 import type { ReportItem } from '../components/ReportDetailModal';
 
 export function useDashboard() {
@@ -12,7 +13,7 @@ export function useDashboard() {
   const [errorMsg, setErrorMsg] = useState('');
   const [reportsError, setReportsError] = useState('');
 
-  const [isLoadingReports, setIsLoadingReports] = useState(false);
+  const [isLoadingReports, setIsLoadingReports] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationStatus, setGenerationStatus] = useState<'idle' | 'pending' | 'done' | 'failed'>('idle');
   const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
@@ -22,13 +23,7 @@ export function useDashboard() {
     setReportsError('');
     try {
       const data = await ReportService.getReports();
-      setReports(data.map((report) => ({
-        id: report.id,
-        title: report.title,
-        video_url: report.url,
-        report: report.report,
-        status: report.status,
-      })));
+      setReports(data.map(toReportItem));
     } catch (err) {
       logSafeError('useDashboard: Erro ao buscar relatórios:', err);
       setReports([]);
@@ -175,6 +170,8 @@ export function useDashboard() {
     user,
     reports,
     reportsError,
+    totals: getReportTotals(reports),
+    reloadReports: loadReports,
     selectedReportId,
     errorMsg,
     canGenerateReport,

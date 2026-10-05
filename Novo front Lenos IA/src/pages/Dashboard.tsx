@@ -4,11 +4,13 @@ import {
   FiBarChart2,
   FiMessageSquare,
   FiThumbsUp,
+  FiThumbsDown,
   FiTrendingUp,
   FiArrowRight,
 } from 'react-icons/fi';
 import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
+import { getCommentPercentage } from '../utils/reportMetrics';
 import { ReportDetailModal, type ReportItem } from '../components/ReportDetailModal';
 import './style/Dashboard.css';
 import Card_GoogleOAuth from '../components/Card_GoogleOAuth';
@@ -20,6 +22,8 @@ export const Dashboard: React.FC = () => {
     user,
     reports,
     reportsError,
+    totals,
+    reloadReports,
     isLoadingReports,
     renameReport,
     deleteReport,
@@ -28,18 +32,14 @@ export const Dashboard: React.FC = () => {
 
   const [activeReportModal, setActiveReportModal] = useState<ReportItem | null>(null);
 
-  const completedReports = (reports || []).filter(
-    (report: ReportItem) => report.status === 'done' || report.status === 'completed'
-  );
+  const formatCount = (value: number | undefined) =>
+    isLoadingReports ? '...' : reportsError || value === undefined ? '—' : value.toLocaleString('pt-BR');
 
-  const totalCommentsCount = completedReports.reduce(
-    (sum: number, r: ReportItem) => sum + Number(r.comments_count || 0),
-    0
-  );
-
-  const formattedCommentsCount = totalCommentsCount > 0
-    ? totalCommentsCount.toLocaleString('pt-BR')
-    : '2.081'; // Default fallback value from mock
+  const formatPercentage = (part: number | undefined) => {
+    const percentage = getCommentPercentage(part, totals.comments);
+    return isLoadingReports ? '...' : reportsError || percentage === undefined
+      ? '—' : `${percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+  };
 
   const userName = typeof user?.name === 'string' ? user.name.trim() : '';
 
@@ -57,14 +57,14 @@ export const Dashboard: React.FC = () => {
         <p>Veja o que sua audiência está dizendo.</p>
       </div>
 
-      {/* Top 4 Stat Cards */}
+      {/* Report statistics */}
       <section className="dashboard-stats-grid">
         <div className="stat-card">
           <div className="stat-card-header">
             <span className="stat-title">Análises realizadas</span>
             <FiBarChart2 className="stat-icon" />
           </div>
-          <strong className="stat-value">{completedReports.length}</strong>
+          <strong className="stat-value">{formatCount(totals.analyses)}</strong>
           <span className="stat-subtext">0 este mês</span>
         </div>
 
@@ -73,32 +73,40 @@ export const Dashboard: React.FC = () => {
             <span className="stat-title">Comentários processados</span>
             <FiMessageSquare className="stat-icon" />
           </div>
-          <strong className="stat-value">{formattedCommentsCount}</strong>
-          <span className="stat-subtext">no total</span>
+          <strong className="stat-value">{formatCount(totals.comments)}</strong>
+          <span className="stat-subtext">nos relatórios concluídos</span>
         </div>
 
         <div className="stat-card">
           <div className="stat-card-header">
-            <span className="stat-title">Sentimento positivo médio</span>
+            <span className="stat-title">Sentimento positivo</span>
             <FiThumbsUp className="stat-icon" />
           </div>
-          <strong className="stat-value">63%</strong>
-          <span className="stat-subtext">média dos vídeos</span>
+          <strong className="stat-value">{formatPercentage(totals.positive)}</strong>
+          <span className="stat-subtext">{formatCount(totals.positive)} comentários positivos</span>
         </div>
 
+        <div className="stat-card">
+          <div className="stat-card-header">
+            <span className="stat-title">Sentimento negativo</span>
+            <FiThumbsDown className="stat-icon" />
+          </div>
+          <strong className="stat-value">{formatPercentage(totals.negative)}</strong>
+          <span className="stat-subtext">{formatCount(totals.negative)} comentários negativos</span>
+        </div>
         <div className="stat-card">
           <div className="stat-card-header">
             <span className="stat-title">Uso do plano</span>
             <FiTrendingUp className="stat-icon" />
           </div>
           <div className="stat-value-group">
-            <strong className="stat-value">{completedReports.length}</strong>
+            <strong className="stat-value">{totals.analyses}</strong>
             <span className="stat-limit">/ 5</span>
           </div>
           <div className="usage-progress-bar">
             <div
               className="usage-progress-fill"
-              style={{ width: `${Math.min(100, (completedReports.length / 5) * 100)}%` }}
+              style={{ width: `${Math.min(100, (totals.analyses / 5) * 100)}%` }}
             />
           </div>
           <span className="stat-subtext">análises este mês</span>
@@ -121,7 +129,10 @@ export const Dashboard: React.FC = () => {
               <p>Carregando análises...</p>
             </div>
           ) : reportsError ? (
-            <p className="dashboard-empty-state" role="alert">{reportsError}</p>
+            <div className="dashboard-empty-state" role="alert">
+              <p>{reportsError}</p>
+              <button type="button" className="cta-btn secondary" onClick={() => void reloadReports()}>Tentar novamente</button>
+            </div>
           ) : reports.length === 0 ? (
             <p className="dashboard-empty-state">Você ainda não tem análises.</p>
           ) : (

@@ -4,6 +4,7 @@ import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
 import { ReportDetailModal, type ReportItem } from '../components/ReportDetailModal';
 import { ReportService } from '../api/report';
+import { toReportItem } from '../utils/reportMetrics';
 import './style/Analyze.css';
 
 export const Analyze: React.FC = () => {
@@ -25,7 +26,7 @@ export const Analyze: React.FC = () => {
 
   // Helper to extract YouTube video ID
   const getYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
@@ -56,13 +57,7 @@ export const Analyze: React.FC = () => {
 
     try {
       const report = await ReportService.getReportById(generatedReportId);
-      setActiveReportModal({
-        id: report.id,
-        title: report.title,
-        video_url: report.url,
-        report: report.report,
-        status: report.status,
-      });
+      setActiveReportModal(toReportItem(report));
     } catch {
       setErrorMsg('Não foi possível carregar o relatório gerado. Tente novamente.');
     }

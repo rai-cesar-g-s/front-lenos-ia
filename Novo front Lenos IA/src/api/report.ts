@@ -8,6 +8,9 @@ export type ApiReport = {
   url: string;
   report: string;
   status: string;
+  processed_comments: number;
+  processed_comments_positive: number;
+  processed_comments_negative: number;
 };
 
 /**
@@ -21,7 +24,19 @@ export const ReportService = {
    */
   async getReports(): Promise<ApiReport[]> {
     const response = await api.get<ApiReport[]>('/v1/user/reports');
-    return response.data;
+    // The list already provides counts. Fetch individual details only if a count is missing.
+    const reports = response.data;
+    const result: ApiReport[] = [];
+    for (let offset = 0; offset < reports.length; offset += 5) {
+      const batch = await Promise.all(reports.slice(offset, offset + 5).map(async (report) => {
+        const hasCounts = [report.processed_comments, report.processed_comments_positive,
+          report.processed_comments_negative].every(value => Number.isSafeInteger(value) && value >= 0);
+        if (hasCounts || !['done', 'completed'].includes(report.status)) return report;
+        return ReportService.getReportById(report.id);
+      }));
+      result.push(...batch);
+    }
+    return result;
   },
 
   /**
