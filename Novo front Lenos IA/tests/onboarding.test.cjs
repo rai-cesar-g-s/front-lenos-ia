@@ -207,3 +207,69 @@ test('configuração exige env, HTTPS e URL sem credenciais', () => {
   assert.equal(evaluate('http://localhost:8000/'), 'http://localhost:8000');
   assert.equal(evaluate('https://api.example.test/'), 'https://api.example.test');
 });
+
+function renderQuestionnaire(pending, overrides = {}) {
+  let hookIndex = 0;
+  const values = [0, '1000', false, '', false];
+  const updates = [];
+  const navigations = [];
+  const completions = [];
+  const saves = [];
+  const React = {
+    useState(initial) {
+      const index = hookIndex++;
+      return [values[index] ?? initial, (value) => updates.push({ index, value })];
+    },
+    useRef: (value) => ({ current: value }),
+  };
+  const jsx = (type, props) => ({ type, props });
+  const source = fs.readFileSync('src/pages/Onboarding.tsx', 'utf8');
+  const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+  const imports = {
+    react: React,
+    'react/jsx-runtime': { jsx, jsxs: jsx },
+    'react-router-dom': { useNavigate: () => (...args) => navigations.push(args) },
+    '../api/questions': { QuestionService: { saveAnswerForQuestion: async (data) => { saves.push(data); if (overrides.failSave) throw new Error('Save failed'); } } },
+    '../hooks/useAuth': { useAuth: () => ({ setHasAnsweredQuestions: (value) => completions.push(value), reloadQuestionStatus() { throw new Error('Extra verification must not run'); } }) },
+    '../hooks/useQuestionnaire': { useQuestionnaire: () => ({ questions: pending, loading: false, error: '', retry() {} }) },
+    './style/Onboarding.css': {},
+  };
+  const exports = {};
+  vm.runInNewContext(code, { exports, require: (name) => imports[name] });
+  const tree = exports.default();
+  const find = (element, type) => {
+    if (!element || typeof element !== 'object') return undefined;
+    if (element.type === type) return element;
+    for (const child of [element.props?.children].flat(Infinity)) {
+      const result = find(child, type);
+      if (result) return result;
+    }
+  };
+  return { tree, form: find(tree, 'form'), updates, saves, navigations, completions };
+}
+test('última resposta salva exibe conclusão sem verificar nem navegar automaticamente', async () => {
+  const view = renderQuestionnaire([{ id: 'q3', question: 'Quantos inscritos?' }]);
+  await view.form.props.onSubmit({ preventDefault() {} });
+  assert.equal(view.saves[0].question_id, 'q3');
+  assert.equal(view.navigations.length, 0);
+  assert.equal(view.completions.length, 0);
+  assert.equal(view.updates.find((update) => update.index === 0).value(0), 1);
+  assert.equal(view.updates.some((update) => update.index === 3 && update.value), false);
+});
+test('todas as perguntas confirmadas mostram sucesso; Concluir libera dashboard sem outra consulta', async () => {
+  const view = renderQuestionnaire([]);
+  assert.equal(JSON.stringify(view.tree).includes('Todas as perguntas foram respondidas'), true);
+  assert.equal(JSON.stringify(view.tree).includes('questionnaire-error'), false);
+  assert.equal(view.navigations.length, 0);
+  await view.form.props.onSubmit({ preventDefault() {} });
+  assert.deepEqual(view.completions, [true]);
+  assert.equal(view.navigations[0][0], '/dashboard');
+  assert.equal(view.saves.length, 0);
+});
+test('falha real ao salvar não avança nem libera a dashboard', async () => {
+  const view = renderQuestionnaire([{ id: 'q3', question: 'Quantos inscritos?' }], { failSave: true });
+  await view.form.props.onSubmit({ preventDefault() {} });
+  assert.equal(view.updates.some((update) => update.index === 0), false);
+  assert.equal(view.completions.length, 0);
+  assert.equal(view.navigations.length, 0);
+});

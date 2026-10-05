@@ -7,35 +7,31 @@ import './style/Onboarding.css';
 
 const Onboarding = () => {
   const { questions, loading, error: loadError, retry } = useQuestionnaire();
-  const { reloadQuestionStatus } = useAuth();
+  const { setHasAnsweredQuestions } = useAuth();
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const [answer, setAnswer] = useState('');
   const [saving, setSaving] = useState(false);
-  const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState('');
   const [touched, setTouched] = useState(false);
   const submitting = useRef(false);
   const question = questions[current];
+  // A lista contém apenas IDs sem resposta; cada avanço exige confirmação do backend.
+  const complete = !loading && !loadError && current === questions.length;
   const validation = !answer.trim() ? 'Informe sua resposta para continuar.' : answer.trim().length > 50 ? 'A resposta deve ter no máximo 50 caracteres.' : '';
 
-  const finish = async () => {
-    setFinishing(true);
-    try {
-      if (!await reloadQuestionStatus()) {
-        setError('As respostas enviadas estão salvas, mas ainda há perguntas pendentes. Recarregue as etapas para continuar.');
-        return;
-      }
-      navigate('/dashboard', { replace: true, state: { showGoogleWelcome: true } });
-    } catch {
-      setError('Suas respostas foram salvas. Não foi possível verificar a conclusão do questionário. Clique em Concluir para tentar a verificação novamente.');
-    } finally {
-      setFinishing(false);
-    }
+  const finish = () => {
+    if (!complete) return;
+    setHasAnsweredQuestions(true);
+    navigate('/dashboard', { replace: true, state: { showGoogleWelcome: true } });
   };
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (submitting.current) return;
+    if (complete) {
+      finish();
+      return;
+    }
     setTouched(true);
     if (question && validation) return;
     submitting.current = true;
@@ -47,9 +43,7 @@ const Onboarding = () => {
         setAnswer('');
         setTouched(false);
         setCurrent((value) => value + 1);
-        if (current + 1 < questions.length) return;
       }
-      await finish();
     } catch (requestError: unknown) {
       const failure = requestError as { response?: { status?: number; data?: { message?: string; detail?: string } } };
       const response = failure.response?.data;
@@ -77,9 +71,9 @@ const Onboarding = () => {
           <input id="channel-answer" className="questionnaire-input" value={answer} disabled={saving} onChange={(event) => { setAnswer(event.target.value); setTouched(true); setError(''); }} aria-invalid={touched && Boolean(validation)} aria-describedby={`channel-answer-help${touched && validation ? ' channel-answer-error' : ''}`} placeholder="Digite sua resposta" />
           <p id="channel-answer-help">Responda em até 50 caracteres.</p>
           {touched && validation && <p id="channel-answer-error" className="questionnaire-error" role="alert">{validation}</p>}
-        </> : <p>Suas respostas foram salvas. Continue para acessar a dashboard.</p>}
-        {error && <p className="questionnaire-error" role="alert">{error}</p>}
-        <button className="questionnaire-submit" disabled={saving} type="submit">{finishing ? 'Verificando conclusão...' : saving ? 'Salvando...' : !question || current + 1 === questions.length ? 'Concluir' : 'Continuar'}</button>
+        </> : complete && <p role="status">Todas as perguntas foram respondidas e suas respostas estão salvas. Clique em Concluir para acessar a dashboard.</p>}
+        {!complete && error && <p className="questionnaire-error" role="alert">{error}</p>}
+        <button className="questionnaire-submit" disabled={saving} type="submit">{saving ? 'Salvando...' : complete ? 'Concluir' : current + 1 === questions.length ? 'Salvar resposta' : 'Continuar'}</button>
       </form>}
     </section>
     <p className="questionnaire-note">Suas respostas são salvas a cada etapa.</p>
