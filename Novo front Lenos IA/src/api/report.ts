@@ -1,4 +1,6 @@
+import { logSafeError } from '../utils/safeLogger';
 import api from './api';
+import { API_BASE_URL } from './config';
 
 export type ApiReport = {
   id: string;
@@ -41,7 +43,7 @@ export const ReportService = {
   },
 
   /**
-   * Renomeia relatório no Supabase / API
+   * Renomeia relatório pela API.
    */
   async renameReport(id: string | { id: string; newTitle: string }, newTitle?: string) {
     const reportId = typeof id === 'string' ? id : id.id;
@@ -53,7 +55,7 @@ export const ReportService = {
   },
 
   /**
-   * Deleta um relatório no Supabase / API
+   * Deleta um relatório pela API.
    */
   async deleteReport(id: string | { id: string }) {
     const reportId = typeof id === 'string' ? id : id.id;
@@ -66,16 +68,7 @@ export const ReportService = {
    */
   getReportPdfUrl(id: string | { id: string }) {
     const reportId = typeof id === 'string' ? id : id.id;
-    const getBaseURL = () => {
-      if (import.meta.env.VITE_API_URL) {
-        return import.meta.env.VITE_API_URL;
-      }
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return '';
-      }
-      return 'https://api.lenos-ia.com.br';
-    };
-    return `${getBaseURL()}/v1/user/report/${reportId}/pdf`;
+    return `${API_BASE_URL}/v1/user/report/${encodeURIComponent(reportId)}/pdf`;
   },
 
   /**
@@ -89,7 +82,7 @@ export const ReportService = {
       });
       return response.data;
     } catch (error) {
-      console.error("ReportService: Erro ao baixar PDF como Blob", error);
+      logSafeError("ReportService: Erro ao baixar PDF como Blob", error);
       throw error;
     }
   }

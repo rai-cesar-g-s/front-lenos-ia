@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import React, { useState, useEffect } from 'react';
 import { UserService } from '../api/user';
 import { QuestionService } from '../api/questions';
@@ -37,13 +38,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           try {
             await reloadQuestionStatus();
           } catch (err) {
-            console.error('AuthContext: Falha ao carregar status da pesquisa:', err);
+            logSafeError('AuthContext: Falha ao carregar status da pesquisa:', err);
             setHasAnsweredQuestions(false);
           }
 
           setIsAuthenticated(true);
         } catch (error) {
-          console.error('AuthContext: Falha ao revalidar sessão:', error);
+          logSafeError('AuthContext: Falha ao revalidar sessão:', error);
           localStorage.removeItem('isAuthenticated');
           setIsAuthenticated(false);
           setUser({ name: '' });
@@ -78,13 +79,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         await reloadQuestionStatus();
       } catch (err) {
-        console.error('AuthContext: Falha ao buscar status da pesquisa pós-login:', err);
+        logSafeError('AuthContext: Falha ao buscar status da pesquisa pós-login:', err);
         setHasAnsweredQuestions(false);
       }
 
       setIsAuthenticated(true);
     } catch (profileError) {
-      console.warn('Falha ao recuperar perfil pós-login', profileError);
+      logSafeError('Falha ao recuperar perfil pós-login', profileError);
       window.dispatchEvent(new Event('auth-error'));
       throw new Error('COOKIE_REJECTED', { cause: profileError });
     }
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await UserService.logoutUser();
     } catch (err) {
-      console.warn('API logout falhou ou já estava deslogado', err);
+      logSafeError('API logout falhou ou já estava deslogado', err);
     } finally {
       localStorage.removeItem('isAuthenticated');
       setIsAuthenticated(false);
@@ -111,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const profile = await UserService.getUserProfile();
       setUser(profile as UserProfile);
     } catch (err) {
-      console.error('AuthContext: Falha ao recarregar perfil:', err);
+      logSafeError('AuthContext: Falha ao recarregar perfil:', err);
     }
   };
 
@@ -133,4 +134,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-

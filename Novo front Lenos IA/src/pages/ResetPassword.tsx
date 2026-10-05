@@ -1,20 +1,16 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { FiLock, FiEye, FiEyeOff, FiAlertTriangle, FiCheckCircle, FiLoader } from "react-icons/fi";
+import { FiLock, FiEye, FiEyeOff, FiAlertTriangle, FiCheckCircle } from "react-icons/fi";
 import { UserService } from "../api/user";
-import { supabase } from "../lib/supabase";
 import { validatePassword, validatePasswordConfirmation } from "../utils/passwordValidation";
 import "./style/ResetPassword.css";
 
-type ResetStatus = "checking" | "form" | "success" | "invalid";
+type ResetStatus = "form" | "success" | "invalid";
 
 const ResetPassword = () => {
     const [params] = useSearchParams();
     const token = params.get("token") || "";
-    const tokenHash = params.get("token_hash") || "";
-    const code = params.get("code") || "";
-    const type = params.get("type") || "";
 
     const [password, setPassword] = useState("");
     const [confirmation, setConfirmation] = useState("");
@@ -24,43 +20,8 @@ const ResetPassword = () => {
     const [touched, setTouched] = useState({ password: false, confirmation: false });
     const passwordError = touched.password ? validatePassword(password) : "";
     const confirmationError = touched.confirmation ? validatePasswordConfirmation(password, confirmation) : "";
-    const hasLinkParam = Boolean(token || tokenHash || code);
-    const [linkStatus, setStatus] = useState<ResetStatus>("checking");
-    const status = !hasLinkParam ? "invalid" : token && linkStatus === "checking" ? "form" : linkStatus;
-    const recoveryMode = token ? "token" : "supabase";
-
-    useEffect(() => {
-        let isActive = true;
-
-        if (!hasLinkParam || token) return;
-
-        const validateLink = async () => {
-            try {
-                if (tokenHash) {
-                    const { error: verifyError } = await supabase.auth.verifyOtp({
-                        type: (type || "recovery") as "recovery",
-                        token_hash: tokenHash,
-                    });
-                    if (verifyError) throw verifyError;
-                }
-
-                if (code) {
-                    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-                    if (exchangeError) throw exchangeError;
-                }
-
-                if (isActive) setStatus("form");
-            } catch {
-                if (isActive) setStatus("invalid");
-            }
-        };
-
-        void validateLink();
-
-        return () => {
-            isActive = false;
-        };
-    }, [token, tokenHash, code, type, hasLinkParam]);
+    const [linkStatus, setStatus] = useState<ResetStatus>('form');
+    const status = token ? linkStatus : 'invalid';
 
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -73,20 +34,13 @@ const ResetPassword = () => {
         setError("");
 
         try {
-            if (recoveryMode === "supabase") {
-                const { error: updateError } = await supabase.auth.updateUser({ password });
-                if (updateError) throw updateError;
-            } else {
-                await UserService.resetPassword({ token, password });
-            }
+            await UserService.resetPassword({ token, password });
             setStatus("success");
         } catch (requestError: unknown) {
             const response = (requestError as { response?: { data?: { message?: string; detail?: string } } })?.response?.data;
-            const supabaseMessage = (requestError as { message?: string })?.message;
             setError(
                 response?.message ||
                 response?.detail ||
-                supabaseMessage ||
                 "Este link é inválido ou expirou.",
             );
         } finally {
@@ -98,10 +52,7 @@ const ResetPassword = () => {
                 <Link to="/" className="auth-brand" aria-label="Lenos IA, página inicial">
                     <img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" />
                 </Link>
-        {status === "checking" ? <>
-            <div className="auth-icon reset-alert"><span className="reset-spinner"><FiLoader /></span></div>
-            <h1>Validando seu link</h1><h2>Estamos conferindo o link de recuperação. Isso leva apenas alguns instantes.</h2>
-        </> : status === "invalid" ? <>
+        {status === "invalid" ? <>
             <div className="auth-icon reset-alert reset-alert--danger"><FiAlertTriangle /></div>
             <h1>Link inválido</h1><h2>Este link de recuperação está ausente, expirou ou já foi utilizado.</h2>
             <div className="invalid-card">Para recuperar o acesso, solicite um novo e-mail de recuperação e abra o link pelo navegador em que você fez a solicitação.</div>

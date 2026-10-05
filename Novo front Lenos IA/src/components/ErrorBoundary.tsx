@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
@@ -19,7 +20,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary capturou um erro não tratado:', error, errorInfo);
+    logSafeError('ErrorBoundary capturou um erro não tratado:', error, errorInfo);
   }
 
   public render() {

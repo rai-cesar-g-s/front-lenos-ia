@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./style/Card_Login.css";
@@ -52,7 +53,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
       await login({ email: email.trim(), password });
       navigate("/dashboard");
     } catch (err: unknown) {
-      console.error("Login Error:", err);
+      logSafeError("Login Error:", err);
       const msg = formatErrorMessage(err, "E-mail ou senha incorretos. Verifique suas credenciais.");
       setServerError(msg);
     } finally {

@@ -1,18 +1,11 @@
 import axios from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
+import { API_BASE_URL } from './config';
 
 // Módulo de configuração central da api utilizando axios.
 
-const getBaseURL = () => {
-    if (import.meta.env.VITE_API_URL){
-        return import.meta.env.VITE_API_URL;
-    }
-    // Always use the production API URL; if a proxy is configured it will intercept.
-    return 'https://api.lenos-ia.com.br';
-}
-
 const api = axios.create({
-    baseURL: getBaseURL(),
+    baseURL: API_BASE_URL,
     timeout: 10000,
     headers: {
         'Content-type': 'application/json',

@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -123,7 +124,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
             // Redireciona somente após o backend confirmar criação com sucesso
             navigate("/confirmacao-de-email");
         } catch (error: unknown) {
-            console.error("Registration Error:", error);
+            logSafeError("Registration Error:", error);
             const isTimeout = axios.isAxiosError(error)
                 && (error.code === "ECONNABORTED" || error.code === "ETIMEDOUT");
             const isServiceUnavailable = axios.isAxiosError(error)

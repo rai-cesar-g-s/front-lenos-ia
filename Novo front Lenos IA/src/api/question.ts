@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import api from './api';
 
 /**
@@ -10,7 +11,7 @@ export const QuestionService = {
       const response = await api.post('/v1/create-question', data);
       return response.data;
     } catch (error) {
-      console.error("QuestionService: Erro ao criar pergunta", error);
+      logSafeError("QuestionService: Erro ao criar pergunta", error);
       throw error;
     }
   },
@@ -20,7 +21,7 @@ export const QuestionService = {
       const response = await api.get('/v1/user/answers-questions');
       return response.data;
     } catch (error) {
-      console.error("QuestionService: Erro ao buscar questionário e respostas", error);
+      logSafeError("QuestionService: Erro ao buscar questionário e respostas", error);
       throw error;
     }
   }

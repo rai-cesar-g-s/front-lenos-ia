@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import api from "./api";
 
 type AnswerQuestionsProps = {
@@ -19,7 +20,7 @@ export const AnswerService = {
             return response.data;
         }
         catch (error) {
-            console.error("AnswerService: Erro ao submeter resposta", error);
+            logSafeError("AnswerService: Erro ao submeter resposta", error);
             throw error;
         }
     },
@@ -30,7 +31,7 @@ export const AnswerService = {
             return response.data;
         }
         catch (error) {
-            console.error("AnswerService: Erro ao atualizar resposta", error);
+            logSafeError("AnswerService: Erro ao atualizar resposta", error);
             throw error;
         }
     }

@@ -1,4 +1,6 @@
+import { logSafeError } from '../utils/safeLogger';
 import api from './api';
+import { API_BASE_URL } from './config';
 
 /**
  * Serviços relacionados às requisições do Usuário (Autenticação e Perfil).
@@ -68,7 +70,7 @@ export const UserService = {
       const response = await api.post('/v1/user/register', userData, { timeout: 60000 });
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao registrar usuário", error);
+      logSafeError("UserService: Falha ao registrar usuário", error);
       throw error;
     }
   },
@@ -83,7 +85,7 @@ export const UserService = {
       localStorage.setItem('isAuthenticated', 'true');
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao realizar login", error);
+      logSafeError("UserService: Falha ao realizar login", error);
       throw error;
     }
   },
@@ -98,7 +100,7 @@ export const UserService = {
       localStorage.removeItem('isAuthenticated');
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao realizar logout", error);
+      logSafeError("UserService: Falha ao realizar logout", error);
       throw error;
     } finally {
       localStorage.removeItem('isAuthenticated');
@@ -115,7 +117,7 @@ export const UserService = {
       localStorage.setItem('isAuthenticated', 'true');
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao atualizar token", error);
+      logSafeError("UserService: Falha ao atualizar token", error);
       throw error;
     }
   },
@@ -129,7 +131,7 @@ export const UserService = {
       const response = await api.get('/v1/user/me');
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao buscar perfil do usuário", error);
+      logSafeError("UserService: Falha ao buscar perfil do usuário", error);
       throw error;
     }
   },
@@ -143,7 +145,7 @@ export const UserService = {
       const response = await api.put('/v1/user', data);
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao atualizar dados", error);
+      logSafeError("UserService: Falha ao atualizar dados", error);
       throw error;
     }
   },
@@ -157,7 +159,7 @@ export const UserService = {
       const response = await api.put('/v1/user/password', data);
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao atualizar senha", error);
+      logSafeError("UserService: Falha ao atualizar senha", error);
       throw error;
     }
   },
@@ -172,7 +174,7 @@ export const UserService = {
       localStorage.removeItem('isAuthenticated');
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao excluir conta", error);
+      logSafeError("UserService: Falha ao excluir conta", error);
       throw error;
     }
   },
@@ -186,7 +188,7 @@ export const UserService = {
       const response = await api.post(`/v1/user/verify-email?token=${encodeURIComponent(token)}`);
       return response.data;
     } catch (error) {
-      console.error("UserService: Falha ao verificar email", error);
+      logSafeError("UserService: Falha ao verificar email", error);
       throw error;
     }
   },
@@ -196,7 +198,6 @@ export const UserService = {
    * Endpoint OpenAPI: GET /v1/oauth2/login
    */
   getOAuth2LoginUrl() {
-    const baseURL = import.meta.env.VITE_API_URL || 'https://api.lenos-ia.com.br';
-    return `${baseURL}/v1/oauth2/login`;
+    return `${API_BASE_URL}/v1/oauth2/login`;
   }
 };

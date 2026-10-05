@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { ReportService } from '../api/report';
@@ -29,7 +30,7 @@ export function useDashboard() {
         status: report.status,
       })));
     } catch (err) {
-      console.error('useDashboard: Erro ao buscar relatórios:', err);
+      logSafeError('useDashboard: Erro ao buscar relatórios:', err);
       setReports([]);
       setReportsError('Não foi possível carregar seus relatórios. Tente novamente.');
     } finally {
@@ -86,7 +87,7 @@ export function useDashboard() {
             setErrorMsg('Falha ao processar os comentários do vídeo. Tente outro link.');
           }
         } catch (pollErr) {
-          console.error('Polling error:', pollErr);
+          logSafeError('Polling error:', pollErr);
         }
 
         if (attempts >= maxAttempts) {
@@ -98,7 +99,7 @@ export function useDashboard() {
         }
       }, 2000);
     } catch (error: unknown) {
-      console.error('Erro ao gerar relatório:', error);
+      logSafeError('Erro ao gerar relatório:', error);
       const errObj = error as { response?: { data?: { detail?: string } } };
       setGenerationStatus('failed');
       setIsGenerating(false);
@@ -128,7 +129,7 @@ export function useDashboard() {
       await ReportService.renameReport(id, trimmed);
       await loadReports();
     } catch (error) {
-      console.error('Erro ao renomear:', error);
+      logSafeError('Erro ao renomear:', error);
       setErrorMsg('Não foi possível renomear o relatório. Tente novamente.');
     }
   };
@@ -139,7 +140,7 @@ export function useDashboard() {
       await loadReports();
       if (selectedReportId === id) setSelectedReportId(null);
     } catch (error) {
-      console.error('Erro ao deletar:', error);
+      logSafeError('Erro ao deletar:', error);
       setErrorMsg('Não foi possível excluir o relatório. Tente novamente.');
     }
   };
@@ -165,7 +166,7 @@ export function useDashboard() {
       }
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Erro ao baixar PDF:', error);
+      logSafeError('Erro ao baixar PDF:', error);
       alert('Não foi possível baixar o relatório. Tente novamente.');
     }
   };

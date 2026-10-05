@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -107,7 +108,7 @@ export const Settings: React.FC = () => {
       await reloadUserProfile();
       showToast('Perfil atualizado com sucesso!');
     } catch (err) {
-      console.error(err);
+      logSafeError(err);
       showToast('Não foi possível atualizar o perfil. Tente novamente.');
     }
   };
@@ -122,7 +123,7 @@ export const Settings: React.FC = () => {
       await reloadUserProfile();
       showToast('Telefone atualizado com sucesso!');
     } catch (err) {
-      console.error(err);
+      logSafeError(err);
       showToast('Não foi possível atualizar o telefone. Tente novamente.');
     }
   };
@@ -137,7 +138,7 @@ export const Settings: React.FC = () => {
       await reloadUserProfile();
       showToast('Endereço de e-mail atualizado!');
     } catch (err) {
-      console.error(err);
+      logSafeError(err);
       showToast('Não foi possível atualizar o e-mail. Tente novamente.');
     }
   };
@@ -159,7 +160,7 @@ export const Settings: React.FC = () => {
       setNewPassword('');
       showToast('Senha alterada com sucesso!');
     } catch (err) {
-      console.error(err);
+      logSafeError(err);
       showToast('Não foi possível alterar a senha. Confira a senha atual e tente novamente.');
     }
   };
@@ -172,7 +173,7 @@ export const Settings: React.FC = () => {
       await logout();
       navigate('/');
     } catch (error) {
-      console.error(error);
+      logSafeError(error);
       showToast('Não foi possível excluir a conta. Tente novamente.');
     }
   };

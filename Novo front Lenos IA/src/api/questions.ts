@@ -1,3 +1,4 @@
+import { logSafeError } from '../utils/safeLogger';
 import api from './api';
 
 type AnswerQuestionProps = {
@@ -73,7 +74,7 @@ export const QuestionService = {
       const response = await api.get('/v1/user/answers');
       return response.data;
     } catch (error) {
-      console.error("Erro ao buscar perguntas do usuário", error);
+      logSafeError("Erro ao buscar perguntas do usuário", error);
       throw error;
     }
   },
@@ -96,7 +97,7 @@ export const QuestionService = {
       const response = await api.post('/v1/user/answer', data);
       return response.data;
     } catch (error) {
-      console.error("Erro ao responder a pergunta", error);
+      logSafeError("Erro ao responder a pergunta", error);
       throw error;
     }
   },
@@ -107,7 +108,7 @@ export const QuestionService = {
       const response = await api.put(`/v1/user/answer/${encodeURIComponent(data.answer_id)}`, { new_answer: data.new_answer });
       return response.data;
     } catch (error) {
-      console.error("Erro ao atualizar a resposta", error);
+      logSafeError("Erro ao atualizar a resposta", error);
       throw error;
     }
   },

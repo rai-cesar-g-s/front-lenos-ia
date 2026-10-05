@@ -9,7 +9,7 @@ function loadModule(file, imports, globals = {}) {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
   }).outputText;
   const exports = {};
-  vm.runInNewContext(code, { exports, require: (name) => imports[name], console: { error() {} }, ...globals });
+  vm.runInNewContext(code, { exports, require: (name) => imports[name] || { logSafeError() {} }, console: { error() {} }, ...globals });
   return exports;
 }
 function service(answers, questions = [{ id: 'q1', description: 'Qual seu nicho?' }, { id: 'q2', description: 'Qual seu objetivo?' }]) {
@@ -174,11 +174,36 @@ test('401 renova a sessão uma única vez para requisições paralelas', async (
   };
   const source = fs.readFileSync('src/api/api.ts', 'utf8').replaceAll('import.meta.env', '({})');
   const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
-  vm.runInNewContext(code, { exports: {}, require: () => ({ create: () => api }), localStorage: { removeItem() {} }, window: { dispatchEvent() {} }, Event: class {} });
+  vm.runInNewContext(code, { exports: {}, require: (name) => name === './config' ? { API_BASE_URL: 'https://api.example.test' } : { create: () => api }, localStorage: { removeItem() {} }, window: { dispatchEvent() {} }, Event: class {} });
   await Promise.all([
     rejection({ response: { status: 401 }, config: { url: '/v1/user/reports' } }),
     rejection({ response: { status: 401 }, config: { url: '/v1/user/answers' } }),
   ]);
   assert.equal(refreshes, 1);
   assert.equal(retries, 2);
+});
+
+
+test('logs não incluem senhas, tokens ou dados do erro Axios', () => {
+  let logged;
+  const { logSafeError } = loadModule('src/utils/safeLogger.ts', {}, { console: { error(...args) { logged = args; } } });
+  logSafeError('Falha no login', { response: { status: 401, data: { token: 'secret-token' } }, config: { data: '{"password":"secret-password"}' } });
+  const output = JSON.stringify(logged);
+  assert.equal(output.includes('secret-token'), false);
+  assert.equal(output.includes('secret-password'), false);
+  assert.equal(output.includes('401'), true);
+});
+test('configuração exige env, HTTPS e URL sem credenciais', () => {
+  const source = fs.readFileSync('src/api/config.ts', 'utf8');
+  const evaluate = (url) => {
+    const code = ts.transpileModule(source.replaceAll('import.meta.env', 'frontendEnv'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+    const exports = {};
+    vm.runInNewContext(code, { exports, URL, frontendEnv: { VITE_API_URL: url } });
+    return exports.API_BASE_URL;
+  };
+  assert.throws(() => evaluate(undefined), /VITE_API_URL/);
+  assert.throws(() => evaluate('http://api.example.test'), /HTTPS/);
+  assert.throws(() => evaluate('https://user:password@api.example.test'), /credenciais/);
+  assert.equal(evaluate('http://localhost:8000/'), 'http://localhost:8000');
+  assert.equal(evaluate('https://api.example.test/'), 'https://api.example.test');
 });
