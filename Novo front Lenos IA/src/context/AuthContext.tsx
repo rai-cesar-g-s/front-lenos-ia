@@ -17,7 +17,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserProfile>({ name: 'Carregando...' });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [hasAnsweredQuestions, setHasAnsweredQuestions] = useState(true);
+  const [hasAnsweredQuestions, setHasAnsweredQuestions] = useState(false);
+  const reloadQuestionStatus = async () => {
+    setHasAnsweredQuestions(false);
+    const complete = (await QuestionService.getPendingQuestions()).length === 0;
+    setHasAnsweredQuestions(complete);
+    return complete;
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -29,11 +35,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(profile as UserProfile);
 
           try {
-            const answers = await QuestionService.getUserQuestions();
-            setHasAnsweredQuestions(Boolean(answers && answers.length > 0));
+            await reloadQuestionStatus();
           } catch (err) {
             console.error('AuthContext: Falha ao carregar status da pesquisa:', err);
-            setHasAnsweredQuestions(true);
+            setHasAnsweredQuestions(false);
           }
 
           setIsAuthenticated(true);
@@ -56,7 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('isAuthenticated');
       setIsAuthenticated(false);
       setUser({ name: '' });
-      setHasAnsweredQuestions(true);
+      setHasAnsweredQuestions(false);
     };
 
     window.addEventListener('auth-error', handleAuthError);
@@ -71,11 +76,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(profile as UserProfile);
 
       try {
-        const answers = await QuestionService.getUserQuestions();
-        setHasAnsweredQuestions(Boolean(answers && answers.length > 0));
+        await reloadQuestionStatus();
       } catch (err) {
         console.error('AuthContext: Falha ao buscar status da pesquisa pós-login:', err);
-        setHasAnsweredQuestions(true);
+        setHasAnsweredQuestions(false);
       }
 
       setIsAuthenticated(true);
@@ -97,7 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('isAuthenticated');
       setIsAuthenticated(false);
       setUser({ name: '' });
-      setHasAnsweredQuestions(true);
+      setHasAnsweredQuestions(false);
       window.dispatchEvent(new Event('auth-error'));
     }
   };
@@ -121,6 +125,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         hasAnsweredQuestions,
         setHasAnsweredQuestions,
+        reloadQuestionStatus,
         reloadUserProfile,
       }}
     >

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { InternalAxiosRequestConfig } from 'axios';
 
 // Módulo de configuração central da api utilizando axios.
 
@@ -6,9 +7,7 @@ const getBaseURL = () => {
     if (import.meta.env.VITE_API_URL){
         return import.meta.env.VITE_API_URL;
     }
-    if (window.location.hostname === 'localhost' || window.location.hostname == "127.0.0.1") {
-        return ''; // URL relativa ativa o Proxy do Vite em ambiente local
-    }
+    // Always use the production API URL; if a proxy is configured it will intercept.
     return 'https://api.lenos-ia.com.br';
 }
 
@@ -21,20 +20,36 @@ const api = axios.create({
     withCredentials: true
 });
 
-// Interceptor Global para respostas de autenticação (trata o retorno 401 do backend)
+let refreshRequest: Promise<unknown> | null = null;
+
+// Renova a sessão uma vez e repete a requisição que falhou, sem ciclos de renovação.
 
 api.interceptors.response.use(
     (response) => {
         return response;
     },
-    (error) => {
+    async (error) => {
+        const request = error.config as (InternalAxiosRequestConfig & { sessionRetried?: boolean }) | undefined;
+        const isAuthRequest = /\/user\/(login|refresh|logout|register|forgot-password|reset-password)(?:\?|$)/.test(request?.url || '');
+        if (error.response?.status === 401 && request && !isAuthRequest && !request.sessionRetried) {
+            request.sessionRetried = true;
+            try {
+                if (!refreshRequest) {
+                    refreshRequest = api.post('/v1/user/refresh').finally(() => { refreshRequest = null; });
+                }
+                await refreshRequest;
+                return api.request(request);
+            } catch {
+                // A falha definitiva é tratada abaixo pelo contexto de autenticação.
+            }
+        }
         // Se a segurança do back-end chutar o usuário (Token inválido, expirado ou sem cookie)
         // Mas se a requisição atual não for a tentativa inicial de login! (para podermos mostrar o erro "senha inválida" na tela)
         if (
             error.response &&
             error.response.status === 401 &&
             error.config &&
-            !error.config.url.includes('/login')
+            !isAuthRequest
         ) {
             localStorage.removeItem('isAuthenticated'); // Limpa a UI
             // Emite um evento silencioso para o AuthContext lidar, em vez de dar refreseh hostil na página

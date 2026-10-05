@@ -1,0 +1,15 @@
+.card_google_oauth { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; min-width: 0; box-sizing: border-box; text-align: center; }
+.card_google_oauth .google-connect-icon { font-size: 32px; color: #4285f4; }
+.card_google_oauth h3 { margin: 0; color: #101729; font-size: 18px; }
+.card_google_oauth p { margin: 0; color: #607286; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.card_google_oauth .primary-action { max-width: 100%; box-sizing: border-box; white-space: normal; }
+.card_google_oauth .primary-action:disabled { opacity: .65; cursor: wait; }
+.google-welcome-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(16,23,41,.45); }
+.google-welcome-dialog { width: min(calc(100% - 32px), 440px); max-height: calc(100dvh - 40px); overflow: auto; box-sizing: border-box; padding: 28px; border: 1px solid #dfe5e9; border-radius: 16px; background: white; text-align: center; }
+.google-welcome-dialog::backdrop { background: rgba(16,23,41,.45); }
+.google-welcome-dialog h2 { margin-top: 0; font-size: 22px; }
+.google-welcome-dialog > p { color: #607286; line-height: 1.6; }
+.google-welcome-dismiss { margin-top: 20px; padding: 10px 16px; background: transparent; border: 1px solid #dfe5e9; border-radius: 8px; cursor: pointer; font: inherit; }
+.card_google_oauth .youtube-connected-icon { font-size: 32px; color: #75aa7e; }
+.google-connect-button { padding: 12px 20px; max-width: 100%; border: 0; border-radius: 8px; background: #75aa7e; color: white; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.google-connect-button:disabled { opacity: .65; cursor: wait; }

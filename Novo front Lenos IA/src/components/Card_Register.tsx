@@ -5,6 +5,7 @@ import "./style/Card_Register.css";
 import { FiMail, FiPhone, FiUser, FiLock, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
 import { UserService } from "../api/user";
 import { formatErrorMessage } from "../utils/errorMessage";
+import { validatePassword, validatePasswordConfirmation } from "../utils/passwordValidation";
 
 interface CardRegisterProps {
     name?: string;
@@ -70,12 +71,10 @@ const Card_Register: React.FC<CardRegisterProps> = ({
             if (digits.length !== 11) return "Informe um telefone válido com DDD e 9 dígitos.";
         }
         if (field === "password") {
-            if (!value) return "Informe uma senha.";
-            if (value.length < 8 || value.length > 20) return "A senha deve conter entre 8 e 20 caracteres.";
+            return validatePassword(value);
         }
         if (field === "confirmation_password") {
-            if (!value) return "Confirme a sua senha.";
-            if (value !== formData.password) return "As senhas não coincidem.";
+            return validatePasswordConfirmation(formData.password, value);
         }
         return "";
     };

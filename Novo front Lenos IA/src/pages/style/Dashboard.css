@@ -169,6 +169,8 @@
 }
 
 .report-info {
+  text-align: left;
+  min-width: 0;
   flex: 1;
   margin: 0 14px;
   display: flex;

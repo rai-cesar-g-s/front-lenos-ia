@@ -30,14 +30,36 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 820px)').matches,
+    () => {
+      if (typeof window === 'undefined') return false;
+
+      try {
+        const savedState = window.localStorage.getItem('lenos-sidebar-collapsed');
+        if (savedState !== null) return savedState === 'true';
+      } catch {
+        // Use the viewport default when browser storage is unavailable.
+      }
+
+      return window.matchMedia('(max-width: 820px)').matches;
+  },
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const supportDialogRef = useRef<HTMLDialogElement>(null);
 
   const userName = typeof user?.name === 'string' && user.name ? user.name : 'Usuário';
   const userEmail = typeof user?.email === 'string' ? user.email : '';
   const initial = userName.charAt(0).toUpperCase();
+
+  const toggleSidebar = () => {
+    const nextState = !isSidebarCollapsed;
+    try {
+      window.localStorage.setItem('lenos-sidebar-collapsed', String(nextState));
+    } catch {
+      // The current page can still toggle when browser storage is unavailable.
+    }
+    setIsSidebarCollapsed(nextState);
+  };
 
   const handleLogout = async () => {
     setIsDropdownOpen(false);
@@ -62,7 +84,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
         <button
           type="button"
           className="sidebar-toggle"
-          onClick={() => setIsSidebarCollapsed((collapsed) => !collapsed)}
+          onClick={toggleSidebar}
           aria-label={isSidebarCollapsed ? 'Expandir barra lateral' : 'Recolher barra lateral'}
           aria-expanded={!isSidebarCollapsed}
           title={isSidebarCollapsed ? 'Expandir barra lateral' : 'Recolher barra lateral'}
@@ -85,6 +107,10 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
                 href={path}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(event) => {
+                  event.preventDefault();
+                  supportDialogRef.current?.showModal();
+                }}
                 aria-label={label}
                 title={isSidebarCollapsed ? label : undefined}
               >
@@ -161,6 +187,15 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
 
         <main className="app-content">{children}</main>
       </div>
+      <dialog ref={supportDialogRef} className="support-confirm-dialog" aria-labelledby="support-confirm-title" aria-describedby="support-confirm-description">
+        <FiHelpCircle className="support-confirm-icon" aria-hidden="true" />
+        <h2 id="support-confirm-title">Abrir página de suporte?</h2>
+        <p id="support-confirm-description">Você será direcionado à página de suporte em uma nova aba. Sua página atual permanecerá aberta.</p>
+        <div className="support-confirm-actions">
+          <button type="button" autoFocus onClick={() => supportDialogRef.current?.close()}>Cancelar</button>
+          <a href="/suporte" target="_blank" rel="noopener noreferrer" onClick={() => supportDialogRef.current?.close()}>Ir para o suporte</a>
+        </div>
+      </dialog>
     </div>
   );
 };

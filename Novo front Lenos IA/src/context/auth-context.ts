@@ -19,6 +19,7 @@ export type AuthContextType = {
   logout: () => Promise<void>;
   setHasAnsweredQuestions: (value: boolean) => void;
   reloadUserProfile: () => Promise<void>;
+  reloadQuestionStatus: () => Promise<boolean>;
 };
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

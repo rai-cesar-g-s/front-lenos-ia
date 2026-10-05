@@ -11,7 +11,8 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
         bypass: (request) => {
-          if (request.method === 'GET' && request.url?.split('?')[0] === '/v1/verify-email') {
+          const pagePaths = ['/v1/verify-email', '/v1/reset-password', '/v1/user/reset-password']
+          if (request.method === 'GET' && pagePaths.includes(request.url?.split('?')[0] || '')) {
             return '/index.html'
           }
         },

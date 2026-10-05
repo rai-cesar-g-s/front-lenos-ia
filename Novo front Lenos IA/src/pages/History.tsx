@@ -2,9 +2,6 @@ import React, { useState, useMemo } from 'react';
 import {
   FiSearch,
   FiFilter,
-  FiCheckCircle,
-  FiClock,
-  FiAlertCircle,
   FiArrowRight,
 } from 'react-icons/fi';
 import AppShell from '../components/AppShell';
@@ -41,7 +38,7 @@ export const History: React.FC = () => {
 
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
@@ -102,10 +99,6 @@ export const History: React.FC = () => {
         ) : (
           filteredReports.map((report: ReportItem) => {
             const ytId = getYouTubeId(report.video_url);
-            const status = report.status?.toLowerCase();
-            const isPending = status === 'pending' || status === 'processing';
-            const isFailed = status === 'failed';
-            const isCompleted = status === 'done' || status === 'completed';
 
             return (
               <div
@@ -126,28 +119,11 @@ export const History: React.FC = () => {
                 <div className="history-main-info">
                   <h3 className="history-title">{report.title || 'Análise sem título'}</h3>
                   <div className="history-meta">
-                    <span className="channel-name">{report.status}</span>
-                    <span className="meta-separator">·</span>
                     <span className="history-video-url">{report.video_url}</span>
                   </div>
                 </div>
 
                 <div className="history-badges-actions">
-                  {isPending ? (
-                    <span className="status-badge pending">
-                      <FiClock /> Em fila
-                    </span>
-                  ) : isFailed ? (
-                    <span className="status-badge failed">
-                      <FiAlertCircle /> Erro
-                    </span>
-                  ) : isCompleted ? (
-                    <span className="status-badge completed">
-                      <FiCheckCircle /> Concluída
-                    </span>
-                  ) : (
-                    <span className="status-badge">{report.status}</span>
-                  )}
 
                   <FiArrowRight className="history-row-arrow" />
                 </div>

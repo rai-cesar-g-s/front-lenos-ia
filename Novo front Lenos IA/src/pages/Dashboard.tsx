@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FiBarChart2,
   FiMessageSquare,
   FiThumbsUp,
   FiTrendingUp,
-  FiSearch,
   FiArrowRight,
 } from 'react-icons/fi';
 import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
 import { ReportDetailModal, type ReportItem } from '../components/ReportDetailModal';
 import './style/Dashboard.css';
-
+import Card_GoogleOAuth from '../components/Card_GoogleOAuth';
+import GoogleWelcome from '../components/GoogleWelcome';
 export const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
+  const [showWelcome, setShowWelcome] = useState(Boolean(location.state?.showGoogleWelcome));
   const {
     user,
     reports,
@@ -44,7 +45,7 @@ export const Dashboard: React.FC = () => {
 
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
@@ -145,7 +146,6 @@ export const Dashboard: React.FC = () => {
                     )}
                     <div className="report-info">
                       <strong>{report.title || 'Análise de vídeo'}</strong>
-                      <small>{report.status}</small>
                     </div>
                     <div className="report-action-area">
                       <FiArrowRight className="row-arrow" />
@@ -159,18 +159,11 @@ export const Dashboard: React.FC = () => {
 
         {/* Right Panel: Call to Action */}
         <section className="dashboard-panel action-panel">
-          <h2>Comece agora</h2>
-          <p>Analise um novo vídeo e descubra insights em minutos.</p>
-
-          <button className="cta-btn primary" onClick={() => navigate('/analise')}>
-            <FiSearch /> <span>Analisar novo vídeo</span>
-          </button>
-
-          <button className="cta-btn secondary" onClick={() => navigate('/insights')}>
-            Ver insights globais
-          </button>
+          <Card_GoogleOAuth />
         </section>
       </div>
+
+      {showWelcome && <GoogleWelcome onClose={() => setShowWelcome(false)} />}
 
       {/* Report Modal */}
       {activeReportModal && (
