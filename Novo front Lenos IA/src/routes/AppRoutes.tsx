@@ -115,6 +115,7 @@ const AppRoutes = () => {
       <Route path="/sobre" element={<About />} />
       <Route path="/confirmacao-de-email" element={<ConfirmationEmail />} />
       <Route path="/v1/verify-email" element={<ConfirmationEmail />} />
+      <Route path="/v1/user/verify-email" element={<ConfirmationEmail />} />
       <Route path="/error" element={<ErrorPage />} />
       <Route path="/perguntas-frequentes" element={<Faq />} />
       <Route path="/recuperacao-de-senha" element={<ForgotPassword />} />
