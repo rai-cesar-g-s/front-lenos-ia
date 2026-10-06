@@ -68,7 +68,7 @@ export const Support: React.FC = () => {
           <div className="support-card-content">
             <h3>Central de ajuda</h3>
             <p>Artigos e tutoriais</p>
-            <Link className="support-contact-detail" to="/perguntas-frequentes">Acesse a base de conhecimento</Link>
+            <Link className="support-contact-detail" to="/faq">Acesse a base de conhecimento</Link>
           </div>
         </div>
       </div>

@@ -88,7 +88,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
         <div className="card">
           <div className="login-label-row">
             <h3>Senha <span>*</span></h3>
-            <Link to="/recuperacao-de-senha">Esqueci minha senha</Link>
+            <Link to="/forgot-password">Esqueci minha senha</Link>
           </div>
           <label className={errors.password ? "has-error" : ""}>
             <FiLock aria-hidden="true" />
@@ -147,7 +147,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
         <div className="anchor-links">
           <span>
             Não tem uma conta?{" "}
-            <Link to="/cadastramento" className="anchor-link">
+            <Link to="/register" className="anchor-link">
               <span>Criar conta</span>
             </Link>
           </span>

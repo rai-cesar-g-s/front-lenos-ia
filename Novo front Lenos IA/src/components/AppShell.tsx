@@ -19,11 +19,11 @@ import './style/AppShellExtras.css';
 
 const navigation = [
   { label: 'Dashboard', path: '/dashboard', icon: FiGrid },
-  { label: 'Analisar vídeo', path: '/analise', icon: FiSearch },
-  { label: 'Histórico', path: '/historico', icon: FiClock },
+  { label: 'Analisar vídeo', path: '/analyze', icon: FiSearch },
+  { label: 'Histórico', path: '/history', icon: FiClock },
   { label: 'Insights', path: '/insights', icon: FiCompass },
   { label: 'Configurações', path: '/settings', icon: FiSettings },
-  { label: 'Suporte', path: '/suporte', icon: FiHelpCircle },
+  { label: 'Suporte', path: '/support', icon: FiHelpCircle },
 ];
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => {
@@ -101,7 +101,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
 
         <nav className="app-nav">
           {navigation.map(({ label, path, icon: Icon }) => (
-            path === '/suporte' ? (
+            path === '/support' ? (
               <a
                 key={path}
                 href={path}
@@ -135,7 +135,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
         <div className="sidebar-footer">
           <button
             className="new-analysis-btn"
-            onClick={() => navigate('/analise')}
+            onClick={() => navigate('/analyze')}
             aria-label="Nova análise"
             title={isSidebarCollapsed ? 'Nova análise' : undefined}
           >
@@ -193,7 +193,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
         <p id="support-confirm-description">Você será direcionado à página de suporte em uma nova aba. Sua página atual permanecerá aberta.</p>
         <div className="support-confirm-actions">
           <button type="button" autoFocus onClick={() => supportDialogRef.current?.close()}>Cancelar</button>
-          <a href="/suporte" target="_blank" rel="noopener noreferrer" onClick={() => supportDialogRef.current?.close()}>Ir para o suporte</a>
+          <a href="/support" target="_blank" rel="noopener noreferrer" onClick={() => supportDialogRef.current?.close()}>Ir para o suporte</a>
         </div>
       </dialog>
     </div>

@@ -1,5 +1,6 @@
 import { logSafeError } from '../utils/safeLogger';
 import api from './api';
+import { validatePassword } from '../utils/passwordValidation';
 import { API_BASE_URL } from './config';
 
 /**
@@ -155,6 +156,8 @@ export const UserService = {
    * Endpoint OpenAPI: PUT /v1/user/password
    */
   async updatePassword(data: UpdatePasswordData) {
+    const passwordError = validatePassword(data.new_password);
+    if (passwordError) throw new Error(passwordError);
     try {
       const response = await api.put('/v1/user/password', data);
       return response.data;

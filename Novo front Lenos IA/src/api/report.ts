@@ -1,5 +1,6 @@
 import { logSafeError } from '../utils/safeLogger';
 import api from './api';
+import { completeReportDetails } from '../utils/reportDetails';
 import { API_BASE_URL } from './config';
 
 export type ApiReport = {
@@ -8,6 +9,7 @@ export type ApiReport = {
   url: string;
   report: string;
   status: string;
+  created_at?: string;
   processed_comments: number;
   processed_comments_positive: number;
   processed_comments_negative: number;
@@ -24,16 +26,13 @@ export const ReportService = {
    */
   async getReports(): Promise<ApiReport[]> {
     const response = await api.get<ApiReport[]>('/v1/user/reports');
-    // The list already provides counts. Fetch individual details only if a count is missing.
+    // Fetch details when the list omits counts or a valid creation timestamp.
     const reports = response.data;
     const result: ApiReport[] = [];
     for (let offset = 0; offset < reports.length; offset += 5) {
-      const batch = await Promise.all(reports.slice(offset, offset + 5).map(async (report) => {
-        const hasCounts = [report.processed_comments, report.processed_comments_positive,
-          report.processed_comments_negative].every(value => Number.isSafeInteger(value) && value >= 0);
-        if (hasCounts || !['done', 'completed'].includes(report.status)) return report;
-        return ReportService.getReportById(report.id);
-      }));
+      const batch = await Promise.all(reports.slice(offset, offset + 5).map(report =>
+        completeReportDetails(report, id => ReportService.getReportById(id))
+      ));
       result.push(...batch);
     }
     return result;

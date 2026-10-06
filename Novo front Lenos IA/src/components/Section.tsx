@@ -8,12 +8,12 @@ interface SectionProps {
     update: string;
 };
 
-const Section: React.FC<SectionProps> = ({image, title, update, children}) => {
+const Section: React.FC<SectionProps> = ({image, update, children}) => {
     return (
         <div className="page">
             <div className="section-image">{image}</div>
 
-            <title>{title}</title>
+            <title>Lenos IA</title>
 
             {children}
 

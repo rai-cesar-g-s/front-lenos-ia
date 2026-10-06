@@ -1,4 +1,7 @@
 import { FiThumbsUp, FiThumbsDown, FiBarChart2 } from 'react-icons/fi';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import '../components/style/ReportMarkdown.css';
 import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
 import { getCommentPercentage, isCompletedReport } from '../utils/reportMetrics';
@@ -47,7 +50,7 @@ export const Insights: React.FC = () => {
           : completed.map(report => (
             <article className="impact-card-item" key={report.id}>
               <h4>{report.title || 'Análise de vídeo'}</h4>
-              <p style={{ whiteSpace: 'pre-wrap' }}>{report.report || 'Análise não fornecida pela API.'}</p>
+              <div className="report-markdown insights-report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{report.report || 'Análise não fornecida pela API.'}</ReactMarkdown></div>
             </article>
           ))}
       </section>

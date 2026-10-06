@@ -56,7 +56,7 @@ const ResetPassword = () => {
             <div className="auth-icon reset-alert reset-alert--danger"><FiAlertTriangle /></div>
             <h1>Link inválido</h1><h2>Este link de recuperação está ausente, expirou ou já foi utilizado.</h2>
             <div className="invalid-card">Para recuperar o acesso, solicite um novo e-mail de recuperação e abra o link pelo navegador em que você fez a solicitação.</div>
-            <Link className="reset-link" to="/recuperacao-de-senha">Solicitar novo link</Link>
+            <Link className="reset-link" to="/forgot-password">Solicitar novo link</Link>
         </> : status === "success" ? <>
             <div className="auth-icon reset-alert reset-alert--success"><FiCheckCircle /></div><h1>Senha redefinida</h1><h2>Sua senha foi atualizada com sucesso. Já pode entrar na sua conta.</h2>
             <Link className="reset-link" to="/login">Entrar</Link>

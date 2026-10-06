@@ -1,0 +1,11 @@
+.report-markdown { text-align: left; overflow-wrap: anywhere; min-width: 0; }
+.report-markdown > :first-child { margin-top: 0; }
+.report-markdown > :last-child { margin-bottom: 0; }
+.report-markdown h1, .report-markdown h2, .report-markdown h3, .report-markdown h4 { display: block; color: inherit; font-size: 1.1em; margin: 16px 0 8px; }
+.report-markdown p { margin: 8px 0; }
+.report-markdown ul, .report-markdown ol { padding-left: 22px; }
+.report-markdown table { display: block; overflow-x: auto; border-collapse: collapse; max-width: 100%; margin: 12px 0; }
+.report-markdown th, .report-markdown td { border: 1px solid #dfe5e9; padding: 6px 10px; }
+.report-markdown pre { overflow-x: auto; padding: 10px; background: #f8fafb; }
+.report-markdown blockquote { margin-left: 0; padding-left: 12px; border-left: 3px solid #dfe5e9; }
+.report-markdown a { color: #4d8960; }

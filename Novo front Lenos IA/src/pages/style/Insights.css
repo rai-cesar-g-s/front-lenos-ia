@@ -194,3 +194,6 @@
     grid-template-columns: 1fr;
   }
 }
+
+.insights-report-markdown { font-size: 11px; color: #607286; line-height: 1.5; }
+.insights-report-markdown p { margin: 8px 0; }

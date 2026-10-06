@@ -70,8 +70,8 @@ const Home = () => {
             você tomar decisões com confiança.
           </h3>
           <div className="buttons">
-            <Button type={2} text="Começar agora" link="/cadastramento" />
-            <Button type={1} text="Saber mais" link="/sobre" />
+            <Button type={2} text="Começar agora" link="/register" />
+            <Button type={1} text="Saber mais" link="/about" />
           </div>
         </div>
 
@@ -170,7 +170,7 @@ const Home = () => {
           <p>
             Crie sua conta gratuita e analise seu primeiro vídeo em minutos.
           </p>
-          <Button text="Criar conta gratuita" type={1} link="/cadastramento" />
+          <Button text="Criar conta gratuita" type={1} link="/register" />
         </div>
       </main>
 

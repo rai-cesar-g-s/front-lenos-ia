@@ -122,7 +122,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
             });
 
             // Redireciona somente após o backend confirmar criação com sucesso
-            navigate("/confirmacao-de-email");
+            navigate("/email-confirmation");
         } catch (error: unknown) {
             logSafeError("Registration Error:", error);
             const isTimeout = axios.isAxiosError(error)
@@ -257,7 +257,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
                         }}
                     />
                     <label htmlFor="register-terms">
-                        Eu aceito os <a href="/politicas-e-termos-de-uso" target="_blank" rel="noopener noreferrer">Termos de Uso</a> e a <a href="/politicas-e-termos-de-uso" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.
+                        Eu aceito os <a href="/policies-and-terms" target="_blank" rel="noopener noreferrer">Termos de Uso</a> e a <a href="/policies-and-terms" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.
                     </label>
                 </div>
                 {errors.terms && <small className="field-error terms-error">{errors.terms}</small>}

@@ -20,7 +20,7 @@ export function toReportItem(report: ApiReport): ReportItem {
   const negative = count(report.processed_comments_negative);
   return {
     id: report.id, title: report.title, video_url: report.url,
-    report: report.report, status: report.status,
+    report: report.report, status: report.status, created_at: report.created_at,
     comments_count: total, comments_positive: positive, comments_negative: negative,
     sentiment_positive: getCommentPercentage(positive, total),
     sentiment_negative: getCommentPercentage(negative, total),

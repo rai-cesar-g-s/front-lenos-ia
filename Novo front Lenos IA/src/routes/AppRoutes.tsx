@@ -36,7 +36,7 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
   }
 
   if (!hasAnsweredQuestions) {
-    return <Navigate to="/pesquisa" replace />;
+    return <Navigate to="/onboarding" replace />;
   }
 
   return <>{children}</>;
@@ -112,19 +112,19 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/sobre" element={<About />} />
-      <Route path="/confirmacao-de-email" element={<ConfirmationEmail />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/email-confirmation" element={<ConfirmationEmail />} />
       <Route path="/v1/verify-email" element={<ConfirmationEmail />} />
       <Route path="/v1/user/verify-email" element={<ConfirmationEmail />} />
       <Route path="/error" element={<ErrorPage />} />
-      <Route path="/perguntas-frequentes" element={<Faq />} />
-      <Route path="/recuperacao-de-senha" element={<ForgotPassword />} />
+      <Route path="/faq" element={<Faq />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/manutencao" element={<Maintenance />} />
-      <Route path="/politicas-e-termos-de-uso" element={<Policies />} />
-      <Route path="/cadastramento" element={<Register />} />
-      <Route path="/suporte" element={<Support />} />
-      <Route path="/cadastramento-completo" element={<RegisterCompleted />} />
+      <Route path="/maintenance" element={<Maintenance />} />
+      <Route path="/policies-and-terms" element={<Policies />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/support" element={<Support />} />
+      <Route path="/registration-complete" element={<RegisterCompleted />} />
 
       <Route
         path="/dashboard"
@@ -135,7 +135,7 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/analise"
+        path="/analyze"
         element={
           <PrivateRoute>
             <Analyze />
@@ -143,7 +143,7 @@ const AppRoutes = () => {
         }
       />
       <Route
-        path="/historico"
+        path="/history"
         element={
           <PrivateRoute>
             <History />
@@ -167,11 +167,10 @@ const AppRoutes = () => {
         }
       />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/reset-senha" element={<ResetPassword />} />
       <Route path="/v1/reset-password" element={<ResetPassword />} />
       <Route path="/v1/user/reset-password" element={<ResetPassword />} />
       <Route
-        path="/pesquisa"
+        path="/onboarding"
         element={
           <QuestionsRoute>
             <Onboarding />

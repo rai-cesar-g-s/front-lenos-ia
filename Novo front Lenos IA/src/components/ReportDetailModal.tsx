@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { FiX, FiDownload, FiEdit3, FiTrash2, FiExternalLink, FiMessageSquare, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
+import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { getSentimentStats, formatPercent } from '../utils/reportStats';
 import './style/ReportDetailModal.css';
+import './style/ReportMarkdown.css';
 
 export interface ReportItem {
   id: string;
@@ -27,7 +29,7 @@ interface ReportDetailModalProps {
   report: ReportItem | null;
   onClose: () => void;
   onRename?: (id: string, newTitle: string) => void;
-  onDelete?: (id: string) => void;
+  onDelete?: (id: string) => Promise<void>;
   onDownloadPdf?: (id: string) => void;
 }
 
@@ -39,6 +41,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   onDownloadPdf,
 }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
 
   if (!report) return null;
@@ -50,8 +53,9 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const commentsCountLabel = commentsCount == null
     ? 'contagem não fornecida'
     : `${Number(commentsCount).toLocaleString('pt-BR')} comentários analisados`;
-  const createdAt = report.created_at
-    ? new Date(report.created_at).toLocaleDateString('pt-BR')
+  const createdDate = report.created_at ? new Date(report.created_at) : null;
+  const createdAt = createdDate && !Number.isNaN(createdDate.getTime())
+    ? createdDate.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     : 'data não fornecida';
 
   const getYouTubeId = (url: string) => {
@@ -84,7 +88,8 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   };
 
   return (
-    <div className="report-modal-overlay" onClick={onClose}>
+    <div className="report-modal-overlay" onClick={() => { if (!confirmDelete) onClose(); }}>
+      {confirmDelete && onDelete && <ConfirmDeleteModal title="Excluir relatório?" description={`O relatório “${title}” será excluído permanentemente. Esta ação não pode ser desfeita.`} confirmLabel="Excluir relatório" onCancel={() => setConfirmDelete(false)} onConfirm={async () => { await onDelete(report.id); onClose(); }} />}
       <div className="report-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="report-modal-header">
           <div className="report-modal-title-area">
@@ -110,7 +115,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
               </div>
             )}
             <p className="report-subtitle">
-              Processado em {createdAt} · {commentsCountLabel}
+              Processado em: {createdAt} · {commentsCountLabel}
             </p>
           </div>
 
@@ -128,12 +133,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             {onDelete && (
               <button
                 className="btn-modal-danger"
-                onClick={() => {
-                  if (confirm('Tem certeza que deseja excluir esta análise?')) {
-                    onDelete(report.id);
-                    onClose();
-                  }
-                }}
+                onClick={() => setConfirmDelete(true)}
                 title="Excluir relatório"
               >
                 <FiTrash2 />

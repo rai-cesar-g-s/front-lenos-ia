@@ -1,4 +1,6 @@
 import { logSafeError } from '../utils/safeLogger';
+import { validatePassword, validatePasswordConfirmation } from '../utils/passwordValidation';
+import { isAxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,6 +17,8 @@ import {
   FiAlertTriangle,
   FiPhone,
 } from 'react-icons/fi';
+import { ChannelAnswerEditor } from '../components/ChannelAnswerEditor';
+import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 import AppShell from '../components/AppShell';
 import { useAuth } from '../hooks/useAuth';
 import { useDashboard } from '../hooks/useDashboard';
@@ -58,15 +62,9 @@ const validateEmail = (value: string) => {
   return '';
 };
 
-const validatePassword = (value: string) => {
-  if (!value) return 'Informe uma senha.';
-  if (value.length < 8 || value.length > 20) return 'A senha deve conter entre 8 e 20 caracteres.';
-  return '';
-};
-
 export const Settings: React.FC = () => {
   const { user, reloadUserProfile, logout } = useAuth();
-  const { reports, reportsError, isLoadingReports } = useDashboard();
+  const { reports, reportsError, isLoadingReports, totals } = useDashboard();
   const completedReportCount = reports.filter((report) => report.status === 'done' || report.status === 'completed').length;
   const navigate = useNavigate();
 
@@ -81,10 +79,13 @@ export const Settings: React.FC = () => {
   const [email, setEmail] = useState(typeof user?.email === 'string' ? user.email : '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+  const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
 
   useEffect(() => {
@@ -144,29 +145,45 @@ export const Settings: React.FC = () => {
   };
 
   const handleChangePassword = async () => {
-    const error = validatePassword(newPassword);
-    setFieldErrors((current) => ({ ...current, newPassword: error }));
-    if (!currentPassword) {
-      showToast('Preencha a senha atual e a nova senha.');
+    if (isChangingPassword) return;
+    const currentError = currentPassword ? '' : 'Informe sua senha atual.';
+    const newError = validatePassword(newPassword) || (newPassword === currentPassword ? 'A nova senha deve ser diferente da atual.' : '');
+    const confirmationError = validatePasswordConfirmation(newPassword, passwordConfirmation);
+    setFieldErrors(current => ({ ...current, currentPassword: currentError, newPassword: newError, passwordConfirmation: confirmationError }));
+    if (currentError || newError || confirmationError) return;
+    setIsChangingPassword(true);
+    try {
+      await UserService.updatePassword({ current_password: currentPassword, new_password: newPassword });
+    } catch (err) {
+      const status = isAxiosError(err) ? err.response?.status : undefined;
+      if (status === 401) {
+        setFieldErrors(current => ({ ...current, currentPassword: 'A senha atual está incorreta. Confira e tente novamente.' }));
+      } else {
+        showToast(status === 403 ? 'Você não tem permissão para alterar a senha.' : status === 422 ? 'Confira os dados da senha e tente novamente.' : 'Não foi possível alterar a senha. Tente novamente.');
+      }
+      setIsChangingPassword(false);
       return;
     }
-    if (error) return;
+    // The change succeeded. Re-establish cookies using the new password.
     try {
-      await UserService.updatePassword({
-        current_password: currentPassword,
-        new_password: newPassword,
-      });
+      if (typeof user?.email !== 'string' || !user.email) throw new Error('Missing account email');
+      await UserService.loginUser({ email: user.email, password: newPassword });
       setCurrentPassword('');
       setNewPassword('');
+      setPasswordConfirmation('');
       showToast('Senha alterada com sucesso!');
-    } catch (err) {
-      logSafeError(err);
-      showToast('Não foi possível alterar a senha. Confira a senha atual e tente novamente.');
+    } catch {
+      setCurrentPassword('');
+      setNewPassword('');
+      setPasswordConfirmation('');
+      navigate('/login', { replace: true, state: { message: 'Senha alterada com sucesso. Entre novamente com sua nova senha.' } });
+      window.dispatchEvent(new Event('auth-error'));
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!confirm('Deseja excluir permanentemente sua conta?')) return;
 
     try {
       await UserService.deleteUserAccount();
@@ -174,12 +191,13 @@ export const Settings: React.FC = () => {
       navigate('/');
     } catch (error) {
       logSafeError(error);
-      showToast('Não foi possível excluir a conta. Tente novamente.');
+      throw error;
     }
   };
 
   return (
     <AppShell>
+      {confirmDeleteAccount && <ConfirmDeleteModal title="Excluir conta?" description="Sua conta e todos os dados associados serão excluídos permanentemente. Esta ação não pode ser desfeita." confirmLabel="Excluir conta" onCancel={() => setConfirmDeleteAccount(false)} onConfirm={handleDeleteAccount} />}
       <div className="page-heading">
         <h1>Configurações</h1>
         <p>Gerencie sua conta, segurança e assinatura.</p>
@@ -314,7 +332,11 @@ export const Settings: React.FC = () => {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={(e) => { setCurrentPassword(e.target.value); setFieldErrors(current => ({ ...current, currentPassword: '' })); }}
+                  disabled={isChangingPassword}
+                  autoComplete="current-password"
+                  aria-invalid={Boolean(fieldErrors.currentPassword)}
+                  aria-describedby={fieldErrors.currentPassword ? 'current-password-error' : undefined}
                   placeholder="••••••••••••"
                 />
                 <button
@@ -325,6 +347,7 @@ export const Settings: React.FC = () => {
                   {showPassword ? <FiEyeOff /> : <FiEye />} <span>{showPassword ? 'Ocultar' : 'Mostrar'}</span>
                 </button>
               </div>
+              {fieldErrors.currentPassword && <small id="current-password-error" className="settings-field-error" role="alert">{fieldErrors.currentPassword}</small>}
             </div>
 
             <div className="field-group">
@@ -333,18 +356,44 @@ export const Settings: React.FC = () => {
                 type="password"
                 minLength={8}
                 maxLength={20}
+                disabled={isChangingPassword}
+                autoComplete="new-password"
+                aria-describedby="new-password-hint new-password-error"
+                aria-invalid={Boolean(fieldErrors.newPassword)}
                 value={newPassword}
                 onChange={(e) => {
                   setNewPassword(e.target.value);
-                  setFieldErrors((current) => ({ ...current, newPassword: validatePassword(e.target.value) }));
+                  setFieldErrors((current) => ({ ...current, newPassword: validatePassword(e.target.value), passwordConfirmation: passwordConfirmation ? validatePasswordConfirmation(e.target.value, passwordConfirmation) : '' }));
                 }}
                 placeholder="Digite a nova senha"
               />
-              {fieldErrors.newPassword && <small className="settings-field-error">{fieldErrors.newPassword}</small>}
+              <small id="new-password-hint">A senha deve conter entre 8 e 20 caracteres.</small>
+              {fieldErrors.newPassword && <small id="new-password-error" className="settings-field-error" role="alert">{fieldErrors.newPassword}</small>}
             </div>
 
-            <button className="settings-save-btn" onClick={handleChangePassword}>
-              <FiLock /> Alterar senha
+            <div className="field-group">
+              <label htmlFor="password-confirmation">Confirmar nova senha</label>
+              <input
+                id="password-confirmation"
+                type="password"
+                minLength={8}
+                maxLength={20}
+                autoComplete="new-password"
+                disabled={isChangingPassword}
+                value={passwordConfirmation}
+                onChange={event => {
+                  setPasswordConfirmation(event.target.value);
+                  setFieldErrors(current => ({ ...current, passwordConfirmation: validatePasswordConfirmation(newPassword, event.target.value) }));
+                }}
+                placeholder="Repita a nova senha"
+                aria-invalid={Boolean(fieldErrors.passwordConfirmation)}
+                aria-describedby={fieldErrors.passwordConfirmation ? 'password-confirmation-error' : undefined}
+              />
+              {fieldErrors.passwordConfirmation && <small id="password-confirmation-error" className="settings-field-error" role="alert">{fieldErrors.passwordConfirmation}</small>}
+            </div>
+
+            <button className="settings-save-btn" disabled={isChangingPassword} onClick={handleChangePassword}>
+              <FiLock /> {isChangingPassword ? 'Alterando...' : 'Alterar senha'}
             </button>
           </div>
 
@@ -359,7 +408,7 @@ export const Settings: React.FC = () => {
               </div>
               <button
                 className="danger-outline-btn small"
-                onClick={handleDeleteAccount}
+                onClick={() => setConfirmDeleteAccount(true)}
               >
                 <FiTrash2 /> Excluir
               </button>
@@ -374,7 +423,7 @@ export const Settings: React.FC = () => {
         <div className="settings-content-wrapper">
           <div className="settings-card">
             <h3><FiYoutube /> Detalhes do canal</h3>
-            <p className="card-desc">Confira as perguntas e respostas que você forneceu sobre seu canal.</p>
+            <p className="card-desc">Confira e edite as respostas que você forneceu sobre seu canal.</p>
             {channelDetails.loading ? <p role="status">Carregando detalhes do canal...</p> : channelDetails.error ? (
               <div role="alert">
                 <p className="settings-field-error">{channelDetails.error}</p>
@@ -387,7 +436,7 @@ export const Settings: React.FC = () => {
                 {channelDetails.answers.map((item) => (
                   <div className="channel-answer" key={item.answer_id}>
                     <dt>{item.question}</dt>
-                    <dd>{item.answer}</dd>
+                    <dd><ChannelAnswerEditor answer={item.answer} question={item.question} onSave={value => channelDetails.updateAnswer(item.answer_id, value)} /></dd>
                   </div>
                 ))}
               </dl>
@@ -425,10 +474,12 @@ export const Settings: React.FC = () => {
               <div className="usage-item">
                 <div className="usage-label-row">
                   <span>Comentários processados</span>
-                  <span className="usage-count">0 de 2.500</span>
+                  <span className="usage-count">
+                    {isLoadingReports ? 'Carregando...' : reportsError || totals.comments === undefined ? 'Indisponível' : `${totals.comments.toLocaleString('pt-BR')} de 1.000`}
+                  </span>
                 </div>
                 <div className="plan-progress-bg">
-                  <div className="plan-progress-fill" style={{ width: '0%' }} />
+                  <div className="plan-progress-fill" style={{ width: `${isLoadingReports || reportsError ? 0 : Math.min(100, ((totals.comments ?? 0) / 1000) * 100)}%` }} />
                 </div>
               </div>
             </div>
@@ -445,7 +496,7 @@ export const Settings: React.FC = () => {
               <li><FiCheck className="check-icon" /> 1 usuário</li>
             </ul>
             <small className="plan-limit-note">
-              Limite: até 5 análises/mês · 500 comentários por análise
+              Limite: até 5 análises/mês · 1.000 comentários no plano gratuito
             </small>
           </div>
         </div>

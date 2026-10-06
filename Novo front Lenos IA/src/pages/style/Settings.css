@@ -557,3 +557,6 @@ input:checked + .slider:before {
 .channel-answer:last-child { border-bottom: 0; padding-bottom: 0; }
 .channel-answer dt { font-weight: 600; color: #101729; }
 .channel-answer dd { margin: 10px 0 0; color: #607286; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.channel-answer-view { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.channel-answer-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }

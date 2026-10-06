@@ -13,16 +13,16 @@ const Header = () => {
       <nav>
         <ul>
           <li><Link to="/">Início</Link></li>
-          <li><Link to="/sobre">Sobre Nós</Link></li>
-          <li><Link to="/perguntas-frequentes">FAQ</Link></li>
-          <li><Link to="/suporte">Suporte</Link></li>
-          <li><Link to="/politicas-e-termos-de-uso">Políticas</Link></li>
+          <li><Link to="/about">Sobre Nós</Link></li>
+          <li><Link to="/faq">FAQ</Link></li>
+          <li><Link to="/support">Suporte</Link></li>
+          <li><Link to="/policies-and-terms">Políticas</Link></li>
         </ul>
       </nav>
 
       <div className="btn">
         <Button type={1} text="Entrar" link="/login" />
-        <Button type={2} text="Criar conta" link="/cadastramento" />
+        <Button type={2} text="Criar conta" link="/register" />
       </div>
     </header>
   );

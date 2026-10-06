@@ -23,7 +23,7 @@ api.interceptors.response.use(
     },
     async (error) => {
         const request = error.config as (InternalAxiosRequestConfig & { sessionRetried?: boolean }) | undefined;
-        const isAuthRequest = /\/user\/(login|refresh|logout|register|forgot-password|reset-password)(?:\?|$)/.test(request?.url || '');
+        const isAuthRequest = /\/user\/(login|refresh|logout|register|forgot-password|reset-password|password)(?:\?|$)/.test(request?.url || '');
         if (error.response?.status === 401 && request && !isAuthRequest && !request.sessionRetried) {
             request.sessionRetried = true;
             try {

@@ -11,10 +11,10 @@ const Footer = () => {
       <nav>
         <ul>
           <li><Link to="/">Início</Link></li>
-          <li><Link to="/sobre">Sobre</Link></li>
-          <li><Link to="/perguntas-frequentes">FAQ</Link></li>
-          <li><Link to="/suporte">Suporte</Link></li>
-          <li><Link to="/politicas-e-termos-de-uso">Políticas</Link></li>
+          <li><Link to="/about">Sobre</Link></li>
+          <li><Link to="/faq">FAQ</Link></li>
+          <li><Link to="/support">Suporte</Link></li>
+          <li><Link to="/policies-and-terms">Políticas</Link></li>
         </ul>
       </nav>
 

@@ -5,8 +5,6 @@ import {
   FiMessageSquare,
   FiThumbsUp,
   FiThumbsDown,
-  FiMinus,
-  FiTrendingUp,
   FiArrowRight,
 } from 'react-icons/fi';
 import { ReportRowTitle, ReportStatus } from '../components/ReportRowActions';
@@ -43,7 +41,6 @@ export const Dashboard: React.FC = () => {
       ? '—' : `${percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
   };
 
-  const neutral = totals.comments !== undefined && totals.positive !== undefined && totals.negative !== undefined ? Math.max(0, totals.comments - totals.positive - totals.negative) : undefined;
   const userName = typeof user?.name === 'string' ? user.name.trim() : '';
 
   const getYouTubeId = (url?: string) => {
@@ -92,28 +89,10 @@ export const Dashboard: React.FC = () => {
         <div className="stat-card">
           <div className="stat-card-header">
             <span className="stat-title">Sentimento negativo</span>
-            <FiThumbsDown className="stat-icon" />
+            <FiThumbsDown className="stat-icon sentiment-negative-icon" />
           </div>
           <strong className="stat-value">{formatPercentage(totals.negative)}</strong>
           <span className="stat-subtext">{formatCount(totals.negative)} comentários negativos</span>
-        </div>
-        <div className="stat-card"><div className="stat-card-header"><span className="stat-title">Sentimento neutro</span><FiMinus className="stat-icon" /></div><strong className="stat-value">{formatPercentage(neutral)}</strong><span className="stat-subtext">{formatCount(neutral)} comentários neutros</span></div>
-        <div className="stat-card">
-          <div className="stat-card-header">
-            <span className="stat-title">Uso do plano</span>
-            <FiTrendingUp className="stat-icon" />
-          </div>
-          <div className="stat-value-group">
-            <strong className="stat-value">{totals.analyses}</strong>
-            <span className="stat-limit">/ 5</span>
-          </div>
-          <div className="usage-progress-bar">
-            <div
-              className="usage-progress-fill"
-              style={{ width: `${Math.min(100, (totals.analyses / 5) * 100)}%` }}
-            />
-          </div>
-          <span className="stat-subtext">análises este mês</span>
         </div>
       </section>
 
@@ -123,7 +102,7 @@ export const Dashboard: React.FC = () => {
         <section className="dashboard-panel recent-panel">
           <div className="panel-header">
             <h2>Relatórios da sua conta</h2>
-            <Link to="/historico" className="view-all-link">
+            <Link to="/history" className="view-all-link">
               Ver todas <FiArrowRight />
             </Link>
           </div>

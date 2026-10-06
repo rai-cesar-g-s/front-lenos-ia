@@ -138,6 +138,7 @@ export function useDashboard() {
     } catch (error) {
       logSafeError('Erro ao deletar:', error);
       setErrorMsg('Não foi possível excluir o relatório. Tente novamente.');
+      throw error;
     }
   };
 
