@@ -4,6 +4,7 @@ import {
   FiFilter,
   FiArrowRight,
 } from 'react-icons/fi';
+import { ReportRowTitle, ReportStatus } from '../components/ReportRowActions';
 import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
 import { ReportDetailModal, type ReportItem } from '../components/ReportDetailModal';
@@ -117,7 +118,7 @@ export const History: React.FC = () => {
                 )}
 
                 <div className="history-main-info">
-                  <h3 className="history-title">{report.title || 'Análise sem título'}</h3>
+                  <ReportRowTitle report={report} onRename={renameReport} />
                   <div className="history-meta">
                     <span className="history-video-url">{report.video_url}</span>
                   </div>
@@ -125,7 +126,7 @@ export const History: React.FC = () => {
 
                 <div className="history-badges-actions">
 
-                  <FiArrowRight className="history-row-arrow" />
+                  <ReportStatus status={report.status} /><FiArrowRight className="history-row-arrow" />
                 </div>
               </div>
             );
@@ -135,7 +136,7 @@ export const History: React.FC = () => {
 
       {selectedReportModal && (
         <ReportDetailModal
-          report={selectedReportModal}
+          report={reports.find(item => item.id === selectedReportModal.id) || selectedReportModal}
           onClose={() => setSelectedReportModal(null)}
           onRename={renameReport}
           onDelete={deleteReport}

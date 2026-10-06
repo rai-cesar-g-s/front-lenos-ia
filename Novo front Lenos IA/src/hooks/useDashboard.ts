@@ -126,6 +126,7 @@ export function useDashboard() {
     } catch (error) {
       logSafeError('Erro ao renomear:', error);
       setErrorMsg('Não foi possível renomear o relatório. Tente novamente.');
+      throw error;
     }
   };
 

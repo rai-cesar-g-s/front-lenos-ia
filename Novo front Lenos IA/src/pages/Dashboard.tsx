@@ -5,9 +5,11 @@ import {
   FiMessageSquare,
   FiThumbsUp,
   FiThumbsDown,
+  FiMinus,
   FiTrendingUp,
   FiArrowRight,
 } from 'react-icons/fi';
+import { ReportRowTitle, ReportStatus } from '../components/ReportRowActions';
 import AppShell from '../components/AppShell';
 import { useDashboard } from '../hooks/useDashboard';
 import { getCommentPercentage } from '../utils/reportMetrics';
@@ -41,6 +43,7 @@ export const Dashboard: React.FC = () => {
       ? '—' : `${percentage.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
   };
 
+  const neutral = totals.comments !== undefined && totals.positive !== undefined && totals.negative !== undefined ? Math.max(0, totals.comments - totals.positive - totals.negative) : undefined;
   const userName = typeof user?.name === 'string' ? user.name.trim() : '';
 
   const getYouTubeId = (url?: string) => {
@@ -80,7 +83,7 @@ export const Dashboard: React.FC = () => {
         <div className="stat-card">
           <div className="stat-card-header">
             <span className="stat-title">Sentimento positivo</span>
-            <FiThumbsUp className="stat-icon" />
+            <FiThumbsUp className="stat-icon sentiment-positive-icon" />
           </div>
           <strong className="stat-value">{formatPercentage(totals.positive)}</strong>
           <span className="stat-subtext">{formatCount(totals.positive)} comentários positivos</span>
@@ -94,6 +97,7 @@ export const Dashboard: React.FC = () => {
           <strong className="stat-value">{formatPercentage(totals.negative)}</strong>
           <span className="stat-subtext">{formatCount(totals.negative)} comentários negativos</span>
         </div>
+        <div className="stat-card"><div className="stat-card-header"><span className="stat-title">Sentimento neutro</span><FiMinus className="stat-icon" /></div><strong className="stat-value">{formatPercentage(neutral)}</strong><span className="stat-subtext">{formatCount(neutral)} comentários neutros</span></div>
         <div className="stat-card">
           <div className="stat-card-header">
             <span className="stat-title">Uso do plano</span>
@@ -156,10 +160,10 @@ export const Dashboard: React.FC = () => {
                       <div className="report-thumb-placeholder" aria-hidden="true"><FiBarChart2 /></div>
                     )}
                     <div className="report-info">
-                      <strong>{report.title || 'Análise de vídeo'}</strong>
+                      <ReportRowTitle report={report} onRename={renameReport} />
                     </div>
                     <div className="report-action-area">
-                      <FiArrowRight className="row-arrow" />
+                      <ReportStatus status={report.status} /><FiArrowRight className="row-arrow" />
                     </div>
                   </div>
                 );
@@ -179,7 +183,7 @@ export const Dashboard: React.FC = () => {
       {/* Report Modal */}
       {activeReportModal && (
         <ReportDetailModal
-          report={activeReportModal}
+          report={reports.find(item => item.id === activeReportModal.id) || activeReportModal}
           onClose={() => setActiveReportModal(null)}
           onRename={renameReport}
           onDelete={deleteReport}

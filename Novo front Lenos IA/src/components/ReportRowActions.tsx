@@ -1,0 +1,40 @@
+import { useState } from 'react';
+import { FiEdit3 } from 'react-icons/fi';
+import type { ReportItem } from './ReportDetailModal';
+import './style/ReportRowActions.css';
+
+export function ReportRowTitle({ report, onRename }: { report: ReportItem; onRename: (id: string, title: string) => Promise<void> }) {
+  const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState(report.title || 'Análise de vídeo');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  return editing ? (
+    <form className="title-edit-box report-row-edit" onClick={e => e.stopPropagation()} onSubmit={async e => {
+      e.preventDefault();
+      setError('');
+      setSaving(true);
+      try { await onRename(report.id, title.trim()); setEditing(false); } catch { setError('Não foi possível renomear. Tente novamente.'); } finally { setSaving(false); }
+    }}>
+      <input aria-label="Título do relatório" value={title} onChange={e => setTitle(e.target.value)} minLength={2} maxLength={50} required autoFocus />
+      <button className="save-btn" disabled={saving}>Salvar</button>
+      <button className="cancel-btn" type="button" onClick={() => setEditing(false)}>Cancelar</button>
+      {error && <span role="alert">{error}</span>}
+    </form>
+  ) : (
+    <div className="report-row-title">
+      <strong>{report.title || 'Análise de vídeo'}</strong>
+      <button className="icon-action-btn" aria-label="Renomear relatório" title="Renomear relatório" onClick={e => { e.stopPropagation(); setTitle(report.title || 'Análise de vídeo'); setEditing(true); }}><FiEdit3 /></button>
+    </div>
+  );
+}
+
+export function ReportStatus({ status }: { status?: string }) {
+  const statuses: Record<string, [string, string]> = {
+    done: ['Concluído', 'done'], completed: ['Concluído', 'done'],
+    pending: ['Pendente', 'pending'], queued: ['Na fila', 'pending'],
+    processing: ['Em processamento', 'pending'], in_progress: ['Em processamento', 'pending'],
+    failed: ['Falhou', 'failed'], error: ['Falhou', 'failed'],
+  };
+  const [label, tone] = statuses[status?.toLowerCase() || ''] || ['Não informado', 'unknown'];
+  return <span className={`report-status ${tone}`}>{label}</span>;
+}

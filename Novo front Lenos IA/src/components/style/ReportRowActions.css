@@ -1,0 +1,11 @@
+.report-row-title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.report-row-title strong { overflow: hidden; text-overflow: ellipsis; }
+.report-row-title .icon-action-btn { flex-shrink: 0; }
+.report-status { border-radius: 99px; padding: 4px 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.report-status.done { background: #edf5ef; color: #4d8960; }
+.report-status.pending { background: #fff5df; color: #8a651b; }
+.report-status.failed { background: #fdf2f2; color: #cb5353; }
+.report-status.unknown { background: #edf0f2; color: #607286; }
+.report-row-edit { flex-wrap: wrap; }
+.report-row-edit input { min-width: 0; width: min(100%, 300px); }
+@media (max-width: 540px) { .history-card-item, .report-row-card { flex-wrap: wrap; gap: 8px; } }

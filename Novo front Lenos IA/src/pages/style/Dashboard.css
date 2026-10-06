@@ -296,3 +296,6 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (min-width: 961px) { .dashboard-stats-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.stat-icon.sentiment-positive-icon { color: #cb5353; }

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { FiX, FiDownload, FiEdit3, FiTrash2, FiExternalLink, FiMessageSquare, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { getSentimentStats, formatPercent } from '../utils/reportStats';
 import './style/ReportDetailModal.css';
 
 export interface ReportItem {
@@ -42,7 +45,8 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
   const title = report.title || 'Análise de Vídeo';
   const videoUrl = report.video_url || '#';
-  const commentsCount = report.comments_count;
+  const stats = getSentimentStats(report);
+  const commentsCount = stats.total;
   const commentsCountLabel = commentsCount == null
     ? 'contagem não fornecida'
     : `${Number(commentsCount).toLocaleString('pt-BR')} comentários analisados`;
@@ -59,13 +63,10 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const videoId = getYouTubeId(videoUrl);
   const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 
-  const completed = report.status === 'done' || report.status === 'completed';
-  const posSentiment = completed ? report.sentiment_positive : undefined;
-  const negSentiment = completed ? report.sentiment_negative : undefined;
-  const percentageLabel = (value: number | undefined) => value === undefined
-    ? 'Não disponível' : `${value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
-  const countLabel = (value: number | undefined) => completed && value !== undefined
-    ? `${value.toLocaleString('pt-BR')} comentários` : 'Contagem não disponível';
+  const posSentiment = stats.percent(stats.positive);
+  const neuSentiment = stats.percent(stats.neutral);
+  const negSentiment = stats.percent(stats.negative);
+
   const summaryText = report.summary || report.report || 'Resumo não fornecido pela API.';
   const topicsList = report.topics || [];
   const recommendationsList = report.recommendations || [];
@@ -167,19 +168,25 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             <div className="report-sentiment-cards">
               <div className="sentiment-stat-card positive">
                 <span className="stat-label">Sentimento Positivo</span>
-                <strong className="stat-val">{percentageLabel(posSentiment)}</strong>
-                <span>{countLabel(report.comments_positive)}</span>
+                <strong className="stat-val">{formatPercent(posSentiment)}</strong><span>{stats.positive} comentários</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill pos" style={{ width: `${percentageLabel(posSentiment)}` }} />
+                  <div className="stat-bar-fill pos" style={{ width: `${posSentiment}%` }} />
+                </div>
+              </div>
+
+              <div className="sentiment-stat-card neutral">
+                <span className="stat-label">Sentimento Neutro</span>
+                <strong className="stat-val">{formatPercent(neuSentiment)}</strong><span>{stats.neutral} comentários</span>
+                <div className="stat-bar-track">
+                  <div className="stat-bar-fill neu" style={{ width: `${neuSentiment}%` }} />
                 </div>
               </div>
 
               <div className="sentiment-stat-card negative">
                 <span className="stat-label">Sentimento Negativo</span>
-                <strong className="stat-val">{percentageLabel(negSentiment)}</strong>
-                <span>{countLabel(report.comments_negative)}</span>
+                <strong className="stat-val">{formatPercent(negSentiment)}</strong><span>{stats.negative} comentários</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill neg" style={{ width: `${percentageLabel(negSentiment)}` }} />
+                  <div className="stat-bar-fill neg" style={{ width: `${negSentiment}%` }} />
                 </div>
               </div>
             </div>
@@ -187,7 +194,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
           <section className="report-section-box">
             <h3><FiMessageSquare /> Resumo Executivo da IA</h3>
-            <p className="summary-paragraph">{summaryText}</p>
+            <div className="summary-paragraph report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{summaryText}</ReactMarkdown></div>
           </section>
 
           <section className="report-section-box">
