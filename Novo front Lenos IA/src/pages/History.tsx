@@ -1,3 +1,4 @@
+import { ReportDateFilter } from '../components/ReportDateFilter';
 import React, { useState, useMemo } from 'react';
 import {
   FiSearch,
@@ -12,6 +13,8 @@ import './style/History.css';
 
 export const History: React.FC = () => {
   const {
+    dateRange,
+    setDateRange,
     reports,
     reportsError,
     isLoadingReports,
@@ -50,6 +53,8 @@ export const History: React.FC = () => {
         <h1>Histórico de análises</h1>
         <p>Consulte e revise análises anteriores.</p>
       </div>
+
+      <ReportDateFilter range={dateRange} onApply={setDateRange} />
 
       {/* Filter and Search Bar */}
       <div className="history-controls-bar">

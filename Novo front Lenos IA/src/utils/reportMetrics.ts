@@ -15,9 +15,9 @@ export function getCommentPercentage(part: number | undefined, total: number | u
 
 // Preserve API counts: missing data must never become invented comments.
 export function toReportItem(report: ApiReport): ReportItem {
-  const total = count(report.processed_comments);
-  const positive = count(report.processed_comments_positive);
-  const negative = count(report.processed_comments_negative);
+  const total = count(report.comments_processed);
+  const positive = count(report.comments_positive);
+  const negative = count(report.comments_negative);
   return {
     id: report.id, title: report.title, video_url: report.url,
     report: report.report, status: report.status, created_at: report.created_at,

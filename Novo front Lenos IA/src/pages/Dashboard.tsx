@@ -1,3 +1,4 @@
+import { ReportDateFilter } from '../components/ReportDateFilter';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -20,9 +21,13 @@ export const Dashboard: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(Boolean(location.state?.showGoogleWelcome));
   const {
     user,
+    dateRange,
+    setDateRange,
     reports,
     reportsError,
     totals,
+    quota,
+    isLoadingQuota,
     reloadReports,
     isLoadingReports,
     renameReport,
@@ -57,6 +62,8 @@ export const Dashboard: React.FC = () => {
         <p>Veja o que sua audiência está dizendo.</p>
       </div>
 
+      <ReportDateFilter range={dateRange} onApply={setDateRange} />
+
       {/* Report statistics */}
       <section className="dashboard-stats-grid">
         <div className="stat-card">
@@ -65,7 +72,7 @@ export const Dashboard: React.FC = () => {
             <FiBarChart2 className="stat-icon" />
           </div>
           <strong className="stat-value">{formatCount(totals.analyses)}</strong>
-          <span className="stat-subtext">0 este mês</span>
+          <span className="stat-subtext">{isLoadingQuota ? 'Carregando cota...' : quota ? `${quota.used} este mês` : 'Cota mensal indisponível'}</span>
         </div>
 
         <div className="stat-card">

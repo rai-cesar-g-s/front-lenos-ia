@@ -1,14 +1,22 @@
 import { logSafeError } from '../utils/safeLogger';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAuth } from './useAuth';
-import { ReportService } from '../api/report';
-import { toReportItem, getReportTotals } from '../utils/reportMetrics';
+import { ReportService, type ReportQuota, type ReportStats, type ReportDateRange, currentMonthRange } from '../api/report';
+import { toReportItem } from '../utils/reportMetrics';
+import { getReportErrorMessage, quotaReachedMessage } from '../utils/reportFeedback';
 import type { ReportItem } from '../components/ReportDetailModal';
 
 export function useDashboard() {
   const { user } = useAuth();
+  const [dateRange, setDateRange] = useState<ReportDateRange>(currentMonthRange);
+  const reportRequest = useRef(0);
+  const generationInFlight = useRef(false);
 
   const [reports, setReports] = useState<ReportItem[]>([]);
+  const [stats, setStats] = useState<ReportStats | null>(null);
+  const [quota, setQuota] = useState<ReportQuota | null>(null);
+  const [quotaError, setQuotaError] = useState('');
+  const [isLoadingQuota, setIsLoadingQuota] = useState(true);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [reportsError, setReportsError] = useState('');
@@ -19,43 +27,71 @@ export function useDashboard() {
   const [generatedReportId, setGeneratedReportId] = useState<string | null>(null);
 
   const loadReports = useCallback(async () => {
+    const requestId = ++reportRequest.current;
     setIsLoadingReports(true);
     setReportsError('');
     try {
-      const data = await ReportService.getReports();
-      setReports(data.map(toReportItem));
+      const data = await ReportService.getReports(dateRange);
+      if (requestId !== reportRequest.current) return;
+      setReports(data.result.map(toReportItem));
+      setStats(data.stats);
     } catch (err) {
+      if (requestId !== reportRequest.current) return;
       logSafeError('useDashboard: Erro ao buscar relatórios:', err);
       setReports([]);
+      setStats(null);
       setReportsError('Não foi possível carregar seus relatórios. Tente novamente.');
     } finally {
-      setIsLoadingReports(false);
+      if (requestId === reportRequest.current) setIsLoadingReports(false);
     }
+  }, [dateRange]);
+
+  const loadQuota = useCallback(async () => {
+    setIsLoadingQuota(true);
+    setQuotaError('');
+    try {
+      const currentQuota = await ReportService.getQuota();
+      setQuota(currentQuota);
+      return currentQuota;
+    }
+    catch (err) {
+      logSafeError('Erro ao buscar cota mensal:', err);
+      setQuota(null);
+      setQuotaError('Não foi possível consultar sua cota mensal. Tente novamente.');
+      return null;
+    } finally { setIsLoadingQuota(false); }
   }, []);
 
   useEffect(() => {
-    loadReports();
-  }, [loadReports]);
+    const timer = window.setTimeout(() => { void loadReports(); void loadQuota(); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [loadReports, loadQuota]);
 
-  const getRecentReportsCount = useCallback(() => {
-    return reports.filter((report: ReportItem) => report.status === 'done' || report.status === 'completed').length;
-  }, [reports]);
-
-  const canGenerateReport = getRecentReportsCount() < 5;
+  const canGenerateReport = quota !== null && quota.remaining > 0;
 
   const generateReport = async (link: string) => {
+    if (generationInFlight.current) return;
     if (!link.trim()) {
       setErrorMsg('Por favor, insira um link de vídeo válido.');
       return;
     }
 
+    generationInFlight.current = true;
     setErrorMsg('');
     setIsGenerating(true);
     setGenerationStatus('pending');
     setGeneratedReportId(null);
 
     try {
-      // Cast parameter to match ReportService signature if needed
+      // A cota precisa estar atualizada antes de afirmar que o limite foi atingido.
+      const currentQuota = await loadQuota();
+      if (!currentQuota || currentQuota.remaining === 0) {
+        setErrorMsg(currentQuota ? quotaReachedMessage : 'Não foi possível verificar sua cota mensal. Tente novamente em alguns instantes.');
+        setGenerationStatus('idle');
+        setIsGenerating(false);
+        generationInFlight.current = false;
+        return;
+      }
       const result = await ReportService.generateReport(link);
       const reportId = result?.report_id;
       if (!reportId) throw new Error('A API não retornou o identificador do relatório.');
@@ -73,13 +109,17 @@ export function useDashboard() {
           if (report && (report.status === 'done' || report.report)) {
             clearInterval(pollInterval);
             await loadReports();
+            await loadQuota();
             setGenerationStatus('done');
             setIsGenerating(false);
+          generationInFlight.current = false;
           } else if (report && report.status === 'failed') {
             clearInterval(pollInterval);
             setGenerationStatus('failed');
             setIsGenerating(false);
-            setErrorMsg('Falha ao processar os comentários do vídeo. Tente outro link.');
+      generationInFlight.current = false;
+            setErrorMsg('Não foi possível concluir a análise deste vídeo. Tente novamente em alguns instantes.');
+            return;
           }
         } catch (pollErr) {
           logSafeError('Polling error:', pollErr);
@@ -90,15 +130,17 @@ export function useDashboard() {
           await loadReports();
           setGenerationStatus('failed');
           setIsGenerating(false);
-          setErrorMsg('A API ainda não confirmou a conclusão. Consulte o Histórico mais tarde.');
+            generationInFlight.current = false;
+          setErrorMsg('Sua análise ainda não foi confirmada. Consulte o Histórico em alguns instantes antes de tentar novamente.');
         }
       }, 2000);
     } catch (error: unknown) {
       logSafeError('Erro ao gerar relatório:', error);
-      const errObj = error as { response?: { data?: { detail?: string } } };
+      const currentQuota = await loadQuota();
       setGenerationStatus('failed');
       setIsGenerating(false);
-      setErrorMsg(errObj?.response?.data?.detail || 'Erro ao conectar ao servidor de processamento.');
+            generationInFlight.current = false;
+      setErrorMsg(getReportErrorMessage(error, currentQuota));
     }
   };
 
@@ -134,6 +176,7 @@ export function useDashboard() {
     try {
       await ReportService.deleteReport(id);
       await loadReports();
+      await loadQuota();
       if (selectedReportId === id) setSelectedReportId(null);
     } catch (error) {
       logSafeError('Erro ao deletar:', error);
@@ -170,14 +213,21 @@ export function useDashboard() {
 
   return {
     user,
+    dateRange,
+    setDateRange,
     reports,
     reportsError,
-    totals: getReportTotals(reports),
+    totals: { analyses: stats?.count, comments: stats?.comments_processed,
+      positive: stats?.comments_positive, negative: stats?.comments_negative },
+    quota,
+    quotaError,
+    isLoadingQuota,
+    reloadQuota: loadQuota,
     reloadReports: loadReports,
     selectedReportId,
     errorMsg,
     canGenerateReport,
-    recentReportsCount: getRecentReportsCount(),
+    recentReportsCount: quota?.used,
     isLoadingReports,
     isGenerating,
     generationStatus,

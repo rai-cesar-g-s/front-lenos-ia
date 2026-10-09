@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { completeReportDetails } from '../src/utils/reportDetails.ts';
 import { toReportItem } from '../src/utils/reportMetrics.ts';
-const report = { id: 'id', title: 'Video', status: 'done', processed_comments: 13, processed_comments_positive: 9, processed_comments_negative: 1 };
+const report = { id: 'id', title: 'Video', status: 'done', comments_processed: 13, comments_positive: 9, comments_negative: 1 };
 const timestamp = '2026-10-06T00:54:51.712806+00:00';
 test('fetches missing creation date even when all comment counts are present and preserves it in the modal model', async () => {
   let calls = 0;

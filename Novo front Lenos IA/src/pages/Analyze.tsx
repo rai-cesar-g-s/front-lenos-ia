@@ -11,6 +11,10 @@ export const Analyze: React.FC = () => {
   const [link, setLink] = useState('');
   const {
     generateReport,
+    quota,
+    quotaError,
+    isLoadingQuota,
+    reloadQuota,
     isGenerating,
     generationStatus,
     generatedReportId,
@@ -51,7 +55,7 @@ export const Analyze: React.FC = () => {
     }
 
     if (!generatedReportId) {
-      setErrorMsg('O relatório não foi retornado pela API. Consulte o Histórico ou tente novamente.');
+      setErrorMsg('Não foi possível abrir o relatório agora. Consulte o Histórico ou tente novamente.');
       return;
     }
 
@@ -71,6 +75,7 @@ export const Analyze: React.FC = () => {
       </div>
 
       <div className="analyze-container">
+        {isLoadingQuota ? <p role="status">Consultando cota mensal...</p> : quotaError ? <p role="alert">{quotaError} <button type="button" onClick={() => void reloadQuota()}>Tentar novamente</button></p> : quota && <p>{quota.used} de {quota.limit} análises utilizadas neste mês · {quota.remaining} disponíveis</p>}
         <form onSubmit={handleSubmit} className="analyze-form">
           <label className="url-field-label">
             <span>URL do vídeo do YouTube</span>
@@ -114,7 +119,7 @@ export const Analyze: React.FC = () => {
               <FiLoader className="spin-icon large" />
               <div>
                 <h3>A IA está processando os comentários do vídeo</h3>
-                <p>Isso leva cerca de 10 a 20 segundos. Por favor, aguarde...</p>
+                <p>Aguarde enquanto verificamos e processamos sua solicitação.</p>
               </div>
             </div>
 
@@ -129,7 +134,7 @@ export const Analyze: React.FC = () => {
             </div>
 
             <ul className="processing-steps">
-              <li className="done">✓ Coletando comentários da API do YouTube</li>
+              <li className="pending">Coleta de comentários do YouTube</li>
               <li className="active">⚙ Processando análises de sentimentos com IA</li>
               <li className="pending">⏱ Gerando relatório executivo e tópicos...</li>
             </ul>

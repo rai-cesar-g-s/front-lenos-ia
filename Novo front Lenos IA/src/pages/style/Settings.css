@@ -560,3 +560,7 @@ input:checked + .slider:before {
 
 .channel-answer-view { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .channel-answer-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+.settings-field-success { display: block; color: #28753d; margin-top: 8px; font-size: 13px; }
+
+.settings-email-notice { display: block; margin-top: 12px; color: #607286; line-height: 1.5; }

@@ -137,20 +137,19 @@ test('resposta já confirmada não é reenviada', async () => {
   assert.equal((await QuestionService.saveAnswerForQuestion({ question_id: 'q2', answer: '1000' })).answer, '1000');
 });
 
-test('YouTube conectado exige confirmação explícita do backend', async () => {
-  const api = { async get(path, options) {
-    assert.equal(path, '/v1/oauth2/login');
-    assert.equal(options.fetchOptions.redirect, 'manual');
-    throw { response: { status: 400, data: { message: 'Conta Youtube já conectada' } } };
-  } };
+test('YouTube conectado exige confirmação explícita da rota de status', async () => {
+  const status = { connected: true, expired: false, expires_at: null };
+  const api = { async get(path) { assert.equal(path, '/v1/oauth2/status'); return { data: status }; } };
   const { YouTubeService } = loadModule('src/api/youtube.ts', { './api': api });
-  assert.equal(await YouTubeService.checkConnection(), 'connected');
+  assert.equal((await YouTubeService.checkConnection()).connected, true);
 });
-test('redirecionamento opaco não é tratado como conexão confirmada', async () => {
+
+test('falha sem resposta não é tratada como conexão confirmada', async () => {
   const api = { async get() { throw { response: { status: 0 } }; } };
   const { YouTubeService } = loadModule('src/api/youtube.ts', { './api': api });
-  assert.equal(await YouTubeService.checkConnection(), 'unconfirmed');
+  await assert.rejects(YouTubeService.checkConnection());
 });
+
 test('falha de permissão não confirma conexão YouTube', async () => {
   const api = { async get() { throw { response: { status: 403, data: { message: 'Sem permissão' } } }; } };
   const { YouTubeService } = loadModule('src/api/youtube.ts', { './api': api });

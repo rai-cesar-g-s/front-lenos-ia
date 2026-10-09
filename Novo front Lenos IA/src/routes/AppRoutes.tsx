@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
@@ -57,7 +57,18 @@ const QuestionsRoute = ({ children }: { children: ReactNode }) => {
 };
 
 const AppRoutes = () => {
-  const { pathname } = useLocation();
+  const { pathname, key } = useLocation();
+
+  useEffect(() => {
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => { window.history.scrollRestoration = previousRestoration; };
+  }, []);
+
+  // Cada navegação começa no topo, inclusive ao voltar ou avançar no histórico.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [key]);
 
   useEffect(() => {
     if (

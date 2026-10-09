@@ -1,6 +1,5 @@
 import { logSafeError } from '../utils/safeLogger';
 import api from './api';
-import { completeReportDetails } from '../utils/reportDetails';
 import { API_BASE_URL } from './config';
 
 export type ApiReport = {
@@ -10,10 +9,21 @@ export type ApiReport = {
   report: string;
   status: string;
   created_at?: string;
-  processed_comments: number;
-  processed_comments_positive: number;
-  processed_comments_negative: number;
+  comments_processed: number | null;
+  comments_positive: number | null;
+  comments_negative: number | null;
 };
+
+export type ReportDateRange = { start_date: string; end_date: string };
+export const currentMonthRange = (): ReportDateRange => {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+  const part = (type: string) => parts.find(item => item.type === type)?.value ?? '';
+  return { start_date: part('year') + '-' + part('month') + '-01', end_date: part('year') + '-' + part('month') + '-' + part('day') };
+};
+
+export type ReportQuota = { used: number; limit: number; remaining: number; comments_processed: number };
+export type ReportStats = { count: number; comments_processed: number; comments_positive: number; comments_negative: number };
+export type ReportList = { result: ApiReport[]; stats: ReportStats };
 
 /**
  * Serviços relacionados às requisições de "Relatórios" / "Vídeos"
@@ -24,18 +34,14 @@ export const ReportService = {
   /**
    * Busca relatórios do usuário autenticado pelo endpoint documentado.
    */
-  async getReports(): Promise<ApiReport[]> {
-    const response = await api.get<ApiReport[]>('/v1/user/reports');
-    // Fetch details when the list omits counts or a valid creation timestamp.
-    const reports = response.data;
-    const result: ApiReport[] = [];
-    for (let offset = 0; offset < reports.length; offset += 5) {
-      const batch = await Promise.all(reports.slice(offset, offset + 5).map(report =>
-        completeReportDetails(report, id => ReportService.getReportById(id))
-      ));
-      result.push(...batch);
-    }
-    return result;
+  async getReports(range: ReportDateRange = currentMonthRange()): Promise<ReportList> {
+    const response = await api.get<ReportList>('/v1/user/reports', { params: range });
+    return response.data;
+  },
+
+  async getQuota(): Promise<ReportQuota> {
+    const response = await api.get<ReportQuota>('/v1/user/reports/quota');
+    return response.data;
   },
 
   /**

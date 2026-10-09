@@ -89,7 +89,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
   return (
     <div className="report-modal-overlay" onClick={() => { if (!confirmDelete) onClose(); }}>
-      {confirmDelete && onDelete && <ConfirmDeleteModal title="Excluir relatório?" description={`O relatório “${title}” será excluído permanentemente. Esta ação não pode ser desfeita.`} confirmLabel="Excluir relatório" onCancel={() => setConfirmDelete(false)} onConfirm={async () => { await onDelete(report.id); onClose(); }} />}
+      {confirmDelete && onDelete && <ConfirmDeleteModal title="Excluir relatório?" description={`O relatório “${title}” será removido do seu histórico.`} confirmLabel="Excluir relatório" onCancel={() => setConfirmDelete(false)} onConfirm={async () => { await onDelete(report.id); onClose(); }} />}
       <div className="report-modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="report-modal-header">
           <div className="report-modal-title-area">

@@ -241,3 +241,12 @@ a.support-contact-detail:hover { text-decoration: underline; }
   .support-form { grid-template-columns: 1fr; gap: 16px; }
   .support-field:nth-child(n + 3) { grid-column: auto; }
 }
+
+.support-copy-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; margin-top: 10px; border: 1px solid #dfe5e9; border-radius: 8px; background: #fff; color: #315d40; font: inherit; cursor: pointer; }
+.support-copy-btn:focus-visible { outline: 2px solid #4d8960; outline-offset: 3px; }
+.support-copy-feedback { margin-top: 10px !important; }
+.support-safety-notice { width: min(100%, 680px); box-sizing: border-box; margin: 0 auto 20px; padding: 12px 16px; background: #f2f7f3; border: 1px solid #dfe5e9; border-radius: 8px; color: #334458; font-size: 13px; line-height: 1.5; }
+.support-field small { color: #607286; font-size: 12px; }
+.support-form-error { grid-column: 1 / -1; color: #a12626; margin: 0; }
+.support-success-alert { margin-top: 20px; }
+.send-support-btn { height: auto; min-height: 40px; padding: 10px 16px; max-width: 100%; }

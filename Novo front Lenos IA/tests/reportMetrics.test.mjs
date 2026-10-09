@@ -5,7 +5,7 @@ import { toReportItem, getReportTotals, getCommentPercentage } from '../src/util
 // Fixtures verify the documented API fields; production never uses these values.
 const response = (counts = {}, status = 'done') => ({
   id: 'report-id', title: 'Video', url: 'https://youtu.be/abcdefghijk', report: 'API analysis', status,
-  processed_comments: 100, processed_comments_positive: 70, processed_comments_negative: 20, ...counts,
+  comments_processed: 100, comments_positive: 70, comments_negative: 20, ...counts,
 });
 
 test('maps the documented API response into video counts and percentages', () => {
@@ -19,13 +19,13 @@ test('maps the documented API response into video counts and percentages', () =>
 });
 
 test('sums all completed reports and excludes pending and failed reports', () => {
-  const reports = [response(), response({processed_comments: 20, processed_comments_positive: 5, processed_comments_negative: 10}, 'completed'), response({}, 'pending'), response({}, 'failed')];
+  const reports = [response(), response({comments_processed: 20, comments_positive: 5, comments_negative: 10}, 'completed'), response({}, 'pending'), response({}, 'failed')];
   assert.deepEqual(getReportTotals(reports.map(toReportItem)), { analyses: 2, comments: 120, positive: 75, negative: 30 });
 });
 
 test('empty accounts and videos with zero comments never receive fallback values', () => {
   assert.deepEqual(getReportTotals([]), { analyses: 0, comments: 0, positive: 0, negative: 0 });
-  const item = toReportItem(response({processed_comments: 0, processed_comments_positive: 0, processed_comments_negative: 0}));
+  const item = toReportItem(response({comments_processed: 0, comments_positive: 0, comments_negative: 0}));
   assert.equal(item.comments_count, 0);
   assert.equal(item.sentiment_positive, undefined);
   assert.equal(item.sentiment_negative, undefined);
@@ -33,17 +33,17 @@ test('empty accounts and videos with zero comments never receive fallback values
 
 test('missing or invalid metrics stay unavailable instead of becoming invented totals', () => {
   for (const value of [undefined, null, -1, NaN, Infinity, 1.5]) {
-    const item = toReportItem(response({processed_comments: value}));
+    const item = toReportItem(response({comments_processed: value}));
     assert.equal(item.comments_count, undefined);
     assert.equal(getReportTotals([item]).comments, undefined);
   }
-  assert.equal(toReportItem(response({processed_comments_positive: 101})).sentiment_positive, undefined);
+  assert.equal(toReportItem(response({comments_positive: 101})).sentiment_positive, undefined);
 });
 
 
 test('global percentage divides summed positives by summed comments instead of averaging video percentages', () => {
-  const reports = [response({processed_comments: 100, processed_comments_positive: 90}),
-    response({processed_comments: 900, processed_comments_positive: 90})];
+  const reports = [response({comments_processed: 100, comments_positive: 90}),
+    response({comments_processed: 900, comments_positive: 90})];
   const totals = getReportTotals(reports.map(toReportItem));
   assert.equal(totals.comments, 1000);
   assert.equal(totals.positive, 180);

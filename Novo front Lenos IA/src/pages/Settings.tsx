@@ -1,7 +1,7 @@
 import { logSafeError } from '../utils/safeLogger';
 import { validatePassword, validatePasswordConfirmation } from '../utils/passwordValidation';
 import { isAxiosError } from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FiUser,
@@ -55,17 +55,9 @@ const validatePhone = (value: string) => {
   return '';
 };
 
-const validateEmail = (value: string) => {
-  if (!value.trim()) return 'Informe seu e-mail.';
-  if (value.length > 200) return 'O e-mail deve ter no máximo 200 caracteres.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return 'Informe um e-mail válido.';
-  return '';
-};
-
 export const Settings: React.FC = () => {
   const { user, reloadUserProfile, logout } = useAuth();
-  const { reports, reportsError, isLoadingReports, totals } = useDashboard();
-  const completedReportCount = reports.filter((report) => report.status === 'done' || report.status === 'completed').length;
+  const { quota, quotaError, isLoadingQuota, reloadQuota } = useDashboard();
   const navigate = useNavigate();
 
 
@@ -74,75 +66,23 @@ export const Settings: React.FC = () => {
   const channelDetails = useChannelDetails(activeTab === 'canal');
 
   // Form states
-  const [name, setName] = useState(typeof user?.name === 'string' && user.name !== 'Carregando...' ? user.name : '');
-  const [phone, setPhone] = useState(typeof user?.phone === 'string' ? phoneDigits(user.phone) : '');
-  const [email, setEmail] = useState(typeof user?.email === 'string' ? user.email : '');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isPhoneFocused, setIsPhoneFocused] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
 
-  useEffect(() => {
-    if (typeof user?.name === 'string' && user.name !== 'Carregando...') setName(user.name);
-    if (typeof user?.phone === 'string') setPhone(phoneDigits(user.phone));
-    if (typeof user?.email === 'string') setEmail(user.email);
-  }, [user]);
-
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(''), 4000);
+  const saveProfileField = async (field: 'name' | 'phone', value: string) => {
+    await UserService.updateUser({ [field]: field === 'phone' ? '+55' + phoneDigits(value) : value });
+    await reloadUserProfile();
   };
-
-  const handleSaveName = async () => {
-    const error = validateName(name);
-    setFieldErrors((current) => ({ ...current, name: error }));
-    if (error) return;
-
-    try {
-      await UserService.updateUser({ name: name.trim() });
-      await reloadUserProfile();
-      showToast('Perfil atualizado com sucesso!');
-    } catch (err) {
-      logSafeError(err);
-      showToast('Não foi possível atualizar o perfil. Tente novamente.');
-    }
-  };
-
-  const handleSavePhone = async () => {
-    const error = validatePhone(phone);
-    setFieldErrors((current) => ({ ...current, phone: error }));
-    if (error) return;
-
-    try {
-      await UserService.updateUser({ phone: `+55${phoneDigits(phone)}` });
-      await reloadUserProfile();
-      showToast('Telefone atualizado com sucesso!');
-    } catch (err) {
-      logSafeError(err);
-      showToast('Não foi possível atualizar o telefone. Tente novamente.');
-    }
-  };
-
-  const handleSaveEmail = async () => {
-    const error = validateEmail(email);
-    setFieldErrors((current) => ({ ...current, email: error }));
-    if (error) return;
-
-    try {
-      await UserService.updateUser({ email: email.trim() });
-      await reloadUserProfile();
-      showToast('Endereço de e-mail atualizado!');
-    } catch (err) {
-      logSafeError(err);
-      showToast('Não foi possível atualizar o e-mail. Tente novamente.');
-    }
-  };
+  const showToast = (msg: string) => setToastMsg(msg);
 
   const handleChangePassword = async () => {
     if (isChangingPassword) return;
@@ -151,6 +91,7 @@ export const Settings: React.FC = () => {
     const confirmationError = validatePasswordConfirmation(newPassword, passwordConfirmation);
     setFieldErrors(current => ({ ...current, currentPassword: currentError, newPassword: newError, passwordConfirmation: confirmationError }));
     if (currentError || newError || confirmationError) return;
+    setToastMsg('');
     setIsChangingPassword(true);
     try {
       await UserService.updatePassword({ current_password: currentPassword, new_password: newPassword });
@@ -171,6 +112,9 @@ export const Settings: React.FC = () => {
       setCurrentPassword('');
       setNewPassword('');
       setPasswordConfirmation('');
+      setShowPassword(false);
+      setShowNewPassword(false);
+      setShowPasswordConfirmation(false);
       showToast('Senha alterada com sucesso!');
     } catch {
       setCurrentPassword('');
@@ -203,7 +147,6 @@ export const Settings: React.FC = () => {
         <p>Gerencie sua conta, segurança e assinatura.</p>
       </div>
 
-      {toastMsg && <div className="settings-toast-msg">{toastMsg}</div>}
 
       {/* Subtabs navigation bar matching UI design */}
       <div className="settings-tabs-bar">
@@ -245,76 +188,30 @@ export const Settings: React.FC = () => {
             <h3>Nome</h3>
             <p className="card-desc">Seu nome de exibição na plataforma.</p>
 
-            <div className="field-group">
-              <label>Nome completo</label>
-              <input
-                type="text"
-                maxLength={50}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setFieldErrors((current) => ({ ...current, name: validateName(e.target.value) }));
-                }}
-                placeholder="Seu nome completo"
-              />
-              {fieldErrors.name && <small className="settings-field-error">{fieldErrors.name}</small>}
-            </div>
-
-            <button className="settings-save-btn" onClick={handleSaveName}>
-              Salvar
-            </button>
+            <ChannelAnswerEditor question="Nome completo" answer={typeof user?.name === 'string' ? user.name : ''}
+              maxLength={50} validate={validateName} onSave={value => saveProfileField('name', value)}
+              successMessage="Informação atualizada com sucesso!" />
           </div>
 
           <div className="settings-card">
             <h3><FiPhone /> Telefone</h3>
             <p className="card-desc">Seu telefone. Alterações exigem verificação.</p>
 
-            <div className="field-group">
-              <label>Telefone</label>
-              <input
-                type="tel"
-                inputMode="numeric"
-                maxLength={isPhoneFocused ? 11 : 19}
-                value={isPhoneFocused ? phone : formatPhone(phone)}
-                onFocus={() => setIsPhoneFocused(true)}
-                onBlur={() => setIsPhoneFocused(false)}
-                onChange={(e) => {
-                  const digits = phoneDigits(e.target.value);
-                  setPhone(digits);
-                  setFieldErrors((current) => ({ ...current, phone: validatePhone(digits) }));
-                }}
-                placeholder="(00) 00000-0000"
-              />
-              {fieldErrors.phone && <small className="settings-field-error">{fieldErrors.phone}</small>}
-            </div>
-
-            <button className="settings-save-btn" onClick={handleSavePhone}>
-              Salvar telefone
-            </button>
+            <ChannelAnswerEditor question="Telefone" answer={typeof user?.phone === 'string' ? phoneDigits(user.phone) : ''}
+              type="tel" maxLength={11} validate={validatePhone} normalize={phoneDigits} displayValue={typeof user?.phone === 'string' ? formatPhone(user.phone) : 'Não informado'} onSave={value => saveProfileField('phone', value)}
+              successMessage="Informação atualizada com sucesso!" />
           </div>
 
           <div className="settings-card">
             <h3><FiMail /> E-mail</h3>
             <p className="card-desc">Seu endereço de e-mail. Alterações exigem validação.</p>
 
-            <div className="field-group">
-              <label>E-mail</label>
-              <input
-                type="email"
-                maxLength={200}
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setFieldErrors((current) => ({ ...current, email: validateEmail(e.target.value) }));
-                }}
-                placeholder="seu.email@exemplo.com"
-              />
-              {fieldErrors.email && <small className="settings-field-error">{fieldErrors.email}</small>}
+            <div className="channel-answer-view">
+              <span>{typeof user?.email === 'string' ? user.email : 'Não informado'}</span>
             </div>
-
-            <button className="settings-save-btn" onClick={handleSaveEmail}>
-              Salvar e-mail
-            </button>
+            <small className="settings-email-notice" role="status">
+              A troca de e-mail está temporariamente indisponível. O novo endereço precisa ser confirmado antes de substituir o atual.
+            </small>
           </div>
         </div>
       )}
@@ -342,6 +239,9 @@ export const Settings: React.FC = () => {
                 <button
                   type="button"
                   className="toggle-password-btn"
+                  disabled={isChangingPassword}
+                  aria-label={showPassword ? 'Ocultar senha atual' : 'Mostrar senha atual'}
+                  aria-pressed={showPassword}
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />} <span>{showPassword ? 'Ocultar' : 'Mostrar'}</span>
@@ -352,8 +252,9 @@ export const Settings: React.FC = () => {
 
             <div className="field-group">
               <label>Nova senha</label>
+              <div className="password-input-wrapper">
               <input
-                type="password"
+                type={showNewPassword ? 'text' : 'password'}
                 minLength={8}
                 maxLength={20}
                 disabled={isChangingPassword}
@@ -367,15 +268,22 @@ export const Settings: React.FC = () => {
                 }}
                 placeholder="Digite a nova senha"
               />
+                <button type="button" className="toggle-password-btn" disabled={isChangingPassword}
+                  aria-label={showNewPassword ? 'Ocultar nova senha' : 'Mostrar nova senha'} aria-pressed={showNewPassword}
+                  onClick={() => setShowNewPassword(visible => !visible)}>
+                  {showNewPassword ? <FiEyeOff /> : <FiEye />} <span>{showNewPassword ? 'Ocultar' : 'Mostrar'}</span>
+                </button>
+              </div>
               <small id="new-password-hint">A senha deve conter entre 8 e 20 caracteres.</small>
               {fieldErrors.newPassword && <small id="new-password-error" className="settings-field-error" role="alert">{fieldErrors.newPassword}</small>}
             </div>
 
             <div className="field-group">
               <label htmlFor="password-confirmation">Confirmar nova senha</label>
+              <div className="password-input-wrapper">
               <input
                 id="password-confirmation"
-                type="password"
+                type={showPasswordConfirmation ? 'text' : 'password'}
                 minLength={8}
                 maxLength={20}
                 autoComplete="new-password"
@@ -389,9 +297,16 @@ export const Settings: React.FC = () => {
                 aria-invalid={Boolean(fieldErrors.passwordConfirmation)}
                 aria-describedby={fieldErrors.passwordConfirmation ? 'password-confirmation-error' : undefined}
               />
+                <button type="button" className="toggle-password-btn" disabled={isChangingPassword}
+                  aria-label={showPasswordConfirmation ? 'Ocultar confirmação da nova senha' : 'Mostrar confirmação da nova senha'} aria-pressed={showPasswordConfirmation}
+                  onClick={() => setShowPasswordConfirmation(visible => !visible)}>
+                  {showPasswordConfirmation ? <FiEyeOff /> : <FiEye />} <span>{showPasswordConfirmation ? 'Ocultar' : 'Mostrar'}</span>
+                </button>
+              </div>
               {fieldErrors.passwordConfirmation && <small id="password-confirmation-error" className="settings-field-error" role="alert">{fieldErrors.passwordConfirmation}</small>}
             </div>
 
+            {toastMsg && <small className={toastMsg === 'Senha alterada com sucesso!' ? 'settings-field-success' : 'settings-field-error'} role="status">{toastMsg}</small>}
             <button className="settings-save-btn" disabled={isChangingPassword} onClick={handleChangePassword}>
               <FiLock /> {isChangingPassword ? 'Alterando...' : 'Alterar senha'}
             </button>
@@ -458,29 +373,28 @@ export const Settings: React.FC = () => {
               </div>
             </div>
 
+            {quotaError && <p className="settings-field-error" role="alert">{quotaError} <button type="button" onClick={() => void reloadQuota()}>Tentar novamente</button></p>}
             <div className="plan-usage-group">
               <div className="usage-item">
                 <div className="usage-label-row">
                   <span>Análises concluídas</span>
                   <span className="usage-count">
-                    {isLoadingReports ? 'Carregando...' : reportsError ? 'Indisponível' : `${completedReportCount} de 5`}
+                    {isLoadingQuota ? 'Carregando...' : quotaError || !quota ? 'Indisponível' : `${quota.used} de ${quota.limit} neste mês`}
                   </span>
                 </div>
                 <div className="plan-progress-bg">
-                  <div className="plan-progress-fill" style={{ width: `${Math.min(100, (completedReportCount / 5) * 100)}%` }} />
+                  <div className="plan-progress-fill" style={{ width: `${quota && quota.limit > 0 ? Math.min(100, (quota.used / quota.limit) * 100) : 0}%` }} />
                 </div>
               </div>
 
               <div className="usage-item">
                 <div className="usage-label-row">
-                  <span>Comentários processados</span>
+                  <span>Comentários processados neste mês</span>
                   <span className="usage-count">
-                    {isLoadingReports ? 'Carregando...' : reportsError || totals.comments === undefined ? 'Indisponível' : `${totals.comments.toLocaleString('pt-BR')} de 1.000`}
+                    {isLoadingQuota ? 'Carregando...' : quotaError || !quota ? 'Indisponível' : quota.comments_processed.toLocaleString('pt-BR')}
                   </span>
                 </div>
-                <div className="plan-progress-bg">
-                  <div className="plan-progress-fill" style={{ width: `${isLoadingReports || reportsError ? 0 : Math.min(100, ((totals.comments ?? 0) / 1000) * 100)}%` }} />
-                </div>
+
               </div>
             </div>
 
@@ -496,7 +410,7 @@ export const Settings: React.FC = () => {
               <li><FiCheck className="check-icon" /> 1 usuário</li>
             </ul>
             <small className="plan-limit-note">
-              Limite: até 5 análises/mês · 1.000 comentários no plano gratuito
+              {quota ? `Limite: até ${quota.limit} análises/mês · ${quota.remaining} disponíveis` : 'Limite mensal indisponível'}
             </small>
           </div>
         </div>

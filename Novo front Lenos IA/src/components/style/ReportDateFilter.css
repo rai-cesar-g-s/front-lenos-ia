@@ -1,0 +1,11 @@
+.report-date-filter { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 16px; padding: 0; border: 0; background: transparent; }
+.report-date-filter > div { display: flex; flex-direction: column; gap: 4px; }
+.report-date-filter label { color: #607286; font-size: 12px; }
+.report-date-filter input { min-height: 40px; border: 1px solid #dfe5e9; border-radius: 8px; padding: 8px 12px; box-sizing: border-box; color: #101729; background: #fff; font: inherit; font-size: 13px; }
+.report-date-filter button { min-height: 40px; padding: 8px 16px; border: 1px solid #dfe5e9; border-radius: 8px; background: #f2f7f3; color: #315d40; font: inherit; font-size: 13px; cursor: pointer; }
+.report-date-filter button:disabled { opacity: .6; cursor: default; }
+.report-date-filter :focus-visible { outline: 2px solid #75aa7e; outline-offset: 2px; }
+.report-date-filter small { flex-basis: 100%; color: #a12626; }
+@media (max-width: 560px) { .report-date-filter > div { flex: 1 1 140px; min-width: 0; } .report-date-filter input { width: 100%; } .report-date-filter button { width: 100%; } }
+
+
