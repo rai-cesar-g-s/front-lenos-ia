@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 import { useAuth } from '../hooks/useAuth';
 import './style/Support.css';
 
-const SUPPORT_EMAIL = 'suporte@lenosia.com';
+const SUPPORT_EMAIL = 'suporte@lenos-ia.com.br';
 
 export const Support: React.FC = () => {
   const { user } = useAuth();
@@ -169,7 +169,7 @@ export const Support: React.FC = () => {
               <strong>Conclua o envio no seu aplicativo de e-mail</strong>
               <p>
                 A abertura do aplicativo foi solicitada; isso não confirma o envio da mensagem. Se ele não abrir, copie o endereço acima e escreva para{' '}
-                <a href="mailto:suporte@lenosia.com">suporte@lenosia.com</a>.
+                <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
               </p>
             </div>
           </div>
