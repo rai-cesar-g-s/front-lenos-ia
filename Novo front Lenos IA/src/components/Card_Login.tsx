@@ -1,6 +1,6 @@
 import { logSafeError } from '../utils/safeLogger';
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./style/Card_Login.css";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
 import { useAuth } from "../hooks/useAuth";
@@ -13,6 +13,7 @@ interface CardLoginProps {
 
 const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", password: initialPassword = "" }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [email, setEmail] = useState(initialEmail);
@@ -28,14 +29,16 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
     const nextErrors: { email?: string; password?: string } = {};
     if (!email.trim()) {
       nextErrors.email = "Informe seu e-mail.";
+    } else if (email.length > 200) {
+      nextErrors.email = "O e-mail deve ter no máximo 200 caracteres.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       nextErrors.email = "Informe um e-mail válido.";
     }
 
     if (!password) {
       nextErrors.password = "Informe sua senha.";
-    } else if (password.length < 6) {
-      nextErrors.password = "A senha deve ter pelo menos 6 caracteres.";
+    } else if (password.length < 8 || password.length > 20) {
+      nextErrors.password = "A senha deve conter entre 8 e 20 caracteres.";
     }
 
     setErrors(nextErrors);
@@ -51,7 +54,9 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
 
     try {
       await login({ email: email.trim(), password });
-      navigate("/dashboard");
+      const returnTo = location.state?.emailChangeReturnTo;
+      const allowed = typeof returnTo === 'string' && /^\/(?:confirm-email|v1\/confirm-email|v1\/user\/confirm-email|email-change-confirmation)\?/.test(returnTo);
+      navigate(allowed ? returnTo : '/dashboard', { replace: true });
     } catch (err: unknown) {
       logSafeError("Login Error:", err);
       const msg = formatErrorMessage(err, "E-mail ou senha incorretos. Verifique suas credenciais.");
@@ -71,6 +76,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
             <FiMail aria-hidden="true" />
             <input
               type="email"
+              maxLength={200}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -94,6 +100,8 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
             <FiLock aria-hidden="true" />
             <input
               type={showPassword ? "text" : "password"}
+              minLength={8}
+              maxLength={20}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);

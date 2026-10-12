@@ -1,3 +1,4 @@
+import { getReportStatus } from '../utils/reportStatus';
 import { useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import type { ReportItem } from './ReportDetailModal';
@@ -29,12 +30,6 @@ export function ReportRowTitle({ report, onRename }: { report: ReportItem; onRen
 }
 
 export function ReportStatus({ status }: { status?: string }) {
-  const statuses: Record<string, [string, string]> = {
-    done: ['Concluído', 'done'], completed: ['Concluído', 'done'],
-    pending: ['Pendente', 'pending'], queued: ['Na fila', 'pending'],
-    processing: ['Em processamento', 'pending'], in_progress: ['Em processamento', 'pending'],
-    failed: ['Falhou', 'failed'], error: ['Falhou', 'failed'],
-  };
-  const [label, tone] = statuses[status?.toLowerCase() || ''] || ['Não informado', 'unknown'];
+  const [label, tone] = getReportStatus(status);
   return <span className={`report-status ${tone}`}>{label}</span>;
 }

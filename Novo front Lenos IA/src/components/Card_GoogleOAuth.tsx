@@ -29,8 +29,8 @@ const Card_GoogleOAuth = () => {
     {!checking && !connectionError && expirationLabel && (connected || expired) && <p className="connection-expiration">{expired ? 'Autorização expirada em' : 'Autorização válida até'} {expirationLabel} (horário de Brasília).</p>}
     {connectionError && <p className="server-error" role="alert">{connectionError}</p>}
     {error && <p className="server-error" role="alert">{error}</p>}
-    {checking ? <p role="status">Verificando conexão...</p> : connectionError ? <button className="google-connect-button" onClick={retry}>Tentar novamente</button> : !connected && <button className="google-connect-button" onClick={connect} disabled={loading}>
-      {loading ? 'Redirecionando...' : expired ? 'Reconectar Google' : 'Conectar Google'}
+    {checking ? <p role="status">Verificando conexão...</p> : connectionError ? <button className="google-connect-button" onClick={retry}>Tentar novamente</button> : <button className="google-connect-button" onClick={connect} disabled={loading}>
+      {loading ? 'Redirecionando...' : connected ? 'Trocar conta do YouTube' : expired ? 'Reconectar Google' : 'Conectar Google'}
     </button>}
   </div>;
 };

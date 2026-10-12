@@ -84,17 +84,15 @@ const Home = () => {
               <Card_Type_One
                 image={<BiSearch />}
                 step="Passo 1"
-                title="Informe o vídeo"
-                text="Cole o link de qualquer vídeo do YouTube. A Lenos IA valida e
-              identifica o conteúdo automaticamente."
+                title="Conecte sua conta do YouTube"
+                text="Conecte uma conta do YouTube que tenha vídeos públicos com comentários. Depois, cole o link de um vídeo dessa conta. Apenas vídeos da conta conectada podem ser analisados."
               />
 
               <Card_Type_One
                 image={<LuBrain />}
                 step="Passo 2"
                 title="A IA analisa"
-                text="Nossa tecnologia processa todos os comentários, identificando
-              sentimentos, temas e padrões que o olho humano não enxergaria."
+                text="A IA utilizada analisa uma amostra dos comentários do vídeo, identificando sentimentos, temas e padrões nas reações da audiência."
               />
 
               <Card_Type_One

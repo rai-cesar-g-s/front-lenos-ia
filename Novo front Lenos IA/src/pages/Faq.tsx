@@ -27,7 +27,7 @@ const faqItems = [
   {
     "category": "como-funciona",
     "title": "Como posso melhorar a qualidade dos relatórios?",
-    "text": "Responda corretamente às perguntas iniciais sobre seu canal e mantenha essas informações atualizadas em Configurações > Detalhes do canal. Elas ajudam a contextualizar a análise realizada pela inteligência artificial."
+    "text": "Confira o contexto dos comentários ao interpretar o relatório. Atualmente, as respostas iniciais sobre o canal são armazenadas, mas ainda não são utilizadas para personalizar a análise. Essa integração está prevista e a documentação será atualizada quando estiver disponível."
   },
   {
     "category": "como-funciona",
@@ -42,7 +42,7 @@ const faqItems = [
   {
     "category": "analises",
     "title": "Quantos comentários a Lenos IA consegue analisar?",
-    "text": "Atualmente, o único plano disponível é o gratuito, que permite até 5 análises por mês e até 200 comentários por análise. Isso corresponde a um máximo de 1.000 comentários mensais."
+    "text": "A cota gratuita permite até 5 análises concluídas por mês e até 200 comentários por análise. Isso corresponde a até 1.000 comentários nas análises concluídas do mês."
   },
   {
     "category": "analises",
@@ -52,7 +52,7 @@ const faqItems = [
   {
     "category": "analises",
     "title": "Como são escolhidos os comentários analisados?",
-    "text": "Os comentários são selecionados de forma aleatória, respeitando o limite de até 200 comentários por análise."
+    "text": "A coleta segue a ordenação por relevância fornecida pelo YouTube e seleciona até 200 comentários principais, sem incluir suas respostas. Antes da análise, o sistema remove emojis, normaliza espaços e descarta textos sem conteúdo alfanumérico. A quantidade efetivamente processada pode ser menor que 200."
   },
   {
     "category": "analises",
@@ -67,7 +67,7 @@ const faqItems = [
   {
     "category": "analises",
     "title": "Posso exportar os relatórios?",
-    "text": "Sim. Você pode baixar seus relatórios em PDF, inclusive no plano gratuito."
+    "text": "Sim. Você pode baixar seus relatórios em PDF gratuitamente."
   },
   {
     "category": "analises",
@@ -90,32 +90,32 @@ const faqItems = [
     "text": "Sim. A IA pode interpretar incorretamente gírias, expressões específicas da comunidade, ironia, sarcasmo ou comentários ambíguos e sem contexto. Use o relatório como apoio e confira os comentários antes de tomar decisões."
   },
   {
-    "category": "planos",
-    "title": "Como funciona o plano gratuito?",
-    "text": "O plano gratuito é o padrão para todas as contas e o único disponível atualmente. Ele permite até 5 análises por mês, com até 200 comentários por análise. Não é necessário cartão de crédito para começar."
+    "category": "cotas",
+    "title": "Como funciona a cota gratuita?",
+    "text": "A cota gratuita permite até 5 análises concluídas por mês, com até 200 comentários por análise. Não é necessário cartão de crédito para participar dos testes autorizados."
   },
   {
-    "category": "planos",
+    "category": "cotas",
     "title": "Quando meu limite mensal é renovado?",
     "text": "Seu limite de análises é renovado no dia 1 de cada mês, independentemente da data em que você criou sua conta."
   },
   {
-    "category": "planos",
+    "category": "cotas",
     "title": "Uma análise que falhou consome meu limite?",
-    "text": "Não. Apenas análises concluídas com sucesso, com status done (concluído), entram no cálculo da quota mensal de vídeos. Análises que falharam ou ainda estão em processamento não consomem essa quota."
+    "text": "Não. Apenas análises concluídas com sucesso, com status done (concluído), entram no cálculo da cota mensal por usuário. Análises que falharam ou ainda estão em processamento não consomem essa cota."
   },
   {
-    "category": "planos",
+    "category": "cotas",
     "title": "Excluir um relatório devolve uma análise disponível?",
     "text": "Não. Excluir um relatório remove o item do seu histórico, mas não recupera a análise consumida nem aumenta seu limite disponível no mês."
   },
   {
-    "category": "planos",
-    "title": "Haverá planos pagos?",
-    "text": "Há previsão de oferecer planos pagos com novos recursos e limites de uso. Ainda não há uma data de lançamento confirmada."
+    "category": "cotas",
+    "title": "A ferramenta tem algum custo?",
+    "text": "Não. A Lenos IA é gratuita e possui uma cota mensal de análises por usuário. Não há cobrança ou assinatura."
   },
   {
-    "category": "planos",
+    "category": "cotas",
     "title": "Quais recursos poderão ser adicionados futuramente?",
     "text": "Estamos avaliando os seguintes recursos:",
     "topics": [
@@ -126,7 +126,7 @@ const faqItems = [
       "Compartilhamento de relatórios com outros aplicativos e sistemas.",
       "Viabilidade de analisar vídeos privados."
     ],
-    "note": "Essas possibilidades ainda não têm lançamento ou data confirmados."
+    "note": "São possibilidades de estudo, sem compromisso de implementação ou lançamento comercial."
   },
   {
     "category": "seguranca",
@@ -141,7 +141,27 @@ const faqItems = [
   {
     "category": "seguranca",
     "title": "Como excluo minha conta?",
-    "text": "Entre na Lenos IA, acesse Configurações > Segurança e clique em Excluir conta. Leia o aviso e confirme a exclusão. Essa ação é permanente e exclui sua conta e os dados associados."
+    "text": "Entre na Lenos IA, acesse Configurações > Segurança e clique em Excluir conta. A exclusão remove os registros da conta e seus dados relacionados no banco principal. Ela não exclui PDFs já baixados ou comentários no YouTube. Caches, logs e registros dos fornecedores têm tratamento separado, conforme a Política de Privacidade."
+  },
+  {
+    "category": "como-funciona",
+    "title": "Qual é a finalidade da Lenos IA e quem pode participar dos testes?",
+    "text": "A Lenos IA é uma prova de conceito acadêmica desenvolvida por seus autores, responsáveis pelo projeto. Os testes de análise destinam-se aos criadores da ferramenta e, excepcionalmente, a participantes adultos convidados durante o evento. Não há previsão de comercialização. Após o evento, os responsáveis realizarão a limpeza dos dados sob seu controle. A possibilidade de acessar o site ou criar uma conta não representa autorização para participar dos testes de análise."
+  },
+  {
+    "category": "seguranca",
+    "title": "Os comentários e os nomes de quem comentou ficam armazenados?",
+    "text": "No fluxo atual, os comentários são coletados e processados temporariamente para envio ao Gemini. Esse fluxo não grava comentários individuais nem nomes, perfis ou identificadores de seus autores no banco. São armazenados dados da análise, o relatório, as instruções e as contagens geradas. O texto de um comentário pode conter informações pessoais, mesmo sem o nome de seu autor. O sistema não dispõe de busca por comentarista para localizar os relatórios que utilizaram seu texto."
+  },
+  {
+    "category": "seguranca",
+    "title": "Como revogo a conexão com o Google?",
+    "text": "Acesse as conexões com aplicativos e serviços de terceiros nas configurações da sua Conta Google e remova o acesso da Lenos IA. A revogação impede novos acessos autorizados; não equivale, por si só, à exclusão da conta e dos relatórios armazenados na Lenos IA."
+  },
+  {
+    "category": "como-funciona",
+    "title": "Existe restrição de idade para utilizar a análise com IA?",
+    "text": "Os testes com Gemini destinam-se exclusivamente a participantes com 18 anos ou mais. A finalidade acadêmica não dispensa o cumprimento dos termos do Google. A ferramenta não é destinada a menores de idade, e uma indicação na documentação não substitui medidas de restrição do acesso aos testes."
   },
 {
   "category": "suporte",
@@ -194,7 +214,7 @@ const faqCategories = [
   { id: "todos", label: "Todos os temas", icon: FiGrid },
   { id: "como-funciona", label: "Como funciona", icon: FiHelpCircle },
   { id: "analises", label: "Análises", icon: FiBarChart2 },
-  { id: "planos", label: "Planos", icon: FiCreditCard },
+  { id: "cotas", label: "Cotas", icon: FiCreditCard },
   { id: "suporte", label: "Suporte", icon: FiHelpCircle },
   { id: "seguranca", label: "Privacidade", icon: FiShield },
 ];

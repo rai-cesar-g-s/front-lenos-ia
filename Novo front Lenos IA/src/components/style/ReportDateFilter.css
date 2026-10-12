@@ -1,4 +1,4 @@
-.report-date-filter { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 16px; padding: 0; border: 0; background: transparent; }
+.report-date-filter { position: relative; z-index: 31; display: flex; align-items: flex-end; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 16px; padding: 0; border: 0; background: transparent; }
 .report-date-filter > div { display: flex; flex-direction: column; gap: 4px; }
 .report-date-filter label { color: #607286; font-size: 12px; }
 .report-date-filter input { min-height: 40px; border: 1px solid #dfe5e9; border-radius: 8px; padding: 8px 12px; box-sizing: border-box; color: #101729; background: #fff; font: inherit; font-size: 13px; }
@@ -9,3 +9,22 @@
 @media (max-width: 560px) { .report-date-filter > div { flex: 1 1 140px; min-width: 0; } .report-date-filter input { width: 100%; } .report-date-filter button { width: 100%; } }
 
 
+
+.brazilian-date-field { position: relative; }
+.brazilian-date-field > input[type="text"] { width: 160px; padding-right: 36px; }
+.report-date-filter .date-picker-button { position: absolute; right: 1px; top: 1px; bottom: 1px; min-height: 0; width: 34px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #607286; }
+@media (max-width: 560px) { .brazilian-date-field > input[type="text"] { width: 100%; } .report-date-filter .date-picker-button { width: 34px; } }
+
+.portuguese-calendar { position: absolute; top: calc(100% + 6px); left: 0; z-index: 30; width: 280px; max-width: calc(100vw - 48px); box-sizing: border-box; padding: 12px; background: #fff; border: 1px solid #dfe5e9; border-radius: 10px; box-shadow: 0 8px 24px #10172920; color: #101729; }
+.calendar-heading, .calendar-footer, .calendar-selectors { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+.calendar-heading span { font-size: 13px; font-weight: 600; }
+.report-date-filter .portuguese-calendar button { width: auto; min-height: 30px; padding: 4px 8px; font-size: 12px; }
+.calendar-selectors select, .report-date-filter .calendar-selectors input { min-height: 32px; height: 32px; padding: 4px 6px; border: 1px solid #dfe5e9; border-radius: 6px; background: #fff; color: #101729; font: inherit; font-size: 12px; }
+.calendar-selectors select { flex: 1; min-width: 0; }
+.report-date-filter .calendar-selectors input { width: 80px; }
+.calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.calendar-weekday { text-align: center; font-size: 11px; color: #607286; padding: 4px 0; }
+.report-date-filter .calendar-days button { width: 100%; padding: 4px 0; border: 0; background: #fff; color: #101729; }
+.report-date-filter .calendar-days button:hover { background: #edf5ef; }
+.report-date-filter .calendar-days .calendar-selected { background: #315d40; color: #fff; }
+.calendar-footer { margin: 10px 0 0; }

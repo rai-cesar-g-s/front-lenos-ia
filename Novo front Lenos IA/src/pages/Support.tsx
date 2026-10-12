@@ -16,10 +16,7 @@ export const Support: React.FC = () => {
   const [emailDraft, setEmail] = useState<string | null>(null);
   const name = nameDraft ?? (typeof user?.name === 'string' && user.name !== 'Carregando...' ? user.name : '');
   const email = emailDraft ?? (typeof user?.email === 'string' ? user.email : '');
-  const [subject, setSubject] = useState(() => {
-    const requestedPlan = searchParams.get('plano');
-    return searchParams.get('assunto') || (requestedPlan ? `Alteração do plano ${requestedPlan}` : '');
-  });
+  const [subject, setSubject] = useState(() => searchParams.get('assunto') || '');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 

@@ -1,4 +1,4 @@
-/* Settings.css - Pixel perfect implementation of configurações.png and planos.png */
+/* Settings.css - Pixel perfect implementation of configurações */
 .settings-tabs-bar {
   display: flex;
   align-items: center;
@@ -273,14 +273,14 @@ input:checked + .slider:before {
 }
 
 /* Plan Tab Specifics */
-.plan-name-badge {
+.quota-name-badge {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
 }
 
-.plan-name-badge strong {
+.quota-name-badge strong {
   font-size: 24px;
   color: #101729;
 }
@@ -294,7 +294,7 @@ input:checked + .slider:before {
   font-weight: 600;
 }
 
-.plan-usage-group {
+.quota-usage-group {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -313,7 +313,7 @@ input:checked + .slider:before {
   color: #607286;
 }
 
-.plan-progress-bg {
+.quota-progress-bg {
   height: 6px;
   width: 100%;
   background: #edf5ef;
@@ -321,12 +321,12 @@ input:checked + .slider:before {
   overflow: hidden;
 }
 
-.plan-progress-fill {
+.quota-progress-fill {
   height: 100%;
   background: #75aa7e;
 }
 
-.plan-features-list {
+.quota-features-list {
   list-style: none;
   margin: 0 0 16px;
   padding: 0;
@@ -335,7 +335,7 @@ input:checked + .slider:before {
   gap: 10px;
 }
 
-.plan-features-list li {
+.quota-features-list li {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -347,7 +347,7 @@ input:checked + .slider:before {
   color: #4d8960;
 }
 
-.plan-limit-note {
+.quota-limit-note {
   display: block;
   font-size: 11px;
   color: #8899a8;
@@ -365,7 +365,7 @@ input:checked + .slider:before {
   animation: fadeIn 0.2s ease;
 }
 
-/* Plan Modal matching planos.png */
+/* Monthly quota styles */
 .plans-modal-overlay {
   position: fixed;
   inset: 0;
@@ -423,7 +423,7 @@ input:checked + .slider:before {
   gap: 16px;
 }
 
-.plan-column-card {
+.quota-column-card {
   border: 1px solid #dfe5e9;
   border-radius: 12px;
   padding: 20px;
@@ -434,25 +434,25 @@ input:checked + .slider:before {
   text-align: left;
 }
 
-.plan-column-card.highlight {
+.quota-column-card.highlight {
   border-color: #aed1b5;
   box-shadow: 0 4px 14px rgba(117, 170, 126, 0.12);
 }
 
-.plan-head-row {
+.quota-head-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.plan-column-card h3 {
+.quota-column-card h3 {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
   color: #101729;
 }
 
-.current-plan-pill {
+.current-quota-pill {
   padding: 3px 8px;
   background: #75aa7e;
   color: #ffffff;
@@ -461,28 +461,28 @@ input:checked + .slider:before {
   font-weight: 600;
 }
 
-.plan-price {
+.quota-price {
   margin: 12px 0 4px;
 }
 
-.plan-price strong {
+.quota-price strong {
   font-size: 24px;
   color: #101729;
 }
 
-.plan-price span {
+.quota-price span {
   font-size: 12px;
   color: #607286;
 }
 
-.plan-specs {
+.quota-specs {
   display: block;
   font-size: 11px;
   color: #8899a8;
   margin-bottom: 18px;
 }
 
-.plan-features-check-list {
+.quota-features-check-list {
   list-style: none;
   margin: 0 0 20px;
   padding: 0;
@@ -492,19 +492,19 @@ input:checked + .slider:before {
   font-size: 12px;
 }
 
-.plan-features-check-list li {
+.quota-features-check-list li {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.plan-features-check-list li.yes { color: #334458; }
-.plan-features-check-list li.yes svg { color: #4d8960; }
+.quota-features-check-list li.yes { color: #334458; }
+.quota-features-check-list li.yes svg { color: #4d8960; }
 
-.plan-features-check-list li.no { color: #b8c4d0; }
-.plan-features-check-list li.no svg { color: #cfd9e0; }
+.quota-features-check-list li.no { color: #b8c4d0; }
+.quota-features-check-list li.no svg { color: #cfd9e0; }
 
-.select-plan-btn {
+.select-quota-btn {
   width: 100%;
   height: 38px;
   border: 1px solid #dfe5e9;
@@ -518,7 +518,7 @@ input:checked + .slider:before {
   transition: all 0.15s ease;
 }
 
-.select-plan-btn:hover {
+.select-quota-btn:hover {
   background: #75aa7e;
   color: #ffffff;
   border-color: #75aa7e;

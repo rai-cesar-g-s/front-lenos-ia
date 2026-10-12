@@ -52,3 +52,19 @@ test('global percentage divides summed positives by summed comments instead of a
   assert.equal(getCommentPercentage(0, 0), undefined);
   assert.equal(getCommentPercentage(undefined, 100), undefined);
 });
+
+test('preserves recurring theme descriptions, API relevance and recommendation justifications', () => {
+  const recurring_themes = [{theme:'Qualidade do conteúdo',description:'O público destaca a clareza.',percentage_relevance:35}];
+  const recommendations = [{recommendation:'Aprofundar os exemplos',justification:'O público pede aplicações práticas.'}];
+  const item = toReportItem(response({recurring_themes,recommendations}));
+  assert.deepEqual(item.recurring_themes,recurring_themes);
+  assert.deepEqual(item.recommendations,recommendations);
+  assert.equal(item.recurring_themes[0].count,undefined);
+});
+test('missing or empty new fields do not produce invented insights', () => {
+  for (const fields of [{},{recurring_themes:[],recommendations:[]},{recurring_themes:null,recommendations:null}]) {
+    const item=toReportItem(response(fields));
+    assert.deepEqual(item.recurring_themes,[]);
+    assert.deepEqual(item.recommendations,[]);
+  }
+});

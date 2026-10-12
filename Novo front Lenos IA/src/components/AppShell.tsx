@@ -4,7 +4,6 @@ import {
   FiGrid,
   FiSearch,
   FiClock,
-  FiCompass,
   FiSettings,
   FiHelpCircle,
   FiLogOut,
@@ -21,7 +20,6 @@ const navigation = [
   { label: 'Dashboard', path: '/dashboard', icon: FiGrid },
   { label: 'Analisar vídeo', path: '/analyze', icon: FiSearch },
   { label: 'Histórico', path: '/history', icon: FiClock },
-  { label: 'Insights', path: '/insights', icon: FiCompass },
   { label: 'Configurações', path: '/settings', icon: FiSettings },
   { label: 'Suporte', path: '/support', icon: FiHelpCircle },
 ];

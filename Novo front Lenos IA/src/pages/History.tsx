@@ -1,5 +1,7 @@
+import { reportFilterOptions } from '../utils/reportStatus';
+import type { ReportFilterStatus } from '../api/report';
 import { ReportDateFilter } from '../components/ReportDateFilter';
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   FiSearch,
   FiFilter,
@@ -13,6 +15,8 @@ import './style/History.css';
 
 export const History: React.FC = () => {
   const {
+    statusFilter,
+    setStatusFilter,
     dateRange,
     setDateRange,
     reports,
@@ -23,22 +27,7 @@ export const History: React.FC = () => {
     downloadReportPDF,
   } = useDashboard();
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'done' | 'pending' | 'failed'
   const [selectedReportModal, setSelectedReportModal] = useState<ReportItem | null>(null);
-
-  // Filter & Search Logic
-  const filteredReports = useMemo(() => {
-    return reports.filter((item: ReportItem) => {
-        const titleMatch = (item.title || '').toLowerCase().includes(searchTerm.toLowerCase());
-
-        if (!titleMatch) return false;
-        if (statusFilter === 'done') return item.status === 'done' || item.status === 'completed' || !item.status;
-        if (statusFilter === 'pending') return item.status === 'pending';
-        if (statusFilter === 'failed') return item.status === 'failed';
-        return true;
-      });
-  }, [reports, searchTerm, statusFilter]);
 
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
@@ -54,35 +43,27 @@ export const History: React.FC = () => {
         <p>Consulte e revise análises anteriores.</p>
       </div>
 
+      <div className="history-filters-row">
       <ReportDateFilter range={dateRange} onApply={setDateRange} />
 
-      {/* Filter and Search Bar */}
+      {/* Rótulos em português; os valores do contrato são enviados à API. */}
       <div className="history-controls-bar">
-        <div className="search-box">
-          <FiSearch className="search-icon" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar por título ou canal..."
-          />
-        </div>
-
         <div className="filter-group">
           <div className="select-wrapper">
             <FiFilter className="select-icon" />
             <select
+              aria-label="Filtrar por status da análise"
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => setStatusFilter(e.target.value as ReportFilterStatus | '')}
             >
-              <option value="all">Todos status</option>
-              <option value="done">Concluídas</option>
-              <option value="pending">Em processamento</option>
-              <option value="failed">Falhas</option>
+              <option value="">Todos os status</option>
+              {reportFilterOptions.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </div>
 
         </div>
+      </div>
+
       </div>
 
       {/* History List */}
@@ -96,14 +77,14 @@ export const History: React.FC = () => {
             <h3>Falha ao carregar histórico</h3>
             <p>{reportsError}</p>
           </div>
-        ) : filteredReports.length === 0 ? (
+        ) : reports.length === 0 ? (
           <div className="history-empty">
             <FiSearch className="empty-icon" />
             <h3>Nenhuma análise encontrada</h3>
-            <p>Tente ajustar os filtros de busca ou inicie uma nova análise de vídeo.</p>
+            <p>Tente ajustar o período ou o status ou inicie uma nova análise de vídeo.</p>
           </div>
         ) : (
-          filteredReports.map((report: ReportItem) => {
+          reports.map((report: ReportItem) => {
             const ytId = getYouTubeId(report.video_url);
 
             return (

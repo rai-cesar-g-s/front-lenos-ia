@@ -2,7 +2,7 @@ import { logSafeError } from '../utils/safeLogger';
 import { validatePassword, validatePasswordConfirmation } from '../utils/passwordValidation';
 import { isAxiosError } from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   FiUser,
   FiMail,
@@ -17,6 +17,7 @@ import {
   FiAlertTriangle,
   FiPhone,
 } from 'react-icons/fi';
+import { EmailChange } from '../components/EmailChange';
 import { ChannelAnswerEditor } from '../components/ChannelAnswerEditor';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 import AppShell from '../components/AppShell';
@@ -59,9 +60,10 @@ export const Settings: React.FC = () => {
   const { user, reloadUserProfile, logout } = useAuth();
   const { quota, quotaError, isLoadingQuota, reloadQuota } = useDashboard();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
 
-  const [activeTab, setActiveTab] = useState<'perfil' | 'seguranca' | 'canal' | 'plano'>('perfil');
+  const [activeTab, setActiveTab] = useState<'perfil' | 'seguranca' | 'canal' | 'cota'>('perfil');
 
   const channelDetails = useChannelDetails(activeTab === 'canal');
 
@@ -86,7 +88,7 @@ export const Settings: React.FC = () => {
 
   const handleChangePassword = async () => {
     if (isChangingPassword) return;
-    const currentError = currentPassword ? '' : 'Informe sua senha atual.';
+    const currentError = currentPassword ? validatePassword(currentPassword) : 'Informe sua senha atual.';
     const newError = validatePassword(newPassword) || (newPassword === currentPassword ? 'A nova senha deve ser diferente da atual.' : '');
     const confirmationError = validatePasswordConfirmation(newPassword, passwordConfirmation);
     setFieldErrors(current => ({ ...current, currentPassword: currentError, newPassword: newError, passwordConfirmation: confirmationError }));
@@ -105,26 +107,15 @@ export const Settings: React.FC = () => {
       setIsChangingPassword(false);
       return;
     }
-    // The change succeeded. Re-establish cookies using the new password.
-    try {
-      if (typeof user?.email !== 'string' || !user.email) throw new Error('Missing account email');
-      await UserService.loginUser({ email: user.email, password: newPassword });
-      setCurrentPassword('');
-      setNewPassword('');
-      setPasswordConfirmation('');
-      setShowPassword(false);
-      setShowNewPassword(false);
-      setShowPasswordConfirmation(false);
-      showToast('Senha alterada com sucesso!');
-    } catch {
-      setCurrentPassword('');
-      setNewPassword('');
-      setPasswordConfirmation('');
-      navigate('/login', { replace: true, state: { message: 'Senha alterada com sucesso. Entre novamente com sua nova senha.' } });
-      window.dispatchEvent(new Event('auth-error'));
-    } finally {
-      setIsChangingPassword(false);
-    }
+    // O backend já renovou os cookies; mantenha a sessão atual.
+    setCurrentPassword('');
+    setNewPassword('');
+    setPasswordConfirmation('');
+    setShowPassword(false);
+    setShowNewPassword(false);
+    setShowPasswordConfirmation(false);
+    showToast('Senha alterada com sucesso!');
+    setIsChangingPassword(false);
   };
 
   const handleDeleteAccount = async () => {
@@ -139,12 +130,14 @@ export const Settings: React.FC = () => {
     }
   };
 
+  if (searchParams.get('token')) return <Navigate replace to={'/confirm-email?token=' + encodeURIComponent(searchParams.get('token')!)} />;
+
   return (
     <AppShell>
       {confirmDeleteAccount && <ConfirmDeleteModal title="Excluir conta?" description="Sua conta e todos os dados associados serão excluídos permanentemente. Esta ação não pode ser desfeita." confirmLabel="Excluir conta" onCancel={() => setConfirmDeleteAccount(false)} onConfirm={handleDeleteAccount} />}
       <div className="page-heading">
         <h1>Configurações</h1>
-        <p>Gerencie sua conta, segurança e assinatura.</p>
+        <p>Gerencie sua conta, segurança e cota mensal.</p>
       </div>
 
 
@@ -174,10 +167,10 @@ export const Settings: React.FC = () => {
 
 
         <button
-          className={`settings-tab-btn ${activeTab === 'plano' ? 'active' : ''}`}
-          onClick={() => setActiveTab('plano')}
+          className={`settings-tab-btn ${activeTab === 'cota' ? 'active' : ''}`}
+          onClick={() => setActiveTab('cota')}
         >
-          <FiCreditCard /> <span>Plano</span>
+          <FiCreditCard /> <span>Cota mensal</span>
         </button>
       </div>
 
@@ -206,12 +199,7 @@ export const Settings: React.FC = () => {
             <h3><FiMail /> E-mail</h3>
             <p className="card-desc">Seu endereço de e-mail. Alterações exigem validação.</p>
 
-            <div className="channel-answer-view">
-              <span>{typeof user?.email === 'string' ? user.email : 'Não informado'}</span>
-            </div>
-            <small className="settings-email-notice" role="status">
-              A troca de e-mail está temporariamente indisponível. O novo endereço precisa ser confirmado antes de substituir o atual.
-            </small>
+            <EmailChange />
           </div>
         </div>
       )}
@@ -228,6 +216,8 @@ export const Settings: React.FC = () => {
               <div className="password-input-wrapper">
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  minLength={8}
+                  maxLength={20}
                   value={currentPassword}
                   onChange={(e) => { setCurrentPassword(e.target.value); setFieldErrors(current => ({ ...current, currentPassword: '' })); }}
                   disabled={isChangingPassword}
@@ -359,22 +349,22 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       )}
-      {/* Tab 6: Plano */}
-      {activeTab === 'plano' && (
+      {/* Cota mensal */}
+      {activeTab === 'cota' && (
         <div className="settings-content-wrapper">
           <div className="settings-card">
-            <div className="plan-title-header">
-              <div className="plan-title-group">
-                <h3><FiCreditCard /> Plano atual</h3>
-                <div className="plan-name-badge">
-                  <strong>Gratuito</strong>
-                  <span className="active-status">Ativa</span>
+            <div className="quota-title-header">
+              <div className="quota-title-group">
+                <h3><FiCreditCard /> Cota mensal por usuário</h3>
+                <div className="quota-name-badge">
+                  <strong>Uso gratuito</strong>
+                  <span className="active-status">Sem cobrança</span>
                 </div>
               </div>
             </div>
 
             {quotaError && <p className="settings-field-error" role="alert">{quotaError} <button type="button" onClick={() => void reloadQuota()}>Tentar novamente</button></p>}
-            <div className="plan-usage-group">
+            <div className="quota-usage-group">
               <div className="usage-item">
                 <div className="usage-label-row">
                   <span>Análises concluídas</span>
@@ -382,8 +372,8 @@ export const Settings: React.FC = () => {
                     {isLoadingQuota ? 'Carregando...' : quotaError || !quota ? 'Indisponível' : `${quota.used} de ${quota.limit} neste mês`}
                   </span>
                 </div>
-                <div className="plan-progress-bg">
-                  <div className="plan-progress-fill" style={{ width: `${quota && quota.limit > 0 ? Math.min(100, (quota.used / quota.limit) * 100) : 0}%` }} />
+                <div className="quota-progress-bg">
+                  <div className="quota-progress-fill" style={{ width: `${quota && quota.limit > 0 ? Math.min(100, (quota.used / quota.limit) * 100) : 0}%` }} />
                 </div>
               </div>
 
@@ -398,18 +388,18 @@ export const Settings: React.FC = () => {
               </div>
             </div>
 
-            <p className="card-desc">O plano Gratuito é o único plano disponível no momento.</p>
+            <p className="card-desc">A ferramenta é gratuita. Cada usuário possui uma cota mensal de análises, renovada no dia 1 de cada mês.</p>
           </div>
 
           <div className="settings-card">
             <h3>Recursos incluídos</h3>
-            <ul className="plan-features-list">
+            <ul className="quota-features-list">
               <li><FiCheck className="check-icon" /> Análise de sentimentos</li>
               <li><FiCheck className="check-icon" /> Visualização de temas</li>
               <li><FiCheck className="check-icon" /> Histórico limitado</li>
               <li><FiCheck className="check-icon" /> 1 usuário</li>
             </ul>
-            <small className="plan-limit-note">
+            <small className="quota-limit-note">
               {quota ? `Limite: até ${quota.limit} análises/mês · ${quota.remaining} disponíveis` : 'Limite mensal indisponível'}
             </small>
           </div>

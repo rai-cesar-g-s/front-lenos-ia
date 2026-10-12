@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 
 import Home from '../pages/Home.tsx';
 import About from '../pages/About.tsx';
+import ConfirmEmailChange from '../pages/ConfirmEmailChange';
 import ConfirmationEmail from '../pages/ConfirmationEmail.tsx';
 import ErrorPage from '../pages/ErrorPage.tsx';
 import Faq from '../pages/Faq.tsx';
@@ -19,7 +20,6 @@ import Support from '../pages/Support.tsx';
 import Analyze from '../pages/Analyze.tsx';
 import Dashboard from '../pages/Dashboard.tsx';
 import History from '../pages/History.tsx';
-import Insights from '../pages/Insights.tsx';
 import Onboarding from '../pages/Onboarding.tsx';
 import ResetPassword from '../pages/ResetPassword.tsx';
 import Settings from '../pages/Settings.tsx';
@@ -124,6 +124,10 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/confirm-email" element={<ConfirmEmailChange />} />
+      <Route path="/v1/confirm-email" element={<ConfirmEmailChange />} />
+      <Route path="/v1/user/confirm-email" element={<ConfirmEmailChange />} />
+      <Route path="/email-change-confirmation" element={<ConfirmEmailChange />} />
       <Route path="/email-confirmation" element={<ConfirmationEmail />} />
       <Route path="/v1/verify-email" element={<ConfirmationEmail />} />
       <Route path="/v1/user/verify-email" element={<ConfirmationEmail />} />
@@ -158,14 +162,6 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <History />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/insights"
-        element={
-          <PrivateRoute>
-            <Insights />
           </PrivateRoute>
         }
       />

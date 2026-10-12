@@ -2,6 +2,9 @@ import { logSafeError } from '../utils/safeLogger';
 import api from './api';
 import { API_BASE_URL } from './config';
 
+export type RecurringTheme = { theme: string; description: string; percentage_relevance: number };
+export type ReportRecommendation = { recommendation: string; justification: string };
+
 export type ApiReport = {
   id: string;
   title: string;
@@ -12,8 +15,11 @@ export type ApiReport = {
   comments_processed: number | null;
   comments_positive: number | null;
   comments_negative: number | null;
+  recurring_themes: RecurringTheme[];
+  recommendations: ReportRecommendation[];
 };
 
+export type ReportFilterStatus = 'done' | 'pending' | 'failed';
 export type ReportDateRange = { start_date: string; end_date: string };
 export const currentMonthRange = (): ReportDateRange => {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
@@ -34,8 +40,8 @@ export const ReportService = {
   /**
    * Busca relatórios do usuário autenticado pelo endpoint documentado.
    */
-  async getReports(range: ReportDateRange = currentMonthRange()): Promise<ReportList> {
-    const response = await api.get<ReportList>('/v1/user/reports', { params: range });
+  async getReports(range: ReportDateRange = currentMonthRange(), status?: ReportFilterStatus): Promise<ReportList> {
+    const response = await api.get<ReportList>('/v1/user/reports', { params: { ...range, ...(status ? { status } : {}) } });
     return response.data;
   },
 

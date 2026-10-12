@@ -21,6 +21,8 @@ export function toReportItem(report: ApiReport): ReportItem {
   return {
     id: report.id, title: report.title, video_url: report.url,
     report: report.report, status: report.status, created_at: report.created_at,
+    recurring_themes: Array.isArray(report.recurring_themes) ? report.recurring_themes : [],
+    recommendations: Array.isArray(report.recommendations) ? report.recommendations : [],
     comments_count: total, comments_positive: positive, comments_negative: negative,
     sentiment_positive: getCommentPercentage(positive, total),
     sentiment_negative: getCommentPercentage(negative, total),

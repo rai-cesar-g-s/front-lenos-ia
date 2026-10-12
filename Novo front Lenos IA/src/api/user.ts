@@ -23,7 +23,6 @@ type LoginCredentials = {
 
 type UpdateUserData = {
   name?: string;
-  email?: string;
   phone?: string;
 };
 
@@ -42,6 +41,15 @@ type ResetPasswordData = {
 };
 
 export const UserService = {
+  // Solicita confirmação no novo endereço; não altera o perfil localmente.
+  async requestEmailChange(newEmail: string) {
+    const response = await api.post('/v1/user/email', { new_email: newEmail.trim() });
+    return response.data;
+  },
+  async confirmEmailChange(token: string) {
+    const response = await api.post('/v1/user/confirm-email', null, { params: { token } });
+    return response.data;
+  },
   /**
    * Solicita o e-mail de recuperação de senha.
    * Endpoint OpenAPI: POST /v1/user/forgot-password
@@ -138,7 +146,7 @@ export const UserService = {
   },
 
   /**
-   * Atualiza dados cadastrais do perfil (nome, email, telefone).
+   * Atualiza nome e telefone. A troca de e-mail tem confirmação própria.
    * Endpoint OpenAPI: PUT /v1/user
    */
   async updateUser(data: UpdateUserData) {

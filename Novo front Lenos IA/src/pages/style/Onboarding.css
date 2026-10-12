@@ -1,5 +1,5 @@
 .questionnaire-page { min-height: 100dvh; background: #fff; color: #101729; font-family: var(--font-family); }
-.questionnaire-header { padding: 32px clamp(24px, 6vw, 80px); }
+.questionnaire-header { padding: 20px clamp(24px, 6vw, 80px); }
 .questionnaire-header img { display: block; width: 112px; height: auto; }
 .questionnaire-main { width: min(100% - 48px, 520px); margin: clamp(32px, 8vh, 88px) auto 0; padding-bottom: 48px; }
 .questionnaire-heading > span { display: block; margin-bottom: 14px; color: #528c5d; font-size: 13px; font-weight: 600; }
@@ -20,4 +20,4 @@
 .questionnaire-submit:focus-visible { outline: 2px solid #528c5d; outline-offset: 3px; }
 .questionnaire-submit:disabled { opacity: .65; cursor: wait; }
 .questionnaire-note { margin: 20px 0 0; color: #607286; font-size: 12px; text-align: center; }
-@media (max-width: 600px) { .questionnaire-header { padding: 24px; } .questionnaire-main { margin-top: 32px; } .questionnaire-heading h1 { font-size: 26px; } .questionnaire-step { margin-top: 32px; } }
+@media (max-width: 600px) { .questionnaire-header { padding: 16px 24px; } .questionnaire-main { margin-top: 32px; } .questionnaire-heading h1 { font-size: 26px; } .questionnaire-step { margin-top: 32px; } }

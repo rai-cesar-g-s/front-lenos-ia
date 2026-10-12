@@ -1,7 +1,7 @@
 import { logSafeError } from '../utils/safeLogger';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAuth } from './useAuth';
-import { ReportService, type ReportQuota, type ReportStats, type ReportDateRange, currentMonthRange } from '../api/report';
+import { ReportService, type ReportQuota, type ReportStats, type ReportDateRange, type ReportFilterStatus, currentMonthRange } from '../api/report';
 import { toReportItem } from '../utils/reportMetrics';
 import { getReportErrorMessage, quotaReachedMessage } from '../utils/reportFeedback';
 import type { ReportItem } from '../components/ReportDetailModal';
@@ -9,6 +9,7 @@ import type { ReportItem } from '../components/ReportDetailModal';
 export function useDashboard() {
   const { user } = useAuth();
   const [dateRange, setDateRange] = useState<ReportDateRange>(currentMonthRange);
+  const [statusFilter, setStatusFilter] = useState<ReportFilterStatus | ''>('');
   const reportRequest = useRef(0);
   const generationInFlight = useRef(false);
 
@@ -31,7 +32,7 @@ export function useDashboard() {
     setIsLoadingReports(true);
     setReportsError('');
     try {
-      const data = await ReportService.getReports(dateRange);
+      const data = await ReportService.getReports(dateRange, statusFilter || undefined);
       if (requestId !== reportRequest.current) return;
       setReports(data.result.map(toReportItem));
       setStats(data.stats);
@@ -44,7 +45,7 @@ export function useDashboard() {
     } finally {
       if (requestId === reportRequest.current) setIsLoadingReports(false);
     }
-  }, [dateRange]);
+  }, [dateRange, statusFilter]);
 
   const loadQuota = useCallback(async () => {
     setIsLoadingQuota(true);
@@ -213,6 +214,8 @@ export function useDashboard() {
 
   return {
     user,
+    statusFilter,
+    setStatusFilter,
     dateRange,
     setDateRange,
     reports,

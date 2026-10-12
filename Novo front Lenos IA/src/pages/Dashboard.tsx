@@ -26,8 +26,6 @@ export const Dashboard: React.FC = () => {
     reports,
     reportsError,
     totals,
-    quota,
-    isLoadingQuota,
     reloadReports,
     isLoadingReports,
     renameReport,
@@ -72,7 +70,6 @@ export const Dashboard: React.FC = () => {
             <FiBarChart2 className="stat-icon" />
           </div>
           <strong className="stat-value">{formatCount(totals.analyses)}</strong>
-          <span className="stat-subtext">{isLoadingQuota ? 'Carregando cota...' : quota ? `${quota.used} este mês` : 'Cota mensal indisponível'}</span>
         </div>
 
         <div className="stat-card">

@@ -6,9 +6,9 @@ import api from './api';
  */
 export const QuestionService = {
   
-  async createQuestion(data: Record<string, unknown>) {
+  async createQuestion(data: { description: string }) {
     try {
-      const response = await api.post('/v1/create-question', data);
+      const response = await api.post('/v1/question', data);
       return response.data;
     } catch (error) {
       logSafeError("QuestionService: Erro ao criar pergunta", error);
@@ -18,7 +18,7 @@ export const QuestionService = {
 
   async getUserQuestionsWithAnswers() {
     try {
-      const response = await api.get('/v1/user/answers-questions');
+      const response = await api.get('/v1/user/answers');
       return response.data;
     } catch (error) {
       logSafeError("QuestionService: Erro ao buscar questionário e respostas", error);

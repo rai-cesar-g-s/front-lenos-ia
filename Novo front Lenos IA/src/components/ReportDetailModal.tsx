@@ -1,3 +1,4 @@
+import type { RecurringTheme, ReportRecommendation } from '../api/report';
 import React, { useState } from 'react';
 import { FiX, FiDownload, FiEdit3, FiTrash2, FiExternalLink, FiMessageSquare, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
@@ -20,8 +21,8 @@ export interface ReportItem {
   sentiment_neutral?: number;
   sentiment_negative?: number;
   summary?: string;
-  topics?: Array<{ name: string; count: number; percentage?: number }>;
-  recommendations?: string[];
+  recurring_themes?: RecurringTheme[];
+  recommendations?: ReportRecommendation[];
   report?: string;
 }
 
@@ -72,7 +73,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const negSentiment = stats.percent(stats.negative);
 
   const summaryText = report.summary || report.report || 'Resumo não fornecido pela API.';
-  const topicsList = report.topics || [];
+  const topicsList = report.recurring_themes || [];
   const recommendationsList = report.recommendations || [];
 
   const handleStartRename = () => {
@@ -200,20 +201,15 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           <section className="report-section-box">
             <h3><FiTrendingUp /> Temas Mais Recorrentes nos Comentários</h3>
             <div className="topics-list-container">
-              {topicsList.length === 0 && <p>Temas não fornecidos pela API.</p>}
+              {topicsList.length === 0 && <p>Não há temas recorrentes disponíveis para esta análise.</p>}
               {topicsList.map((topic, index) => (
-                <div className="topic-item-row" key={index}>
-                  <div className="topic-info">
-                    <span className="topic-name">{topic.name}</span>
-                    <span className="topic-count">{topic.count} comentários</span>
+                <article className="topic-item-row topic-with-icon" key={index}>
+                  <span className="rec-bullet" aria-hidden="true">✓</span>
+                  <div className="report-insight">
+                  <div className="insight-title report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{topic.theme}</ReactMarkdown></div>
+                  <div className="insight-description report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{topic.description}</ReactMarkdown></div>
                   </div>
-                  <div className="topic-progress-bg">
-                    <div
-                      className="topic-progress-fill"
-                      style={{ width: `${topic.percentage ?? (Number(commentsCount) > 0 ? Math.min(100, (topic.count / Number(commentsCount)) * 100) : 0)}%` }}
-                    />
-                  </div>
-                </div>
+                </article>
               ))}
             </div>
           </section>
@@ -221,11 +217,14 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           <section className="report-section-box">
             <h3><FiCheckCircle /> Recomendações Estratégicas para seu Canal</h3>
             <ul className="recommendations-list">
-              {recommendationsList.length === 0 && <li>Recomendações não fornecidas pela API.</li>}
+              {recommendationsList.length === 0 && <li>Não há recomendações disponíveis para esta análise.</li>}
               {recommendationsList.map((rec, index) => (
                 <li key={index}>
                   <span className="rec-bullet">✓</span>
-                  <span>{rec}</span>
+                  <div className="recommendation-content report-insight">
+                    <div className="insight-title report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{rec.recommendation}</ReactMarkdown></div>
+                    <div className="insight-description report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{rec.justification}</ReactMarkdown></div>
+                  </div>
                 </li>
               ))}
             </ul>

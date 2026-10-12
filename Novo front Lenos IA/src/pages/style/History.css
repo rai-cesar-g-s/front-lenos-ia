@@ -279,3 +279,7 @@
     justify-content: space-between;
   }
 }
+
+.history-filters-row { position: relative; z-index: 32; overflow: visible; display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.history-filters-row .report-date-filter, .history-filters-row .history-controls-bar { margin-bottom: 0; }
+.history-filters-row .select-wrapper select { height: 40px; }

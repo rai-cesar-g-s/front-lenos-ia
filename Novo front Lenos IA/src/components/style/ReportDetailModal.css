@@ -335,37 +335,6 @@
   gap: 4px;
 }
 
-.topic-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-}
-
-.topic-name {
-  font-weight: 600;
-  color: #101729;
-}
-
-.topic-count {
-  color: #607286;
-  font-size: 11px;
-}
-
-.topic-progress-bg {
-  height: 7px;
-  width: 100%;
-  background: #edf5ef;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.topic-progress-fill {
-  height: 100%;
-  background: #75aa7e;
-  border-radius: 99px;
-  transition: width 0.3s ease;
-}
-
 .recommendations-list {
   margin: 0;
   padding: 0;
@@ -375,7 +344,7 @@
   gap: 10px;
 }
 
-.recommendations-list li {
+.recommendations-list > li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -407,3 +376,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.report-insight { min-width: 0; text-align: left; }
+.report-insight .insight-title { color: #101729; font-size: 13px; font-weight: 600; line-height: 1.6; }
+.report-insight .insight-description { color: #607286; font-size: 13px; line-height: 1.7; margin-top: 6px; }
+.topics-list-container { gap: 18px; }
+.recommendations-list { gap: 18px; }
+.report-insight .report-markdown li { display: list-item; }
+
+.topic-item-row.topic-with-icon { flex-direction: row; align-items: flex-start; gap: 10px; }
+.topic-with-icon > .report-insight { flex: 1; }
