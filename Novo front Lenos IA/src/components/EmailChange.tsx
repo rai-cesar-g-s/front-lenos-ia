@@ -40,7 +40,8 @@ export function EmailChange() {
     {editing && <form onSubmit={requestChange} noValidate>
       <div className="field-group">
         <label htmlFor="new-account-email">Novo e-mail</label>
-        <input id="new-account-email" type="email" autoComplete="email" autoFocus value={email} disabled={busy} required aria-invalid={Boolean(error)} aria-describedby="email-change-feedback" onChange={event => { setEmail(event.target.value); setError(''); }} />
+        <input id="new-account-email" type="email" autoComplete="email" autoFocus value={email} disabled={busy} required aria-invalid={Boolean(error)} aria-describedby="email-change-count email-change-feedback" onChange={event => { setEmail(event.target.value); setError(''); }} />
+        <small id="email-change-count">{Array.from(email).length} caracteres</small>
       </div>
       <div className="channel-answer-actions">
         <button className="settings-save-btn" disabled={busy}>{busy ? 'Enviando...' : 'Enviar confirmação'}</button>
