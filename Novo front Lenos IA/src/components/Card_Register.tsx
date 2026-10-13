@@ -151,6 +151,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
                         <FiUser aria-hidden="true" />
                         <input
                             type="text"
+                            minLength={3}
                             maxLength={50}
                             value={formData.name}
                             onChange={(event) => updateField("name", event.target.value)}
@@ -209,7 +210,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
                             maxLength={20}
                             value={formData.password}
                             onChange={(event) => updateField("password", event.target.value)}
-                            placeholder="Mínimo 8 caracteres"
+                            placeholder="Entre 8 e 20 caracteres"
                             disabled={isSubmitting}
                         />
                     </label>

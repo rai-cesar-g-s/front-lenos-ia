@@ -35,12 +35,12 @@ export function EmailChange() {
   return <>
     <div className="channel-answer-view">
       <span>{currentEmail || 'Não informado'}</span>
-      {!editing && <button type="button" className="settings-secondary-btn" onClick={() => { setEditing(true); setError(''); setMessage(''); }}><FiEdit3 /> Alterar e-mail</button>}
+      {!editing && <button type="button" className="settings-secondary-btn" onClick={() => { setEmail(currentEmail); setEditing(true); setError(''); setMessage(''); }}><FiEdit3 /> Alterar e-mail</button>}
     </div>
     {editing && <form onSubmit={requestChange} noValidate>
       <div className="field-group">
         <label htmlFor="new-account-email">Novo e-mail</label>
-        <input id="new-account-email" type="email" autoComplete="email" value={email} disabled={busy} required aria-invalid={Boolean(error)} aria-describedby="email-change-feedback" onChange={event => { setEmail(event.target.value); setError(''); }} />
+        <input id="new-account-email" type="email" autoComplete="email" autoFocus value={email} disabled={busy} required aria-invalid={Boolean(error)} aria-describedby="email-change-feedback" onChange={event => { setEmail(event.target.value); setError(''); }} />
       </div>
       <div className="channel-answer-actions">
         <button className="settings-save-btn" disabled={busy}>{busy ? 'Enviando...' : 'Enviar confirmação'}</button>

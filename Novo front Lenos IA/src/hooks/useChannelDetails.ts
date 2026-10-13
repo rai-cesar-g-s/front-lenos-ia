@@ -36,7 +36,7 @@ export const useChannelDetails = (enabled: boolean) => {
 
   const updateAnswer = async (id: string, answer: string) => {
     const trimmed = answer.trim();
-    if (!trimmed || trimmed.length > 50) throw new Error('A resposta deve ter entre 1 e 50 caracteres.');
+    if (!trimmed || trimmed.length > 20) throw new Error('A resposta deve ter entre 1 e 20 caracteres.');
     await api.put('/v1/user/answer/' + encodeURIComponent(id), { new_answer: trimmed });
     setAnswers(current => current.map(item => item.answer_id === id ? { ...item, answer: trimmed } : item));
   };

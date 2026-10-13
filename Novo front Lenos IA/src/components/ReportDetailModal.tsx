@@ -4,6 +4,7 @@ import { FiX, FiDownload, FiEdit3, FiTrash2, FiExternalLink, FiMessageSquare, Fi
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { REPORT_TITLE_MIN_LENGTH, REPORT_TITLE_MAX_LENGTH, validateReportTitle } from '../utils/reportTitle';
 import { getSentimentStats, formatPercent } from '../utils/reportStats';
 import './style/ReportDetailModal.css';
 import './style/ReportMarkdown.css';
@@ -44,6 +45,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
+  const [titleError, setTitleError] = useState('');
 
   if (!report) return null;
 
@@ -78,10 +80,14 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
   const handleStartRename = () => {
     setEditedTitle(title);
+    setTitleError('');
     setIsEditingTitle(true);
   };
 
   const handleSaveRename = () => {
+    const validation = validateReportTitle(editedTitle);
+    setTitleError(validation);
+    if (validation) return;
     if (onRename && editedTitle.trim()) {
       onRename(report.id, editedTitle.trim());
     }
@@ -98,12 +104,18 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
               <div className="title-edit-box">
                 <input
                   type="text"
+                  aria-label="Título do relatório"
+                  minLength={REPORT_TITLE_MIN_LENGTH}
+                  maxLength={REPORT_TITLE_MAX_LENGTH}
+                  required
+                  aria-invalid={Boolean(titleError)}
                   value={editedTitle}
                   onChange={(e) => setEditedTitle(e.target.value)}
                   autoFocus
                 />
                 <button className="save-btn" onClick={handleSaveRename}>Salvar</button>
                 <button className="cancel-btn" onClick={() => setIsEditingTitle(false)}>Cancelar</button>
+                {titleError && <span role="alert">{titleError}</span>}
               </div>
             ) : (
               <div className="title-view-box">

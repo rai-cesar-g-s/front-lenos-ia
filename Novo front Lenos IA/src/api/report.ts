@@ -1,5 +1,6 @@
 import { logSafeError } from '../utils/safeLogger';
 import api from './api';
+import { validateReportTitle } from '../utils/reportTitle';
 import { API_BASE_URL } from './config';
 
 export type RecurringTheme = { theme: string; description: string; percentage_relevance: number };
@@ -74,8 +75,10 @@ export const ReportService = {
   async renameReport(id: string | { id: string; newTitle: string }, newTitle?: string) {
     const reportId = typeof id === 'string' ? id : id.id;
     const titleToUpdate = typeof id === 'object' ? id.newTitle : newTitle;
+    const validation = validateReportTitle(titleToUpdate ?? '');
+    if (validation) throw new Error(validation);
     const response = await api.put(`/v1/user/report/${reportId}`, {
-      new_title: titleToUpdate,
+      new_title: titleToUpdate!.trim(),
     });
     return response.data;
   },

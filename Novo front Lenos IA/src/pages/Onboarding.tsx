@@ -18,7 +18,7 @@ const Onboarding = () => {
   const question = questions[current];
   // A lista contém apenas IDs sem resposta; cada avanço exige confirmação do backend.
   const complete = !loading && !loadError && current === questions.length;
-  const validation = !answer.trim() ? 'Informe sua resposta para continuar.' : answer.trim().length > 50 ? 'A resposta deve ter no máximo 50 caracteres.' : '';
+  const validation = !answer.trim() || answer.trim().length > 20 ? 'A resposta deve ter entre 1 e 20 caracteres.' : '';
 
   const finish = () => {
     if (!complete) return;
@@ -68,8 +68,8 @@ const Onboarding = () => {
         {question ? <>
           <div className="questionnaire-step-count" aria-live="polite">Etapa {current + 1} de {questions.length}</div>
           <h2><label htmlFor="channel-answer">{question.question}</label></h2>
-          <input id="channel-answer" className="questionnaire-input" value={answer} disabled={saving} onChange={(event) => { setAnswer(event.target.value); setTouched(true); setError(''); }} aria-invalid={touched && Boolean(validation)} aria-describedby={`channel-answer-help${touched && validation ? ' channel-answer-error' : ''}`} placeholder="Digite sua resposta" />
-          <p id="channel-answer-help">Responda em até 50 caracteres.</p>
+          <input id="channel-answer" type="text" minLength={1} maxLength={20} required className="questionnaire-input" value={answer} disabled={saving} onChange={(event) => { setAnswer(event.target.value); setTouched(true); setError(''); }} aria-invalid={touched && Boolean(validation)} aria-describedby={`channel-answer-help${touched && validation ? ' channel-answer-error' : ''}`} placeholder="Digite sua resposta" />
+          <p id="channel-answer-help">Responda com entre 1 e 20 caracteres.</p>
           {touched && validation && <p id="channel-answer-error" className="questionnaire-error" role="alert">{validation}</p>}
         </> : complete && <p role="status">Todas as perguntas foram respondidas e suas respostas estão salvas. Clique em Concluir para acessar a dashboard.</p>}
         {!complete && error && <p className="questionnaire-error" role="alert">{error}</p>}

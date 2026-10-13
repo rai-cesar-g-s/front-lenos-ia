@@ -1,4 +1,5 @@
 import { logSafeError } from '../utils/safeLogger';
+import { validateReportTitle } from '../utils/reportTitle';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAuth } from './useAuth';
 import { ReportService, type ReportQuota, type ReportStats, type ReportDateRange, type ReportFilterStatus, currentMonthRange } from '../api/report';
@@ -155,12 +156,9 @@ export function useDashboard() {
 
   const renameReport = async (id: string, newTitle: string) => {
     const trimmed = newTitle.trim();
-    if (trimmed.length < 2) {
-      alert('O título do relatório deve conter pelo menos 2 caracteres.');
-      return;
-    }
-    if (trimmed.length > 50) {
-      alert('O título do relatório não pode ter mais de 50 caracteres.');
+    const validation = validateReportTitle(trimmed);
+    if (validation) {
+      alert(validation);
       return;
     }
     try {

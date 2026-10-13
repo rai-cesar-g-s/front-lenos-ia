@@ -8,7 +8,7 @@ type EditorProps = {
   displayValue?: string; successMessage?: string;
 };
 
-export function ChannelAnswerEditor({ answer, question, onSave, type = 'text', maxLength = 50,
+export function ChannelAnswerEditor({ answer, question, onSave, type = 'text', maxLength = 20,
   validate, normalize, displayValue, successMessage = 'Resposta atualizada com sucesso.' }: EditorProps) {
   const id = useId();
   const [editing, setEditing] = useState(false);
@@ -19,7 +19,7 @@ export function ChannelAnswerEditor({ answer, question, onSave, type = 'text', m
   // A API documenta respostas como strings; contagens aceitam somente inteiros não negativos.
   const numeric = !validate && /inscrit|quantos?\s+v[ií]deos|v[ií]deos.*seman|frequ[eê]ncia.*post/i.test(question);
   const validateValue = (draft: string) => validate ? validate(draft) :
-    !draft.trim() ? 'Informe uma resposta.' : draft.trim().length > maxLength ? `Use no máximo ${maxLength} caracteres.` :
+    !draft.trim() || draft.trim().length > maxLength ? `A resposta deve ter entre 1 e ${maxLength} caracteres.` :
     numeric && !/^\d+$/.test(draft) ? 'Informe um número inteiro não negativo, usando apenas dígitos.' : '';
   return (
     <>
@@ -45,7 +45,7 @@ export function ChannelAnswerEditor({ answer, question, onSave, type = 'text', m
                 setValue(normalize ? normalize(next) : next); setError('');
               }} required disabled={saving} autoFocus aria-invalid={Boolean(error)} aria-describedby={`${id}-feedback`} />
             <small id={`${id}-feedback`} className={error ? 'settings-field-error' : undefined} role={error ? 'alert' : undefined}>
-              {error || (numeric ? `Número inteiro não negativo · até ${maxLength} dígitos` : `${value.length}/${maxLength} caracteres`)}
+              {error || (numeric ? `Número inteiro não negativo · de 1 a ${maxLength} dígitos` : `${value.length}/${maxLength} caracteres · mínimo de ${validate ? (type === 'tel' ? 11 : 3) : 1}`)}
             </small>
           </div>
           <div className="channel-answer-actions">
