@@ -33,10 +33,10 @@ export function EmailChange() {
     finally { setBusy(false); inFlight.current = false; }
   };
   return <>
-    <div className="channel-answer-view">
+    {!editing && <div className="channel-answer-view">
       <span>{currentEmail || 'Não informado'}</span>
-      {!editing && <button type="button" className="settings-secondary-btn" onClick={() => { setEmail(currentEmail); setEditing(true); setError(''); setMessage(''); }}><FiEdit3 /> Alterar e-mail</button>}
-    </div>
+      <button type="button" className="settings-secondary-btn" onClick={() => { setEmail(currentEmail); setEditing(true); setError(''); setMessage(''); }}><FiEdit3 /> Alterar e-mail</button>
+    </div>}
     {editing && <form onSubmit={requestChange} noValidate>
       <div className="field-group">
         <label htmlFor="new-account-email">Novo e-mail</label>
