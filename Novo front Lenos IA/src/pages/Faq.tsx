@@ -27,7 +27,7 @@ const faqItems = [
   {
     "category": "como-funciona",
     "title": "Como posso melhorar a qualidade dos relatórios?",
-    "text": "Confira o contexto dos comentários ao interpretar o relatório. Atualmente, as respostas iniciais sobre o canal são armazenadas, mas ainda não são utilizadas para personalizar a análise. Essa integração está prevista e a documentação será atualizada quando estiver disponível."
+    "text": "Responda às perguntas sobre seu canal com informações claras e corretas e mantenha suas respostas atualizadas em Configurações > Detalhes do canal. Elas são incluídas nas instruções enviadas à IA para contextualizar a análise e personalizar as recomendações. As conclusões sobre a audiência continuam baseadas nos comentários selecionados."
   },
   {
     "category": "como-funciona",
@@ -131,12 +131,12 @@ const faqItems = [
   {
     "category": "seguranca",
     "title": "Meus dados estão seguros?",
-    "text": "A Lenos IA utiliza medidas de segurança para proteger o acesso à sua conta. Durante a análise, os comentários selecionados e as instruções preparadas pela Lenos IA são enviados ao Google para processamento. Consulte a Política de Privacidade para conhecer o tratamento dos dados. Você também pode solicitar a exclusão da conta em Configurações > Segurança."
+    "text": "A Lenos IA utiliza medidas de segurança para proteger o acesso à sua conta. Durante a análise, os comentários selecionados, as perguntas e respostas sobre seu canal e as instruções preparadas pela Lenos IA são enviados ao Google Gemini para processamento. Não inclua informações sensíveis nas suas respostas. Consulte a Política de Privacidade para conhecer o tratamento dos dados. Você também pode solicitar a exclusão da conta em Configurações > Segurança."
   },
   {
     "category": "seguranca",
     "title": "Quais dados são enviados ao Google durante a análise?",
-    "text": "São enviados os comentários selecionados e o prompt, ou seja, as instruções de análise preparadas pela Lenos IA. Esses dados são utilizados pelo serviço de inteligência artificial do Google para gerar o resultado."
+    "text": "São enviados os textos dos comentários selecionados, as perguntas e suas respostas sobre o canal e o prompt, ou seja, as instruções de análise preparadas pela Lenos IA. O Google Gemini utiliza essas informações para gerar o relatório, considerando o contexto do canal para personalizar os insights e as recomendações."
   },
   {
     "category": "seguranca",
