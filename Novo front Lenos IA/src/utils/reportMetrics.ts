@@ -18,25 +18,27 @@ export function toReportItem(report: ApiReport): ReportItem {
   const total = count(report.comments_processed);
   const positive = count(report.comments_positive);
   const negative = count(report.comments_negative);
+  const neutral = count(report.comments_neutral);
   return {
     id: report.id, title: report.title, video_url: report.url,
     report: report.report, status: report.status, created_at: report.created_at,
     recurring_themes: Array.isArray(report.recurring_themes) ? report.recurring_themes : [],
     recommendations: Array.isArray(report.recommendations) ? report.recommendations : [],
-    comments_count: total, comments_positive: positive, comments_negative: negative,
+    comments_count: total, comments_positive: positive, comments_negative: negative, comments_neutral: neutral,
     sentiment_positive: getCommentPercentage(positive, total),
     sentiment_negative: getCommentPercentage(negative, total),
+    sentiment_neutral: getCommentPercentage(neutral, total),
   };
 }
 
 // Only completed analyses contribute; an incomplete count makes that total unavailable.
 export function getReportTotals(reports: ReportItem[]) {
   const completed = reports.filter(isCompletedReport);
-  const sum = (key: 'comments_count' | 'comments_positive' | 'comments_negative') => {
+  const sum = (key: 'comments_count' | 'comments_positive' | 'comments_negative' | 'comments_neutral') => {
     const values = completed.map(report => count(report[key]));
     return values.some(value => value === undefined)
       ? undefined : values.reduce<number>((total, value) => total + (value ?? 0), 0);
   };
   return { analyses: completed.length, comments: sum('comments_count'),
-    positive: sum('comments_positive'), negative: sum('comments_negative') };
+    positive: sum('comments_positive'), negative: sum('comments_negative'), neutral: sum('comments_neutral') };
 }

@@ -16,6 +16,7 @@ export type ApiReport = {
   comments_processed: number | null;
   comments_positive: number | null;
   comments_negative: number | null;
+  comments_neutral: number | null;
   recurring_themes: RecurringTheme[];
   recommendations: ReportRecommendation[];
 };
@@ -29,7 +30,7 @@ export const currentMonthRange = (): ReportDateRange => {
 };
 
 export type ReportQuota = { used: number; limit: number; remaining: number; comments_processed: number };
-export type ReportStats = { count: number; comments_processed: number; comments_positive: number; comments_negative: number };
+export type ReportStats = { count: number; comments_processed: number; comments_positive: number; comments_negative: number; comments_neutral: number };
 export type ReportList = { result: ApiReport[]; stats: ReportStats };
 
 /**

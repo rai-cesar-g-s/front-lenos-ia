@@ -1,3 +1,4 @@
+import { EMAIL_MAX_LENGTH } from '../utils/emailValidation';
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ const Card_Forgot_Password: React.FC<CardForgotPasswordProps> = ({ email }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (value.trim().length > EMAIL_MAX_LENGTH) { setError('O e-mail deve ter no máximo 200 caracteres.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       setError("Informe um e-mail válido.");
       return;
@@ -45,7 +47,7 @@ const Card_Forgot_Password: React.FC<CardForgotPasswordProps> = ({ email }) => {
           <h3>E-mail</h3>
           <label className={error ? "has-error" : ""}>
             <FiMail aria-hidden="true" />
-            <input type="email" value={value} onChange={(event) => { setValue(event.target.value); setError(""); }} placeholder="voce@email.com" />
+            <input type="email" maxLength={EMAIL_MAX_LENGTH} required value={value} onChange={(event) => { setValue(event.target.value); setError(""); }} placeholder="voce@email.com" />
           </label>
           {error && <small className="forgot-error">{error}</small>}
         </div>

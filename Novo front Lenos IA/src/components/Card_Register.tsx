@@ -1,3 +1,4 @@
+import { EMAIL_MAX_LENGTH } from '../utils/emailValidation';
 import { logSafeError } from '../utils/safeLogger';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -63,7 +64,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
         }
         if (field === "email") {
             if (!value.trim()) return "Informe seu e-mail.";
-            if (value.length > 200) return "O e-mail deve ter no máximo 200 caracteres.";
+            if (value.length > EMAIL_MAX_LENGTH) return "O e-mail deve ter no máximo 200 caracteres.";
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Informe um e-mail válido (ex: seuemail@dominio.com).";
         }
         if (field === "phone") {
@@ -169,7 +170,7 @@ const Card_Register: React.FC<CardRegisterProps> = ({
                         <FiMail aria-hidden="true" />
                         <input
                             type="email"
-                            maxLength={200}
+                            maxLength={EMAIL_MAX_LENGTH}
                             value={formData.email}
                             onChange={(event) => updateField("email", event.target.value)}
                             placeholder="voce@email.com"

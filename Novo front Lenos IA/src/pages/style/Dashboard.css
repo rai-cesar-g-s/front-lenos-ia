@@ -1,7 +1,7 @@
 /* Dashboard.css - Pixel perfect implementation of dashboard.png */
 .dashboard-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -299,3 +299,4 @@
 
 .stat-icon.sentiment-positive-icon { color: #4d8960; }
 .stat-icon.sentiment-negative-icon { color: #cb5353; }
+.stat-icon.sentiment-neutral-icon { color: #607286; }

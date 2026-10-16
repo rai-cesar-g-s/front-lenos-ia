@@ -6,6 +6,7 @@ import {
   FiMessageSquare,
   FiThumbsUp,
   FiThumbsDown,
+  FiMinusCircle,
   FiArrowRight,
 } from 'react-icons/fi';
 import { ReportRowTitle, ReportStatus } from '../components/ReportRowActions';
@@ -97,6 +98,14 @@ export const Dashboard: React.FC = () => {
           </div>
           <strong className="stat-value">{formatPercentage(totals.negative)}</strong>
           <span className="stat-subtext">{formatCount(totals.negative)} comentários negativos</span>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-header">
+            <span className="stat-title">Sentimento neutro</span>
+            <FiMinusCircle className="stat-icon sentiment-neutral-icon" />
+          </div>
+          <strong className="stat-value">{formatPercentage(totals.neutral)}</strong>
+          <span className="stat-subtext">{formatCount(totals.neutral)} comentários neutros</span>
         </div>
       </section>
 

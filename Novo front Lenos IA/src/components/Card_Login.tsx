@@ -1,3 +1,4 @@
+import { EMAIL_MAX_LENGTH } from '../utils/emailValidation';
 import { logSafeError } from '../utils/safeLogger';
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -29,7 +30,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
     const nextErrors: { email?: string; password?: string } = {};
     if (!email.trim()) {
       nextErrors.email = "Informe seu e-mail.";
-    } else if (email.length > 200) {
+    } else if (email.length > EMAIL_MAX_LENGTH) {
       nextErrors.email = "O e-mail deve ter no máximo 200 caracteres.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       nextErrors.email = "Informe um e-mail válido.";
@@ -76,7 +77,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
             <FiMail aria-hidden="true" />
             <input
               type="email"
-              maxLength={200}
+              maxLength={EMAIL_MAX_LENGTH}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);

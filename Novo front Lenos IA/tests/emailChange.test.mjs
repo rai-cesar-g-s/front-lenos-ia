@@ -25,6 +25,12 @@ test('rejects empty, invalid and unchanged email addresses', () => {
   for (const email of ['', 'sem-arroba', 'atual@example.com', ' ATUAL@example.com ']) assert.notEqual(validateNewEmail(email, 'atual@example.com'), '');
   assert.equal(validateNewEmail('novo@example.com', 'atual@example.com'), '');
 });
+test('email change enforces the same 200-character limit as registration', () => {
+  const atLimit = 'a'.repeat(188) + '@example.com';
+  assert.equal(atLimit.length, 200);
+  assert.equal(validateNewEmail(atLimit, 'atual@example.com'), '');
+  assert.match(validateNewEmail('a' + atLimit, 'atual@example.com'), /200 caracteres/);
+});
 test('confirmation errors are actionable and never expose server details', () => {
   assert.match(emailChangeError({ response: { status: 400 } }, true), /inválido ou expirou/);
   assert.match(emailChangeError({ response: { status: 403 } }, true), /conta que solicitou/);

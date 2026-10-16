@@ -5,7 +5,7 @@ import { toReportItem, getReportTotals, getCommentPercentage } from '../src/util
 // Fixtures verify the documented API fields; production never uses these values.
 const response = (counts = {}, status = 'done') => ({
   id: 'report-id', title: 'Video', url: 'https://youtu.be/abcdefghijk', report: 'API analysis', status,
-  comments_processed: 100, comments_positive: 70, comments_negative: 20, ...counts,
+  comments_processed: 100, comments_positive: 70, comments_negative: 20, comments_neutral: 10, ...counts,
 });
 
 test('maps the documented API response into video counts and percentages', () => {
@@ -20,11 +20,11 @@ test('maps the documented API response into video counts and percentages', () =>
 
 test('sums all completed reports and excludes pending and failed reports', () => {
   const reports = [response(), response({comments_processed: 20, comments_positive: 5, comments_negative: 10}, 'completed'), response({}, 'pending'), response({}, 'failed')];
-  assert.deepEqual(getReportTotals(reports.map(toReportItem)), { analyses: 2, comments: 120, positive: 75, negative: 30 });
+  assert.deepEqual(getReportTotals(reports.map(toReportItem)), { analyses: 2, comments: 120, positive: 75, negative: 30, neutral: 20 });
 });
 
 test('empty accounts and videos with zero comments never receive fallback values', () => {
-  assert.deepEqual(getReportTotals([]), { analyses: 0, comments: 0, positive: 0, negative: 0 });
+  assert.deepEqual(getReportTotals([]), { analyses: 0, comments: 0, positive: 0, negative: 0, neutral: 0 });
   const item = toReportItem(response({comments_processed: 0, comments_positive: 0, comments_negative: 0}));
   assert.equal(item.comments_count, 0);
   assert.equal(item.sentiment_positive, undefined);

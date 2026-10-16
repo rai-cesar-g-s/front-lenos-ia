@@ -16,6 +16,7 @@ export interface ReportItem {
   comments_count?: number | string;
   comments_positive?: number;
   comments_negative?: number;
+  comments_neutral?: number;
   created_at?: string;
   status?: string;
   sentiment_positive?: number;
@@ -181,25 +182,25 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             <div className="report-sentiment-cards">
               <div className="sentiment-stat-card positive">
                 <span className="stat-label">Sentimento Positivo</span>
-                <strong className="stat-val">{formatPercent(posSentiment)}</strong><span>{stats.positive} comentários</span>
+                <strong className="stat-val">{formatPercent(posSentiment)}</strong><span>{stats.positive ?? '—'} comentários</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill pos" style={{ width: `${posSentiment}%` }} />
+                  <div className="stat-bar-fill pos" style={{ width: `${posSentiment ?? 0}%` }} />
                 </div>
               </div>
 
               <div className="sentiment-stat-card neutral">
                 <span className="stat-label">Sentimento Neutro</span>
-                <strong className="stat-val">{formatPercent(neuSentiment)}</strong><span>{stats.neutral} comentários</span>
+                <strong className="stat-val">{formatPercent(neuSentiment)}</strong><span>{stats.neutral ?? '—'} comentários</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill neu" style={{ width: `${neuSentiment}%` }} />
+                  <div className="stat-bar-fill neu" style={{ width: `${neuSentiment ?? 0}%` }} />
                 </div>
               </div>
 
               <div className="sentiment-stat-card negative">
                 <span className="stat-label">Sentimento Negativo</span>
-                <strong className="stat-val">{formatPercent(negSentiment)}</strong><span>{stats.negative} comentários</span>
+                <strong className="stat-val">{formatPercent(negSentiment)}</strong><span>{stats.negative ?? '—'} comentários</span>
                 <div className="stat-bar-track">
-                  <div className="stat-bar-fill neg" style={{ width: `${negSentiment}%` }} />
+                  <div className="stat-bar-fill neg" style={{ width: `${negSentiment ?? 0}%` }} />
                 </div>
               </div>
             </div>

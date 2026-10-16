@@ -219,7 +219,7 @@ export function useDashboard() {
     reports,
     reportsError,
     totals: { analyses: stats?.count, comments: stats?.comments_processed,
-      positive: stats?.comments_positive, negative: stats?.comments_negative },
+      positive: stats?.comments_positive, negative: stats?.comments_negative, neutral: stats?.comments_neutral },
     quota,
     quotaError,
     isLoadingQuota,

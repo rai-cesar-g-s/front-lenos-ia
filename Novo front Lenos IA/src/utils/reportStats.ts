@@ -1,17 +1,16 @@
 import type { ReportItem } from '../components/ReportDetailModal';
 
+const count = (value: unknown): number | undefined =>
+  typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : undefined;
+
+// Contagens vêm da API; dados ausentes não são inferidos do texto nem de outros sentimentos.
 export function getSentimentStats(report: ReportItem) {
-  const text = report.report || report.summary || '';
-  const totalMatch = text.match(/Total de coment[áa]rios analisados\s*:\s*([\d.]+)/i);
-  const total = Math.max(0, Number(report.comments_count ?? totalMatch?.[1]?.replace(/\./g, '') ?? 0) || 0);
-  const percentage = (field: number | undefined, label: string) => {
-    const match = text.match(new RegExp(`\\|\\s*${label}\\s*\\|\\s*([\\d.,]+)\\s*%`, 'i'));
-    return Math.min(100, Math.max(0, Number(field ?? match?.[1]?.replace(',', '.') ?? 0) || 0));
-  };
-  const positive = Math.min(total, report.comments_positive ?? Math.round(total * percentage(report.sentiment_positive, 'Positivo') / 100));
-  const negative = Math.min(total - positive, report.comments_negative ?? Math.round(total * percentage(report.sentiment_negative, 'Negativo') / 100));
-  const neutral = Math.max(0, total - positive - negative);
-  return { total, positive, negative, neutral, percent: (count: number) => total ? count / total * 100 : 0 };
+  const total = count(typeof report.comments_count === 'string' ? Number(report.comments_count) : report.comments_count);
+  const positive = count(report.comments_positive);
+  const negative = count(report.comments_negative);
+  const neutral = count(report.comments_neutral);
+  return { total, positive, negative, neutral, percent: (value: number | undefined) =>
+    total !== undefined && total > 0 && value !== undefined && value <= total ? value / total * 100 : undefined };
 }
 
-export const formatPercent = (value: number) => `${value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+export const formatPercent = (value: number | undefined) => value === undefined ? '—' : `${value.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;

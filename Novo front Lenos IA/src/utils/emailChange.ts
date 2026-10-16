@@ -1,5 +1,7 @@
+import { EMAIL_MAX_LENGTH } from './emailValidation.ts';
 export function validateNewEmail(value: string, currentEmail: string) {
   const email = value.trim();
+  if (email.length > EMAIL_MAX_LENGTH) return 'O e-mail deve ter no máximo 200 caracteres.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Informe um e-mail válido.';
   if (email.toLowerCase() === currentEmail.trim().toLowerCase()) return 'Informe um endereço diferente do seu e-mail atual.';
   return '';
