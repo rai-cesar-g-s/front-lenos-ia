@@ -1,8 +1,8 @@
 :root{
     --main-color: #75aa7e;
-    --secondary-color: #101729;
-    --light-gray: #f5f7ff;
-    --border-color: #e5e7eb;
+    --secondary-color: var(--text-h);
+    --light-gray: light-dark(#f5f7ff, #222d3f);
+    --border-color: light-dark(#e5e7eb, #34445a);
 }
 
 .btn-one,
@@ -23,7 +23,7 @@
 }
 
 .btn-one {
-  background-color: #fff;
+  background-color: var(--surface);
   border: 1.5px solid var(--main-color);
   color: var(--main-color);
 }
@@ -40,18 +40,18 @@
 
 .btn-two {
   background-color: var(--main-color);
-  color: white;
+  color: var(--on-brand);
 }
 
 .btn-two:hover {
-  background-color: #5f8a63;
+  background-color: light-dark(#5f8a63, #8dbd95);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(117, 170, 126, 0.3);
 }
 
 .btn-two a {
   text-decoration: none;
-  color: white;
+  color: var(--on-brand);
 }
 
 /* SVG icon colors */
@@ -60,5 +60,5 @@
 }
 
 .btn-two svg {
-  color: white;
+  color: var(--on-brand);
 }

@@ -11,7 +11,7 @@
 
 .policies-page .content > h1 {
 	margin: 0 0 5px;
-	color: #101729;
+	color: var(--text-h);
 	font-family: var(--font-family);
 	font-size: var(--font-page-title);
 	font-weight: var(--font-page-title-weight);
@@ -22,7 +22,7 @@
 
 .policies-page .content > h2 {
 	margin: 0 0 21px;
-	color: #101729;
+	color: var(--text-h);
 	font-family: var(--font-family);
 	font-size: var(--font-page-subtitle);
 	font-weight: 400;
@@ -47,10 +47,10 @@
 	gap: 8px;
 	min-height: 40px;
 	padding: 0 14px;
-	border: 1px solid #dfe5e9;
+	border: 1px solid var(--border);
 	border-radius: 8px;
-	background: white;
-	color: #334458;
+	background: var(--surface);
+	color: light-dark(#334458, #c7d4e4);
 	font: inherit;
 	font-size: 13px;
 	cursor: pointer;
@@ -58,19 +58,19 @@
 }
 
 .policy-tabs button svg {
-	color: #4d8960;
+	color: var(--accent);
 	font-size: 16px;
 }
 
 .policy-tabs button:hover,
 .policy-tabs button.active {
-	border-color: #75aa7e;
-	background: #f2f7f3;
-	color: #315d40;
+	border-color: var(--main-color);
+	background: var(--code-bg);
+	color: light-dark(#315d40, #9fd1a8);
 	font-weight: 600;
 }
 
-.policy-tabs button.active svg { color: #315d40; }
+.policy-tabs button.active svg { color: light-dark(#315d40, #9fd1a8); }
 
 @media (prefers-reduced-motion: reduce) {
 	.policy-tabs button { transition: none; }
@@ -79,8 +79,8 @@
 .policies-page .content > .page {
 	min-height: auto;
 	padding: 25px 24px 12px;
-	background: white;
-	border: 1px solid #dfe5e9;
+	background: var(--surface);
+	border: 1px solid var(--border);
 	border-radius: 8px;
 	text-align: left;
 }
@@ -92,15 +92,15 @@
 	margin: 0 8px 0 0;
 	place-items: center;
 	border-radius: 8px;
-	background: #f2f7f3;
-	color: #75aa7e;
+	background: var(--code-bg);
+	color: var(--main-color);
 	vertical-align: middle;
 }
 
 .policies-page .content > .page > title {
 	display: inline-block;
 	margin: 0 0 22px;
-	color: #101729;
+	color: var(--text-h);
 	font-family: var(--font-family);
 	font-size: var(--font-card-title);
 	font-weight: 600;
@@ -109,14 +109,14 @@
 }
 
 .policies-page .terms { padding-bottom: 16px; }
-.policies-page .terms h3 { margin: 0 0 5px; color: #101729; font-family: var(--font-family); font-size: var(--font-card-title); font-weight: 600; letter-spacing: 0.1px; }
-.policies-page .terms p { margin: 0; color: #101729; font-size: var(--font-body); line-height: 1.5; }
+.policies-page .terms h3 { margin: 0 0 5px; color: var(--text-h); font-family: var(--font-family); font-size: var(--font-card-title); font-weight: 600; letter-spacing: 0.1px; }
+.policies-page .terms p { margin: 0; color: var(--text-h); font-size: var(--font-body); line-height: 1.5; }
 
 .policies-page .section-update {
 	padding-top: 13px;
 	margin-top: 2px;
-	border-top: 1px solid #dfe5e9;
-	color: #101729;
+	border-top: 1px solid var(--border);
+	color: var(--text-h);
 	font-size: 10px;
 	line-height: 1.35;
 }

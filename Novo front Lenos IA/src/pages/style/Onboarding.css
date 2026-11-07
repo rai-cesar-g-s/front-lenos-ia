@@ -1,23 +1,23 @@
-.questionnaire-page { min-height: 100dvh; background: #fff; color: #101729; font-family: var(--font-family); }
+.questionnaire-page { min-height: 100dvh; background: var(--surface); color: var(--text-h); font-family: var(--font-family); }
 .questionnaire-header { padding: 20px clamp(24px, 6vw, 80px); }
 .questionnaire-header img { display: block; width: 112px; height: auto; }
 .questionnaire-main { width: min(100% - 48px, 520px); margin: clamp(32px, 8vh, 88px) auto 0; padding-bottom: 48px; }
-.questionnaire-heading > span { display: block; margin-bottom: 14px; color: #528c5d; font-size: 13px; font-weight: 600; }
+.questionnaire-heading > span { display: block; margin-bottom: 14px; color: light-dark(#528c5d, #8dbd95); font-size: 13px; font-weight: 600; }
 .questionnaire-heading h1 { margin: 0 0 12px; font-size: var(--font-page-title, 30px); font-weight: var(--font-page-title-weight, 700); line-height: 1.25; }
-.questionnaire-heading p { margin: 0; color: #607286; font-size: 14px; line-height: 1.6; }
+.questionnaire-heading p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .questionnaire-step { margin-top: 40px; }
-.questionnaire-step-count { margin-bottom: 18px; color: #607286; font-size: 12px; }
+.questionnaire-step-count { margin-bottom: 18px; color: var(--muted); font-size: 12px; }
 .questionnaire-step h2 { margin: 0 0 20px; font-size: 20px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
-.questionnaire-input { width: 100%; height: 50px; padding: 0 14px; box-sizing: border-box; border: 1px solid #dfe5e9; border-radius: 8px; background: #fff; color: #101729; font: inherit; font-size: 14px; }
-.questionnaire-input::placeholder { color: #8fa0b2; }
-.questionnaire-input:focus { outline: 2px solid #75aa7e; outline-offset: 2px; }
-.questionnaire-input[aria-invalid="true"] { border-color: #b24d4d; }
+.questionnaire-input { width: 100%; height: 50px; padding: 0 14px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-h); font: inherit; font-size: 14px; }
+.questionnaire-input::placeholder { color: light-dark(#8fa0b2, #aab8c9); }
+.questionnaire-input:focus { outline: 2px solid var(--main-color); outline-offset: 2px; }
+.questionnaire-input[aria-invalid="true"] { border-color: light-dark(#b24d4d, #f08a8a); }
 .questionnaire-step p { font-size: 13px; line-height: 1.6; }
-#channel-answer-help { margin: 10px 0 0; color: #607286; font-size: 12px; }
-.questionnaire-error { color: #b24d4d; }
-.questionnaire-submit { display: block; width: 100%; margin-top: 28px; min-height: 48px; padding: 12px 20px; border: 0; border-radius: 8px; background: #75aa7e; color: white; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-.questionnaire-submit:hover { background: #639c6d; }
-.questionnaire-submit:focus-visible { outline: 2px solid #528c5d; outline-offset: 3px; }
+#channel-answer-help { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+.questionnaire-error { color: light-dark(#b24d4d, #f08a8a); }
+.questionnaire-submit { display: block; width: 100%; margin-top: 28px; min-height: 48px; padding: 12px 20px; border: 0; border-radius: 8px; background: var(--main-color); color: var(--on-brand); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.questionnaire-submit:hover { background: light-dark(#639c6d, #8dbd95); }
+.questionnaire-submit:focus-visible { outline: 2px solid light-dark(#528c5d, #8dbd95); outline-offset: 3px; }
 .questionnaire-submit:disabled { opacity: .65; cursor: wait; }
-.questionnaire-note { margin: 20px 0 0; color: #607286; font-size: 12px; text-align: center; }
+.questionnaire-note { margin: 20px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 @media (max-width: 600px) { .questionnaire-header { padding: 16px 24px; } .questionnaire-main { margin-top: 32px; } .questionnaire-heading h1 { font-size: 26px; } .questionnaire-step { margin-top: 32px; } }

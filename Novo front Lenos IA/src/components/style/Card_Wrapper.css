@@ -1,7 +1,7 @@
 .Card_Dropdown {
 	overflow: hidden;
-	background: white;
-	border: 1px solid #dfe5e9;
+	background: var(--surface);
+	border: 1px solid var(--border);
 	border-radius: 11px;
 	text-align: left;
 }
@@ -15,7 +15,7 @@
 	padding: 0 20px;
 	border: 0;
 	background: transparent;
-	color: #101729;
+	color: var(--text-h);
 	font: inherit;
 	font-size: var(--font-card-title);
 	font-weight: 500;
@@ -24,7 +24,7 @@
 }
 
 .dropdown-icon {
-	color: #607286;
+	color: var(--muted);
 	font-size: 17px;
 	line-height: 1;
 	transition: transform 0.2s ease;
@@ -34,7 +34,7 @@
 
 .Card_Dropdown > p {
 	margin: -2px 20px 17px;
-	color: #101729;
+	color: var(--text-h);
 	font-size: 14px;
 	line-height: 1.5;
 }
@@ -44,7 +44,7 @@
 	.Card_Dropdown > p { margin: -2px 15px 15px; font-size: var(--font-body); }
 }
 
-.dropdown-answer { margin: -2px 20px 17px; color: #101729; font-size: 14px; line-height: 1.5; }
+.dropdown-answer { margin: -2px 20px 17px; color: var(--text-h); font-size: 14px; line-height: 1.5; }
 .dropdown-answer p { margin: 0; }
 .dropdown-answer ul { margin: 10px 0 14px; padding-left: 22px; list-style: disc; }
 .dropdown-answer li + li { margin-top: 6px; }

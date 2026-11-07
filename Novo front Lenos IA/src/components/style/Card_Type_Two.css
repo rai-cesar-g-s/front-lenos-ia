@@ -1,8 +1,8 @@
 .card_type_two {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--surface);
+    border: 1px solid light-dark(#e5e7eb, #34445a);
     border-radius: 10px;
     padding: 22px;
     transition: all 0.3s ease;
@@ -15,7 +15,7 @@
 }
 
 .card_type_two:hover {
-    border-color: #75aa7e;
+    border-color: var(--main-color);
     box-shadow: 0 8px 24px rgba(117, 170, 126, 0.1);
     transform: translateY(-3px);
 }
@@ -24,8 +24,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f2f7f3;
-    color: #75aa7e;
+    background-color: var(--code-bg);
+    color: var(--main-color);
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -36,7 +36,7 @@
 .card_type_two h3 {
     font-size: 17px;
     font-weight: 600;
-    color: #111827;
+    color: light-dark(#111827, #eaf0f6);
     margin: 0 0 8px 0;
     padding: 0;
     line-height: 1.3;
@@ -44,7 +44,7 @@
 
 .card_type_two p {
     font-size: 15px;
-    color: #151c2e;
+    color: var(--text);
     margin: 0;
     padding: 0;
     line-height: 1.5;

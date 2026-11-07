@@ -3,8 +3,8 @@
   box-sizing: border-box;
   margin: 32px auto 0;
   padding: 32px;
-  background: white;
-  border: 1px solid #dfe5e9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 14px;
   box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04);
   text-align: left;
@@ -21,13 +21,13 @@
 
 .card_register .card h3 {
   margin: 0 0 7px;
-  color: #101729;
+  color: var(--text-h);
   font-size: 13px;
   font-weight: 500;
 }
 
 .card_register .card h3 span {
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
 }
 
 .card_register .card label {
@@ -37,23 +37,23 @@
   height: 48px;
   padding: 0 12px;
   box-sizing: border-box;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 7px;
-  background: #ffffff;
+  background: var(--surface);
   transition: border-color 0.15s ease;
 }
 
 .card_register .card label.has-error {
-  border-color: #cb5353;
+  border-color: light-dark(#cb5353, #f08a8a);
 }
 
 .card_register .card label:focus-within {
-  border-color: #75aa7e;
+  border-color: var(--main-color);
 }
 
 .card_register .card label > svg {
   flex: 0 0 auto;
-  color: #607286;
+  color: var(--muted);
   font-size: 17px;
 }
 
@@ -63,13 +63,13 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #101729;
+  color: var(--text-h);
   font: inherit;
   font-size: 13px;
 }
 
 .card_register .card input::placeholder {
-  color: #8899a8;
+  color: light-dark(#8899a8, #aab8c9);
   opacity: 1;
 }
 
@@ -80,18 +80,18 @@
   padding: 4px;
   border: 0;
   background: transparent;
-  color: #607286;
+  color: var(--muted);
   cursor: pointer;
 }
 
 .password-eye-btn:hover {
-  color: #101729;
+  color: var(--text-h);
 }
 
 .card_register .field-error {
   display: block;
   margin-top: 5px;
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
   font-size: 11px;
   line-height: 1.3;
 }
@@ -107,19 +107,19 @@
   width: 16px;
   height: 16px;
   margin: 2px 0 0;
-  accent-color: #75aa7e;
+  accent-color: var(--main-color);
   cursor: pointer;
 }
 
 .aceppt_terms label {
-  color: #101729;
+  color: var(--text-h);
   font-size: 11px;
   line-height: 1.4;
   cursor: pointer;
 }
 
 .aceppt_terms a {
-  color: #4d8960;
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
 }
@@ -134,10 +134,10 @@
 
 .server-error-box {
   padding: 10px 14px;
-  background: #fdf2f2;
-  border: 1px solid #f8d7d7;
+  background: light-dark(#fdf2f2, #35232e);
+  border: 1px solid light-dark(#f8d7d7, #573642);
   border-radius: 7px;
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
   font-size: 12px;
   margin-bottom: 16px;
   line-height: 1.4;
@@ -152,8 +152,8 @@
   height: 48px;
   border: 0;
   border-radius: 7px;
-  background: #75aa7e;
-  color: white;
+  background: var(--main-color);
+  color: var(--on-brand);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -162,7 +162,7 @@
 }
 
 .register-submit:hover:not(:disabled) {
-  background: #62966b;
+  background: light-dark(#62966b, #8dbd95);
 }
 
 .register-submit:disabled {

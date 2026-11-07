@@ -1,8 +1,8 @@
 .card_type_one {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
-    border: 1px solid #e5e7eb;
+    background-color: var(--surface);
+    border: 1px solid light-dark(#e5e7eb, #34445a);
     border-radius: 12px;
     padding: 22px;
     transition: all 0.3s ease;
@@ -15,7 +15,7 @@
 }
 
 .card_type_one:hover {
-    border-color: #75aa7e;
+    border-color: var(--main-color);
     box-shadow: 0 1rem 2rem rgba(117, 170, 126, 0.1);
     transform: translateY(-4px);
 }
@@ -24,8 +24,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f2f7f3;
-    color: #75aa7e;
+    background-color: var(--code-bg);
+    color: var(--main-color);
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -36,7 +36,7 @@
 .card_type_one p {
     margin: 0;
     padding: 0;
-    color: #151c2e;
+    color: var(--text);
     font-size: 15px;
     font-weight: 500;
     text-transform: uppercase;
@@ -45,14 +45,14 @@
 }
 
 .card_type_one p:first-of-type {
-    color: #75aa7e;
+    color: var(--main-color);
     font-size: 12px;
     font-weight: 600;
 }
 
 .card_type_one h3 {
     margin: 0 0 8px 0;
-    color: #111827;
+    color: light-dark(#111827, #eaf0f6);
     font-size: 17px;
     font-weight: 600;
     line-height: 1.4;
@@ -60,7 +60,7 @@
 }
 
 .card_type_one p:last-of-type {
-    color: #151c2e;
+    color: var(--text);
     font-size: 15px;
     font-weight: 400;
     line-height: 1.6;

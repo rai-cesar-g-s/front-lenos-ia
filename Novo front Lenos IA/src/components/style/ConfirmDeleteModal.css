@@ -1,14 +1,14 @@
-.confirm-delete-modal { width: min(440px, calc(100vw - 40px)); max-height: calc(100vh - 40px); padding: 0; border: 1px solid #dfe5e9; border-radius: 16px; background: #fff; color: #101729; box-shadow: 0 20px 40px rgba(16,23,41,.16); }
+.confirm-delete-modal { width: min(440px, calc(100vw - 40px)); max-height: calc(100vh - 40px); padding: 0; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text-h); box-shadow: 0 20px 40px rgba(16,23,41,.16); }
 .confirm-delete-modal::backdrop { background: rgba(16,23,41,.45); backdrop-filter: blur(4px); }
 .confirm-delete-content { position: relative; padding: 28px; text-align: left; }
-.confirm-delete-close { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; background: transparent; color: #607286; cursor: pointer; }
-.confirm-delete-icon { display: grid; place-items: center; width: 44px; height: 44px; background: #fdf2f2; color: #cb5353; border-radius: 12px; font-size: 22px; }
+.confirm-delete-close { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.confirm-delete-icon { display: grid; place-items: center; width: 44px; height: 44px; background: light-dark(#fdf2f2, #35232e); color: light-dark(#cb5353, #f08a8a); border-radius: 12px; font-size: 22px; }
 .confirm-delete-content h2 { margin: 18px 0 10px; font-size: 20px; }
-.confirm-delete-content p { margin: 0; color: #607286; font-size: 13px; line-height: 1.6; }
+.confirm-delete-content p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .confirm-delete-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 .confirm-delete-actions button { padding: 10px 16px; border-radius: 8px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
-.confirm-delete-cancel { background: #fff; border: 1px solid #dfe5e9; color: #607286; }
-.confirm-delete-submit { background: #cb5353; border: 1px solid #cb5353; color: #fff; }
-.confirm-delete-submit:hover { background: #b24d4d; }
+.confirm-delete-cancel { background: var(--surface); border: 1px solid var(--border); color: var(--muted); }
+.confirm-delete-submit { background: light-dark(#cb5353, #f08a8a); border: 1px solid light-dark(#cb5353, #f08a8a); color: var(--on-brand); }
+.confirm-delete-submit:hover { background: light-dark(#b24d4d, #f08a8a); }
 .confirm-delete-modal button:disabled { opacity: .65; cursor: wait; }
-.confirm-delete-content .confirm-delete-error { color: #cb5353; margin-top: 12px; }
+.confirm-delete-content .confirm-delete-error { color: light-dark(#cb5353, #f08a8a); margin-top: 12px; }

@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 import Title_Page_Middle from "../components/Title_Page_Middle";
 import Card_Register from "../components/Card_Register";
 import { Link } from "react-router-dom";
@@ -7,9 +8,9 @@ const Register = () => {
   return (
     <div className="page registration-page">
       <main className="registration-main">
-        <Link to="/" className="registration-brand">
+        <div className="auth-theme-nav"><Link to="/" className="registration-brand">
           <img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" />
-        </Link>
+        </Link><ThemeToggle /></div>
         <div className="registration-icon" aria-hidden="true">♙</div>
         <Title_Page_Middle
           title="Criar sua conta"

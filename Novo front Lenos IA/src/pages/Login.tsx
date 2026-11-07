@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 import Title_Page_Middle from "../components/Title_Page_Middle";
 import Card_Login from "../components/Card_Login";
 import { Link, useLocation } from "react-router-dom";
@@ -10,9 +11,9 @@ const Login = () => {
   return (
     <div className="page login-page">
       <main className="login-main">
-        <Link to="/" className="login-brand">
+        <div className="auth-theme-nav"><Link to="/" className="login-brand">
           <img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" />
-        </Link>
+        </Link><ThemeToggle /></div>
         <div className="login-icon" aria-hidden="true"><FiLogIn /></div>
         <Title_Page_Middle
           title="Bem-vindo de volta"

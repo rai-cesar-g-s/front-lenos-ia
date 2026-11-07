@@ -3,7 +3,7 @@
   display: flex;
   min-height: 100vh;
   background: var(--page-bg);
-  color: #101729;
+  color: var(--text-h);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -15,8 +15,8 @@
   display: flex;
   flex-direction: column;
   width: 230px;
-  background: #ffffff;
-  border-right: 1px solid #dfe5e9;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   box-sizing: border-box;
   transition: width 0.2s ease;
 }
@@ -30,17 +30,17 @@
   width: 28px;
   height: 28px;
   place-items: center;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  background: #ffffff;
-  color: #55687d;
+  background: var(--surface);
+  color: light-dark(#55687d, #aab8c9);
   box-shadow: 0 2px 6px rgba(16, 23, 41, 0.1);
   cursor: pointer;
 }
 
 .sidebar-toggle:hover {
-  color: #386747;
-  background: #f2f7f4;
+  color: light-dark(#386747, #9fd1a8);
+  background: light-dark(#f2f7f4, #222d3f);
 }
 
 .sidebar-toggle svg {
@@ -54,9 +54,9 @@
   gap: 12px;
   height: 64px;
   padding: 0 20px;
-  color: #101729;
+  color: var(--text-h);
   text-decoration: none;
-  border-bottom: 1px solid #dfe5e9;
+  border-bottom: 1px solid var(--border);
 }
 
 .app-brand-icon {
@@ -66,8 +66,8 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #5c986f 0%, #437a54 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, light-dark(#5c986f, #8dbd95) 0%, light-dark(#437a54, #8dbd95) 100%);
+  color: var(--on-brand);
   font-size: 16px;
   box-shadow: 0 2px 6px rgba(67, 122, 84, 0.25);
 }
@@ -81,12 +81,12 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
-  color: #101729;
+  color: var(--text-h);
 }
 
 .app-brand-text small {
   font-size: 10px;
-  color: #607286;
+  color: var(--muted);
   font-weight: 400;
 }
 
@@ -105,7 +105,7 @@
   height: 40px;
   padding: 0 14px;
   border-radius: 10px;
-  color: #55687d;
+  color: light-dark(#55687d, #aab8c9);
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
@@ -114,27 +114,27 @@
 
 .app-nav a svg {
   font-size: 17px;
-  color: #6c7f93;
+  color: light-dark(#6c7f93, #aab8c9);
   transition: color 0.15s ease;
 }
 
 .app-nav a:hover {
-  background: #f2f7f4;
-  color: #386747;
+  background: light-dark(#f2f7f4, #222d3f);
+  color: light-dark(#386747, #9fd1a8);
 }
 
 .app-nav a:hover svg {
-  color: #386747;
+  color: light-dark(#386747, #9fd1a8);
 }
 
 .app-nav a.active {
-  background: #edf5ef;
-  color: #4d8960;
+  background: light-dark(#edf5ef, #21352d);
+  color: var(--accent);
   font-weight: 600;
 }
 
 .app-nav a.active svg {
-  color: #4d8960;
+  color: var(--accent);
 }
 
 .sidebar-footer {
@@ -150,8 +150,8 @@
   height: 42px;
   border: none;
   border-radius: 9px;
-  background: #75aa7e;
-  color: #ffffff;
+  background: var(--main-color);
+  color: var(--on-brand);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -161,7 +161,7 @@
 }
 
 .new-analysis-btn:hover {
-  background: #62966b;
+  background: light-dark(#62966b, #8dbd95);
 }
 
 /* Main Content Area */
@@ -238,8 +238,8 @@
   align-items: center;
   height: 64px;
   padding: 0 32px;
-  background: #ffffff;
-  border-bottom: 1px solid #dfe5e9;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 90;
@@ -263,7 +263,7 @@
 }
 
 .user-menu-trigger:hover {
-  background: #f4f7f5;
+  background: light-dark(#f4f7f5, #222d3f);
 }
 
 .user-avatar {
@@ -273,8 +273,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #75aa7e;
-  color: #ffffff;
+  background: var(--main-color);
+  color: var(--on-brand);
   font-size: 13px;
   font-weight: 700;
 }
@@ -282,12 +282,12 @@
 .user-name {
   font-size: 13px;
   font-weight: 600;
-  color: #101729;
+  color: var(--text-h);
 }
 
 .chevron-icon {
   font-size: 14px;
-  color: #607286;
+  color: var(--muted);
   transition: transform 0.2s ease;
 }
 
@@ -300,8 +300,8 @@
   top: calc(100% + 8px);
   right: 0;
   width: 210px;
-  background: #ffffff;
-  border: 1px solid #dfe5e9;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(16, 23, 41, 0.1);
   padding: 8px 0;
@@ -322,19 +322,19 @@
 
 .dropdown-header strong {
   font-size: 13px;
-  color: #101729;
+  color: var(--text-h);
 }
 
 .dropdown-header small {
   font-size: 11px;
-  color: #607286;
+  color: var(--muted);
   word-break: break-all;
 }
 
 .dropdown-divider {
   margin: 6px 0;
   border: none;
-  border-top: 1px solid #edf0f2;
+  border-top: 1px solid light-dark(#edf0f2, #222d3f);
 }
 
 .dropdown-item {
@@ -345,7 +345,7 @@
   padding: 9px 16px;
   border: none;
   background: transparent;
-  color: #334458;
+  color: light-dark(#334458, #c7d4e4);
   font-size: 12px;
   font-weight: 500;
   text-align: left;
@@ -354,13 +354,13 @@
 }
 
 .dropdown-item:hover {
-  background: #f4f7f5;
-  color: #4d8960;
+  background: light-dark(#f4f7f5, #222d3f);
+  color: var(--accent);
 }
 
 .dropdown-item.danger:hover {
-  background: #fdf2f2;
-  color: #cb5353;
+  background: light-dark(#fdf2f2, #35232e);
+  color: light-dark(#cb5353, #f08a8a);
 }
 
 .app-content {
@@ -377,7 +377,7 @@
 
 .page-heading h1 {
   margin: 0 0 6px;
-  color: #101729;
+  color: var(--text-h);
   font-size: var(--font-page-title);
   font-weight: var(--font-page-title-weight);
   line-height: 1.2;
@@ -386,7 +386,7 @@
 
 .page-heading p {
   margin: 0;
-  color: #607286;
+  color: var(--muted);
   font-size: var(--font-page-subtitle);
 }
 
@@ -406,7 +406,7 @@
 }
 
 .app-content .stat-icon {
-  color: #4d8960;
+  color: var(--accent);
   font-size: 20px;
 }
 

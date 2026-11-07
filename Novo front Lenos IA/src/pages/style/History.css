@@ -18,7 +18,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 15px;
-  color: #8899a8;
+  color: light-dark(#8899a8, #aab8c9);
   pointer-events: none;
 }
 
@@ -26,10 +26,10 @@
   width: 100%;
   height: 42px;
   padding: 0 16px 0 42px;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 9px;
-  background: #ffffff;
-  color: #101729;
+  background: var(--surface);
+  color: var(--text-h);
   font: inherit;
   font-size: 13px;
   outline: none;
@@ -38,7 +38,7 @@
 }
 
 .search-box input:focus {
-  border-color: #75aa7e;
+  border-color: var(--main-color);
   box-shadow: 0 0 0 3px rgba(117, 170, 126, 0.15);
 }
 
@@ -58,17 +58,17 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: #607286;
+  color: var(--muted);
   pointer-events: none;
 }
 
 .select-wrapper select {
   height: 42px;
   padding: 0 32px 0 34px;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 9px;
-  background: #ffffff;
-  color: #101729;
+  background: var(--surface);
+  color: var(--text-h);
   font: inherit;
   font-size: 12px;
   font-weight: 500;
@@ -97,8 +97,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  background: #ffffff;
-  border: 1px solid #dfe5e9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(16, 23, 41, 0.03);
   cursor: pointer;
@@ -106,7 +106,7 @@
 }
 
 .history-card-item:hover {
-  border-color: #b3c9b7;
+  border-color: light-dark(#b3c9b7, #8dbd95);
   box-shadow: 0 4px 12px rgba(16, 23, 41, 0.05);
   transform: translateY(-1px);
 }
@@ -116,7 +116,7 @@
   height: 54px;
   object-fit: cover;
   border-radius: 8px;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   flex-shrink: 0;
 }
 
@@ -126,10 +126,10 @@
   height: 54px;
   flex-shrink: 0;
   place-items: center;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #f2f7f3;
-  color: #4d8960;
+  background: var(--code-bg);
+  color: var(--accent);
 }
 
 .history-main-info {
@@ -146,7 +146,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #101729;
+  color: var(--text-h);
   line-height: 1.3;
 }
 
@@ -155,11 +155,11 @@
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: #607286;
+  color: var(--muted);
 }
 
 .channel-name {
-  color: #44556d;
+  color: light-dark(#44556d, #eaf0f6);
   font-weight: 500;
 }
 
@@ -171,7 +171,7 @@
 }
 
 .meta-separator {
-  color: #cfd9e0;
+  color: light-dark(#cfd9e0, #42536b);
 }
 
 .history-badges-actions {
@@ -191,9 +191,9 @@
 }
 
 .sentiment-badge.positive {
-  background: #ffffff;
-  border: 1px solid #b8dac1;
-  color: #4d8960;
+  background: var(--surface);
+  border: 1px solid light-dark(#b8dac1, #3c5e49);
+  color: var(--accent);
 }
 
 .status-badge {
@@ -207,50 +207,50 @@
 }
 
 .status-badge.completed {
-  background: #edf8f0;
-  color: #4d8960;
+  background: light-dark(#edf8f0, #222d3f);
+  color: var(--accent);
 }
 
 .status-badge.pending {
-  background: #fff8eb;
-  color: #d97706;
+  background: light-dark(#fff8eb, #222d3f);
+  color: light-dark(#d97706, #f08a8a);
 }
 
 .status-badge.failed {
-  background: #fdf2f2;
-  color: #cb5353;
+  background: light-dark(#fdf2f2, #35232e);
+  color: light-dark(#cb5353, #f08a8a);
 }
 
 .history-row-arrow {
   font-size: 16px;
-  color: #94a3b8;
+  color: light-dark(#94a3b8, #aab8c9);
   transition: transform 0.15s ease, color 0.15s ease;
 }
 
 .history-card-item:hover .history-row-arrow {
   transform: translateX(3px);
-  color: #4d8960;
+  color: var(--accent);
 }
 
 .history-loading, .history-empty {
   padding: 60px 20px;
-  background: #ffffff;
-  border: 1px solid #dfe5e9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   text-align: center;
-  color: #607286;
+  color: var(--muted);
 }
 
 .empty-icon {
   font-size: 32px;
-  color: #8da4be;
+  color: light-dark(#8da4be, #a5bad3);
   margin-bottom: 12px;
 }
 
 .history-empty h3 {
   margin: 0 0 6px;
   font-size: 15px;
-  color: #101729;
+  color: var(--text-h);
 }
 
 .history-empty p {

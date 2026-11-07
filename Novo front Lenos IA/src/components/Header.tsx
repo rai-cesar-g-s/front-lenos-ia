@@ -1,3 +1,4 @@
+import ThemeToggle from './ThemeToggle';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
@@ -5,7 +6,7 @@ import "./style/Header.css";
 
 const Header = () => {
   return (
-    <header>
+    <header className="public-header">
       <Link to="/" className="logo-link" aria-label="Lenos IA, página inicial">
         <img className="official-brand-logo official-brand-logo--header" src="/logo.png" alt="Lenos IA" />
       </Link>
@@ -21,6 +22,7 @@ const Header = () => {
       </nav>
 
       <div className="btn">
+        <ThemeToggle />
         <Button type={1} text="Entrar" link="/login" />
         <Button type={2} text="Criar conta" link="/register" />
       </div>

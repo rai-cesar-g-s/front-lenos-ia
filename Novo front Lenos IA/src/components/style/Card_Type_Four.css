@@ -1,22 +1,22 @@
 .card_type_four {
 	box-sizing: border-box;
-	background: #f1f6f3;
-	border: 1px solid #dce9df;
+	background: light-dark(#f1f6f3, #222d3f);
+	border: 1px solid light-dark(#dce9df, #34445a);
 	border-radius: 12px;
-	color: #101729;
+	color: var(--text-h);
 	text-align: left;
 }
 
 .card_type_four h3 {
 	margin: 0 0 12px;
-	color: #101729;
+	color: var(--text-h);
 	font-size: var(--font-card-title);
 	font-weight: 600;
 }
 
 .card_type_four p {
 	margin: 0;
-	color: #101729;
+	color: var(--text-h);
 	font-size: var(--font-body);
 	line-height: 1.55;
 }

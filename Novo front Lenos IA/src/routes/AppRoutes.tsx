@@ -28,7 +28,7 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, loading, hasAnsweredQuestions } = useAuth();
 
   if (loading) {
-    return <div style={{ minHeight: '100vh', background: '#fff' }} />;
+    return <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }} />;
   }
 
   if (!isAuthenticated) {
@@ -46,7 +46,7 @@ const QuestionsRoute = ({ children }: { children: ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div style={{ minHeight: '100vh', background: '#fff' }} />;
+    return <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }} />;
   }
 
   if (!isAuthenticated) {

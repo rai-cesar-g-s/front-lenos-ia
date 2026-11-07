@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
@@ -87,9 +88,9 @@ const ConfirmationEmail = () => {
     return (
         <main className="confirmation-email-page">
             <section className="confirmation-email-card" aria-live="polite" aria-busy={status === 'pending'}>
-                <Link to="/" className="confirmation-brand" aria-label="Lenos IA, página inicial">
+                <div className="auth-theme-nav"><Link to="/" className="confirmation-brand" aria-label="Lenos IA, página inicial">
                     <img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" />
-                </Link>
+                </Link><ThemeToggle /></div>
 
                 <div className={`confirmation-status-icon confirmation-status-${status}`}>
                     {statusContent.icon}

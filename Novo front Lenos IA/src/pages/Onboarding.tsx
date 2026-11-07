@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QuestionService } from '../api/questions';
@@ -60,7 +61,7 @@ const Onboarding = () => {
   };
 
   return <div className="questionnaire-page">
-    <header className="questionnaire-header"><img src="/logo.png" alt="Lenos IA" /></header>
+    <header className="questionnaire-header"><img src="/logo.png" alt="Lenos IA" /><ThemeToggle /></header>
     <main className="questionnaire-main">
     <div className="questionnaire-heading"><span>Vamos conhecer seu canal</span><h1>Uma experiência feita para você</h1><p>Antes de começar, conte-nos um pouco sobre seu canal.</p></div>
     <section className="questionnaire-step" aria-label="Perguntas sobre seu canal">

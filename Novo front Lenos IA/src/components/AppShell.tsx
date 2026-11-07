@@ -1,3 +1,4 @@
+import ThemeToggle from './ThemeToggle';
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
@@ -145,7 +146,7 @@ export const AppShell = ({ children }: { children: React.ReactNode }) => {
       {/* Main Area */}
       <div className="app-main">
         <header className="app-topbar">
-          <div className="topbar-left" />
+          <ThemeToggle />
 
           {/* User Menu Dropdown */}
           <div className="user-menu-wrapper" ref={dropdownRef}>

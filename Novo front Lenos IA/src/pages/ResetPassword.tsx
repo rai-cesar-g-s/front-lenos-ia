@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -49,9 +50,9 @@ const ResetPassword = () => {
     };
 
         return <div className="page reset-page"><main className="reset-main">
-                <Link to="/" className="auth-brand" aria-label="Lenos IA, página inicial">
+                <div className="auth-theme-nav"><Link to="/" className="auth-brand" aria-label="Lenos IA, página inicial">
                     <img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" />
-                </Link>
+                </Link><ThemeToggle /></div>
         {status === "invalid" ? <>
             <div className="auth-icon reset-alert reset-alert--danger"><FiAlertTriangle /></div>
             <h1>Link inválido</h1><h2>Este link de recuperação está ausente, expirou ou já foi utilizado.</h2>

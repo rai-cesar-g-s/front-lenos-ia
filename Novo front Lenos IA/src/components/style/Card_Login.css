@@ -3,8 +3,8 @@
   box-sizing: border-box;
   margin: 34px auto 0;
   padding: 32px;
-  background: white;
-  border: 1px solid #dfe5e9;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 14px;
   box-shadow: 0 2px 4px rgba(16, 24, 40, 0.04);
   text-align: left;
@@ -17,13 +17,13 @@
 .card_login .card h3,
 .login-label-row h3 {
   margin: 0 0 8px;
-  color: #101729;
+  color: var(--text-h);
   font-size: 13px;
   font-weight: 500;
 }
 
 .card_login .card h3 span {
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
 }
 
 .login-label-row {
@@ -34,7 +34,7 @@
 
 .login-label-row a {
   margin-bottom: 8px;
-  color: #75aa7e;
+  color: var(--main-color);
   font-size: 11px;
   text-decoration: none;
 }
@@ -50,23 +50,23 @@
   height: 48px;
   padding: 0 12px;
   box-sizing: border-box;
-  border: 1px solid #dfe5e9;
+  border: 1px solid var(--border);
   border-radius: 7px;
-  background: #ffffff;
+  background: var(--surface);
   transition: border-color 0.15s ease;
 }
 
 .card_login .card label.has-error {
-  border-color: #cb5353;
+  border-color: light-dark(#cb5353, #f08a8a);
 }
 
 .card_login .card label:focus-within {
-  border-color: #75aa7e;
+  border-color: var(--main-color);
 }
 
 .card_login .card label > svg {
   flex: 0 0 auto;
-  color: #607286;
+  color: var(--muted);
   font-size: 17px;
 }
 
@@ -76,20 +76,20 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #101729;
+  color: var(--text-h);
   font: inherit;
   font-size: 13px;
 }
 
 .card_login .card input::placeholder {
-  color: #8899a8;
+  color: light-dark(#8899a8, #aab8c9);
   opacity: 1;
 }
 
 .password-eye-btn {
   border: none;
   background: transparent;
-  color: #607286;
+  color: var(--muted);
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -98,7 +98,7 @@
 }
 
 .password-eye-btn:hover {
-  color: #101729;
+  color: var(--text-h);
 }
 
 .card_login .aceppt_terms {
@@ -112,12 +112,12 @@
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: #75aa7e;
+  accent-color: var(--main-color);
   cursor: pointer;
 }
 
 .card_login .aceppt_terms label {
-  color: #101729;
+  color: var(--text-h);
   font-size: 12px;
   cursor: pointer;
 }
@@ -125,16 +125,16 @@
 .field-error {
   display: block;
   margin-top: 4px;
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
   font-size: 11px;
 }
 
 .server-error-box {
   padding: 10px 14px;
-  background: #fdf2f2;
-  border: 1px solid #f8d7d7;
+  background: light-dark(#fdf2f2, #35232e);
+  border: 1px solid light-dark(#f8d7d7, #573642);
   border-radius: 7px;
-  color: #cb5353;
+  color: light-dark(#cb5353, #f08a8a);
   font-size: 12px;
   margin-bottom: 16px;
   line-height: 1.4;
@@ -149,8 +149,8 @@
   height: 48px;
   border: none;
   border-radius: 7px;
-  background: #75aa7e;
-  color: #ffffff;
+  background: var(--main-color);
+  color: var(--on-brand);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
@@ -159,7 +159,7 @@
 }
 
 .login-submit-btn:hover:not(:disabled) {
-  background: #62966b;
+  background: light-dark(#62966b, #8dbd95);
 }
 
 .login-submit-btn:disabled {
@@ -179,12 +179,12 @@
 .card_login .anchor-links {
   margin-top: 25px;
   text-align: center;
-  color: #607286;
+  color: var(--muted);
   font-size: 12px;
 }
 
 .card_login .anchor-link {
-  color: #4d8960;
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
   margin-left: 4px;

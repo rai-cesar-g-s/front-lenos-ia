@@ -10,7 +10,7 @@
 
 .faq-page .content > h1 {
 	margin: 0 0 9px;
-	color: #151c2e;
+	color: var(--text);
 	font-size: var(--font-page-title);
 	line-height: 1.2;
 }
@@ -22,7 +22,7 @@
 
 .faq-page .content > h2 {
 	margin: 0 0 35px;
-	color: #151c2e;
+	color: var(--text);
 	font-size: var(--font-page-subtitle);
 	font-weight: 400;
 }
@@ -42,10 +42,10 @@
 	gap: 8px;
 	min-height: 40px;
 	padding: 0 14px;
-	border: 1px solid #dfe5e9;
+	border: 1px solid var(--border);
 	border-radius: 8px;
-	background: #fff;
-	color: #334458;
+	background: var(--surface);
+	color: light-dark(#334458, #c7d4e4);
 	font: inherit;
 	font-size: 13px;
 	cursor: pointer;
@@ -53,15 +53,15 @@
 }
 
 .faq-topic-filters button svg {
-	color: #4d8960;
+	color: var(--accent);
 	font-size: 16px;
 }
 
 .faq-topic-filters button:hover,
 .faq-topic-filters button.active {
-	border-color: #75aa7e;
-	background: #f2f7f3;
-	color: #315d40;
+	border-color: var(--main-color);
+	background: var(--code-bg);
+	color: light-dark(#315d40, #9fd1a8);
 }
 
 .faq-questions { display: grid; gap: 10px; }

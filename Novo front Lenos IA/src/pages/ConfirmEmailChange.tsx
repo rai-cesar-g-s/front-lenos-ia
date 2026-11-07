@@ -1,3 +1,4 @@
+import ThemeToggle from '../components/ThemeToggle';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiAlertCircle, FiCheckCircle, FiLoader, FiMail } from 'react-icons/fi';
@@ -41,7 +42,7 @@ export default function ConfirmEmailChange() {
   const success = Boolean(outcome && !outcome.error);
   const title = !token ? 'Verifique seu novo e-mail' : pending ? 'Confirmando seu novo e-mail' : success ? 'E-mail alterado' : outcome?.error ? 'Não foi possível confirmar' : 'Entre para confirmar seu e-mail';
   return <main className="confirmation-email-page"><section className="confirmation-email-card" aria-live="polite" aria-busy={pending}>
-    <Link to="/" className="confirmation-brand"><img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" /></Link>
+    <div className="auth-theme-nav"><Link to="/" className="confirmation-brand"><img className="official-brand-logo official-brand-logo--auth" src="/logo.png" alt="Lenos IA" /></Link><ThemeToggle /></div>
     <div className={'confirmation-status-icon confirmation-status-' + (pending ? 'pending' : success ? 'success' : outcome?.error ? 'error' : 'notice')}>
       {pending ? <FiLoader /> : success ? <FiCheckCircle /> : outcome?.error ? <FiAlertCircle /> : <FiMail />}
     </div>
