@@ -1,3 +1,4 @@
+import { getYouTubeId } from '../utils/youtubeUrl';
 import React, { useState } from 'react';
 import { FiSearch, FiLoader, FiCheckCircle, FiAlertCircle, FiArrowRight } from 'react-icons/fi';
 import AppShell from '../components/AppShell';
@@ -28,13 +29,6 @@ export const Analyze: React.FC = () => {
 
   const [activeReportModal, setActiveReportModal] = useState<ReportItem | null>(null);
 
-  // Helper to extract YouTube video ID
-  const getYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
-
   const videoId = getYouTubeId(link);
   const thumbnailUrl = videoId
     ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
@@ -42,9 +36,11 @@ export const Analyze: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (link.trim()) {
-      generateReport(link.trim());
+    if (!videoId) {
+      setErrorMsg('Informe um link válido de um vídeo do YouTube.');
+      return;
     }
+    void generateReport(link.trim());
   };
 
   const handleOpenLatestReport = async () => {

@@ -166,6 +166,7 @@
 
 /* Main Content Area */
 .app-main {
+  min-width: 0;
   width: calc(100% - 230px);
   margin-left: 230px;
   display: flex;
@@ -247,6 +248,7 @@
 
 /* User Menu & Dropdown */
 .user-menu-wrapper {
+  min-width: 0;
   position: relative;
 }
 
@@ -456,4 +458,9 @@
     width: calc(100% - 64px);
     margin-left: 64px;
   }
+}
+@media (max-width: 480px) {
+  .app-content { padding-inline: 12px; }
+  .user-name { display: none; }
+  .user-dropdown-menu { max-width: calc(100vw - 88px); }
 }

@@ -1,3 +1,4 @@
+import { getYouTubeId } from '../utils/youtubeUrl';
 import { reportFilterOptions } from '../utils/reportStatus';
 import type { ReportFilterStatus } from '../api/report';
 import { ReportDateFilter } from '../components/ReportDateFilter';
@@ -28,13 +29,6 @@ export const History: React.FC = () => {
   } = useDashboard();
 
   const [selectedReportModal, setSelectedReportModal] = useState<ReportItem | null>(null);
-
-  const getYouTubeId = (url?: string) => {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
 
   return (
     <AppShell>

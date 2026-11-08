@@ -564,3 +564,12 @@ input:checked + .slider:before {
 .settings-field-success { display: block; color: light-dark(#28753d, #9fd1a8); margin-top: 8px; font-size: 13px; }
 
 .settings-email-notice { display: block; margin-top: 12px; color: var(--muted); line-height: 1.5; }
+
+.channel-answer-view { flex-wrap: wrap; }
+.channel-answer-view > span { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 640px) {
+  .settings-tabs-bar { flex-wrap: wrap; }
+  .settings-tab-btn { min-width: 0; white-space: normal; padding-inline: 10px; }
+  .settings-card { padding: 16px; }
+}

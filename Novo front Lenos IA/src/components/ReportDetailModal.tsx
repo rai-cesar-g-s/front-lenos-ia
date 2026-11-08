@@ -1,3 +1,4 @@
+import { getYouTubeId } from '../utils/youtubeUrl';
 import type { RecurringTheme, ReportRecommendation } from '../api/report';
 import React, { useState } from 'react';
 import { FiX, FiDownload, FiEdit3, FiTrash2, FiExternalLink, FiMessageSquare, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
@@ -51,7 +52,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   if (!report) return null;
 
   const title = report.title || 'Análise de Vídeo';
-  const videoUrl = report.video_url || '#';
   const stats = getSentimentStats(report);
   const commentsCount = stats.total;
   const commentsCountLabel = commentsCount == null
@@ -62,13 +62,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
     ? createdDate.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     : 'data não fornecida';
 
-  const getYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
-
-  const videoId = getYouTubeId(videoUrl);
+  const videoId = getYouTubeId(report.video_url);
   const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 
   const posSentiment = stats.percent(stats.positive);
@@ -169,7 +163,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                 <div className="report-thumbnail-placeholder">Prévia não disponível</div>
               )}
               <a
-                href={videoUrl}
+                href={`https://www.youtube.com/watch?v=${videoId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="youtube-play-btn"
@@ -208,7 +202,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
 
           <section className="report-section-box">
             <h3><FiMessageSquare /> Resumo Executivo da IA</h3>
-            <div className="summary-paragraph report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{summaryText}</ReactMarkdown></div>
+            <div className="summary-paragraph report-markdown"><ReactMarkdown skipHtml disallowedElements={['img']} remarkPlugins={[remarkGfm]}>{summaryText}</ReactMarkdown></div>
           </section>
 
           <section className="report-section-box">
@@ -219,8 +213,8 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                 <article className="topic-item-row topic-with-icon" key={index}>
                   <span className="rec-bullet" aria-hidden="true">✓</span>
                   <div className="report-insight">
-                  <div className="insight-title report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{topic.theme}</ReactMarkdown></div>
-                  <div className="insight-description report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{topic.description}</ReactMarkdown></div>
+                  <div className="insight-title report-markdown"><ReactMarkdown skipHtml disallowedElements={['img']} remarkPlugins={[remarkGfm]}>{topic.theme}</ReactMarkdown></div>
+                  <div className="insight-description report-markdown"><ReactMarkdown skipHtml disallowedElements={['img']} remarkPlugins={[remarkGfm]}>{topic.description}</ReactMarkdown></div>
                   </div>
                 </article>
               ))}
@@ -235,8 +229,8 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                 <li key={index}>
                   <span className="rec-bullet">✓</span>
                   <div className="recommendation-content report-insight">
-                    <div className="insight-title report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{rec.recommendation}</ReactMarkdown></div>
-                    <div className="insight-description report-markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{rec.justification}</ReactMarkdown></div>
+                    <div className="insight-title report-markdown"><ReactMarkdown skipHtml disallowedElements={['img']} remarkPlugins={[remarkGfm]}>{rec.recommendation}</ReactMarkdown></div>
+                    <div className="insight-description report-markdown"><ReactMarkdown skipHtml disallowedElements={['img']} remarkPlugins={[remarkGfm]}>{rec.justification}</ReactMarkdown></div>
                   </div>
                 </li>
               ))}

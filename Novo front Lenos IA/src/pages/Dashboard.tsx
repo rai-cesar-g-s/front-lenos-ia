@@ -1,3 +1,4 @@
+import { getYouTubeId } from '../utils/youtubeUrl';
 import { ReportDateFilter } from '../components/ReportDateFilter';
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -46,13 +47,6 @@ export const Dashboard: React.FC = () => {
   };
 
   const userName = typeof user?.name === 'string' ? user.name.trim() : '';
-
-  const getYouTubeId = (url?: string) => {
-    if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : null;
-  };
 
   return (
     <AppShell>
