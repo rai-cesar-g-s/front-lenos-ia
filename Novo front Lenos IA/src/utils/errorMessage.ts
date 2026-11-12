@@ -87,3 +87,16 @@ export function formatErrorMessage(error: unknown, defaultMessage = 'Ocorreu um 
 
   return defaultMessage;
 }
+
+export function formatLoginError(error: unknown): string {
+  const failure = error as { message?: string; code?: string; response?: { status?: number } } | null;
+  if (failure?.message === 'COOKIE_REJECTED') {
+    return 'O login foi aceito, mas não foi possível validar a sessão. Tente novamente pelo endereço oficial app.lenos-ia.com.br.';
+  }
+  if (failure?.response?.status === 401) return 'E-mail ou senha incorretos. Verifique suas credenciais.';
+  if (failure?.response?.status === 429) return 'Muitas tentativas de login. Aguarde um momento e tente novamente.';
+  if (failure?.code === 'ERR_NETWORK') {
+    return 'Não foi possível conectar à API. Verifique sua conexão e acesse pelo endereço oficial app.lenos-ia.com.br.';
+  }
+  return formatErrorMessage(error, 'Não foi possível entrar. Tente novamente.');
+}

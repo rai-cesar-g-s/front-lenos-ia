@@ -32,5 +32,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "novo-front-lenos-ia.vercel.app"
+        }
+      ],
+      "destination": "https://app.lenos-ia.com.br/:path*",
+      "permanent": false
+    }
   ]
 }

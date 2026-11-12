@@ -5,7 +5,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./style/Card_Login.css";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
 import { useAuth } from "../hooks/useAuth";
-import { formatErrorMessage } from "../utils/errorMessage";
+import { formatLoginError } from "../utils/errorMessage";
 
 interface CardLoginProps {
   email?: string;
@@ -60,7 +60,7 @@ const Card_Login: React.FC<CardLoginProps> = ({ email: initialEmail = "", passwo
       navigate(allowed ? returnTo : '/dashboard', { replace: true });
     } catch (err: unknown) {
       logSafeError("Login Error:", err);
-      const msg = formatErrorMessage(err, "E-mail ou senha incorretos. Verifique suas credenciais.");
+      const msg = formatLoginError(err);
       setServerError(msg);
     } finally {
       setIsSubmitting(false);
