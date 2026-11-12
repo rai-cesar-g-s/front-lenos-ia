@@ -32,7 +32,7 @@ O modal de relatório usa componentes para organizar os indicadores e seções d
 
 ## Estrutura do projeto
 
-O código da aplicação fica nesta pasta, `Front Lenos IA`.
+O código da aplicação fica na pasta [Front Lenos IA](Front%20Lenos%20IA/). Os caminhos da tabela abaixo são relativos a essa pasta.
 
 | Caminho dentro da pasta da aplicação | Responsabilidade |
 | --- | --- |
