@@ -152,7 +152,8 @@ footer .brand-mark {
 
 .public-header nav ul { gap: clamp(16px, 2.4vw, 30px); }
 .public-header nav ul li a { font-size: 12px; }
-.public-header .btn { gap: 10px; }
+.public-header .btn { gap: 10px; order: 1; }
+.public-menu-toggle { display: none; }
 .public-header .btn-one,
 .public-header .btn-two {
     min-height: 32px;
@@ -166,13 +167,51 @@ footer .brand-mark {
 @media (max-width: 900px) {
     .public-header {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 8px 10px;
         padding-inline: clamp(10px, 4vw, 32px);
     }
-    .public-header .logo-link { grid-area: 1 / 1; min-width: 0; }
+    .public-header .logo-link { grid-area: 1 / 2; min-width: 0; }
     .public-header .official-brand-logo--header { max-width: 100%; }
-    .public-header .btn { grid-area: 1 / 2; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
-    .public-header nav { grid-column: 1 / -1; min-width: 0; }
-    .public-header nav ul { flex-wrap: wrap; justify-content: center; gap: 6px 16px; }
+    .public-header .btn { grid-area: 1 / 3; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+    .public-header .public-menu-toggle {
+        grid-area: 1 / 1;
+        display: inline-grid;
+        place-items: center;
+        flex: none;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: var(--surface);
+        color: var(--text-h);
+        font-size: 18px;
+        cursor: pointer;
+    }
+    .public-menu-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .public-header nav {
+        display: none;
+        grid-area: 2 / 1 / auto / -1;
+        border-top: 1px solid var(--border);
+    }
+    .public-header nav[data-open="true"] { display: block; }
+    .public-header nav ul { flex-direction: column; gap: 0; text-align: left; }
+    .public-header nav ul li a { display: block; padding: 10px 8px; }
+    .public-header nav ul li a::after { display: none; }
+}
+.public-theme-inline { display: flex; }
+.public-header nav .public-theme-menu { display: none; }
+
+@media (max-width: 600px) {
+    .public-header .public-theme-inline { display: none; }
+    .public-header nav .public-theme-menu {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 8px;
+        border-top: 1px solid var(--border);
+        color: var(--text-h);
+        font-size: 12px;
+    }
 }

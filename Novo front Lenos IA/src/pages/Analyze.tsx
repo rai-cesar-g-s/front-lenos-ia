@@ -73,11 +73,12 @@ export const Analyze: React.FC = () => {
       <div className="analyze-container">
         {isLoadingQuota ? <p role="status">Consultando cota mensal...</p> : quotaError ? <p role="alert">{quotaError} <button type="button" onClick={() => void reloadQuota()}>Tentar novamente</button></p> : quota && <p>{quota.used} de {quota.limit} análises utilizadas neste mês · {quota.remaining} disponíveis</p>}
         <form onSubmit={handleSubmit} className="analyze-form">
-          <label className="url-field-label">
-            <span>URL do vídeo do YouTube</span>
+          <div className="url-field-label">
+            <label htmlFor="analysis-video-url">URL do vídeo do YouTube</label>
             <div className="url-input-wrapper">
-              <FiSearch className="input-search-icon" />
+              <FiSearch className="input-search-icon" aria-hidden="true" />
               <input
+                id="analysis-video-url"
                 type="url"
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
@@ -99,7 +100,7 @@ export const Analyze: React.FC = () => {
                 )}
               </button>
             </div>
-          </label>
+          </div>
         </form>
 
         {errorMsg && (

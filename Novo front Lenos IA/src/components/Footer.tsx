@@ -3,12 +3,12 @@ import "./style/Footer.css";
 
 const Footer = () => {
   return (
-    <footer>
+    <footer className="public-footer">
       <div className="logo">
         <img className="official-brand-logo official-brand-logo--footer" src="/logo.png" alt="Lenos IA" />
       </div>
 
-      <nav>
+      <nav aria-label="Navegação do rodapé">
         <ul>
           <li><Link to="/">Início</Link></li>
           <li><Link to="/about">Sobre</Link></li>
@@ -18,7 +18,7 @@ const Footer = () => {
         </ul>
       </nav>
 
-      <div className="copyrigths">
+      <div className="footer-copyright">
         <p>© 2026 Lenos IA. Todos os direitos reservados.</p>
       </div>
     </footer>
